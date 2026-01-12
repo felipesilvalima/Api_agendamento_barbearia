@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoExisteRecursoException;
 use App\Exceptions\NaoPermitidoExecption;
 use App\Repository\AgendamentoRepository;
@@ -53,9 +54,14 @@ class AgendamentoService
 
             //salvar agendamento no banco
             $id_agendamento = $this->agendamentoRepository->salvarAgendamento($data);
-
+            
             //salvar o registro de agendamento e servico
-            $this->agendamento_ServicoRepository->SalvarAgendamentoServico($id_agendamento->id, $data['servicos']);
+            $agendamentoServico = $this->agendamento_ServicoRepository->SalvarAgendamentoServico($id_agendamento->id, $data['servicos']);
+
+            if(!$agendamentoServico or $id_agendamento->isEmpty())
+            {
+                throw new ErrorInternoException("Error ao criar agendamento");
+            }
 
             return $id_agendamento->id;
         });

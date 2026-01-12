@@ -8,7 +8,7 @@ class AgendamentoServicoRepository
 {
     public function __construct(private Agendamento_servico $agendamentoServicoModel){}
 
-    public function SalvarAgendamentoServico(int $id_agendamento, array $servicos)
+    public function SalvarAgendamentoServico(int $id_agendamento, array $servicos): bool
     {   
         $servicos = collect($servicos)->unique()->values();// remover valores iguais
         
@@ -19,6 +19,8 @@ class AgendamentoServicoRepository
                 "id_servico" => $servico
             ]);
         }
+
+        return true;
     }
 
     public function existeServicoAgendamento(int $id_agendamento, int $id_servico): bool
