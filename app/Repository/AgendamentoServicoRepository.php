@@ -9,7 +9,9 @@ class AgendamentoServicoRepository
     public function __construct(private Agendamento_servico $agendamentoServicoModel){}
 
     public function SalvarAgendamentoServico(int $id_agendamento, array $servicos)
-    {
+    {   
+        $servicos = collect($servicos)->unique()->values();// remover valores iguais
+        
         foreach($servicos as $servico)
         {
             $this->agendamentoServicoModel->create([

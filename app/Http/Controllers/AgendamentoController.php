@@ -21,7 +21,6 @@ class AgendamentoController extends Controller
             "mensagem" => "Agendamento criado com sucesso. ID do seu agendamento {$agendamento_id}"
         ],201);
         
-
     }
 
     public function reagendarAgendamento(Request $request, int $id_agenda)
@@ -82,9 +81,6 @@ class AgendamentoController extends Controller
     }
 
 
-
-
-    
 
         private function id_cliente(): int | null
         {
