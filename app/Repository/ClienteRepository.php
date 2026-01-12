@@ -1,0 +1,41 @@
+<?php declare(strict_types=1); 
+
+namespace App\Repository;
+
+use App\Models\Cliente;
+use Carbon\Carbon;
+
+class ClienteRepository
+{
+    public function __construct(private Cliente $clienteModel){}
+
+        public function verificarClienteExiste($id_cliente): bool
+        {
+            return $this->clienteModel->where('id', $id_cliente)->exists();
+        }
+
+        
+    public function salvarCliente($data): int
+    {
+
+        $cadastro = $this->clienteModel->create([
+            "nome" => $data['nome'],
+            "telefone" => $data['telefone'],
+            "data_cadastro" => Carbon::now(),
+        ]);
+        
+        return $cadastro->id;
+    }
+
+    public function PerfilCliente($id_cliente): object | bool
+    {
+       return $this->clienteModel
+       ->select('id','nome','telefone','data_cadastro')
+       ->with(['user:id,email,id_cliente'])
+       ->where('id', $id_cliente)
+       ?->first();
+    }
+
+
+    
+}

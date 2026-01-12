@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Laravel x Python — Arrays e Collections</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      color: #333;
+    }
+    header {
+      background: #111827;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+    section {
+      max-width: 1200px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+    h2 {
+      border-left: 5px solid #2563eb;
+      padding-left: 10px;
+      margin-top: 40px;
+    }
+    h3 {
+      color: #2563eb;
+      margin-top: 25px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #f1f5f9;
+    }
+    code {
+      background: #e5e7eb;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .desc {
+      font-size: 13px;
+      color: #555;
+    }
+    footer {
+      text-align: center;
+      padding: 15px;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Laravel x Python</h1>
+  <p>Equivalência entre Arrays, Arr, Collections e estruturas Python</p>
+</header>
+
+<section>
+<h2>🔹 Acesso / Verificação</h2>
+<table>
+<tr><th>Laravel / PHP</th><th>Python</th><th>Explicação</th></tr>
+<tr><td><code>is_array()</code></td><td><code>isinstance(x, list)</code></td><td class="desc">Verifica se a variável é uma lista.</td></tr>
+<tr><td><code>array_key_exists()</code><br><code>Arr::exists()</code></td><td><code>key in dict</code></td><td class="desc">Verifica se a chave existe no dicionário.</td></tr>
+<tr><td><code>count()</code></td><td><code>len()</code></td><td class="desc">Conta elementos.</td></tr>
+<tr><td><code>in_array()</code><br><code>contains()</code></td><td><code>value in list</code></td><td class="desc">Verifica se um valor existe.</td></tr>
+</table>
+</section>
+
+<section>
+<h2>🔹 Inserção / Remoção</h2>
+<table>
+<tr><th>Laravel / PHP</th><th>Python</th><th>Explicação</th></tr>
+<tr><td><code>array_push()</code><br><code>push()</code></td><td><code>list.append()</code></td><td class="desc">Adiciona elemento no final.</td></tr>
+<tr><td><code>array_pop()</code><br><code>pop()</code></td><td><code>list.pop()</code></td><td class="desc">Remove o último elemento.</td></tr>
+<tr><td><code>array_shift()</code></td><td><code>list.pop(0)</code></td><td class="desc">Remove o primeiro elemento.</td></tr>
+<tr><td><code>array_unshift()</code><br><code>prepend()</code></td><td><code>list.insert(0, x)</code></td><td class="desc">Insere no início da lista.</td></tr>
+<tr><td><code>unset()</code><br><code>Arr::forget()</code></td><td><code>del</code></td><td class="desc">Remove chave ou índice.</td></tr>
+</table>
+</section>
+
+<section>
+<h2>🔹 Transformação</h2>
+<table>
+<tr><th>Laravel / PHP</th><th>Python</th><th>Explicação</th></tr>
+<tr><td><code>array_map()</code><br><code>map()</code></td><td><code>map()</code><br><code>[x for x in lista]</code></td><td class="desc">Transforma cada item.</td></tr>
+<tr><td><code>array_walk()</code><br><code>each()</code></td><td><code>for</code></td><td class="desc">Percorre sem retornar nova lista.</td></tr>
+<tr><td><code>array_reduce()</code><br><code>reduce()</code></td><td><code>functools.reduce()</code></td><td class="desc">Reduz para um único valor.</td></tr>
+</table>
+</section>
+
+<section>
+<h2>🔹 Filtro / Busca</h2>
+<table>
+<tr><th>Laravel / PHP</th><th>Python</th><th>Explicação</th></tr>
+<tr><td><code>array_filter()</code><br><code>filter()</code></td><td><code>filter()</code><br><code>[x for x in lista]</code></td><td class="desc">Filtra itens por condição.</td></tr>
+<tr><td><code>array_search()</code></td><td><code>list.index()</code></td><td class="desc">Retorna índice do valor.</td></tr>
+<tr><td><code>array_keys()</code></td><td><code>dict.keys()</code></td><td class="desc">Obtém chaves.</td></tr>
+<tr><td><code>array_values()</code></td><td><code>dict.values()</code></td><td class="desc">Obtém valores.</td></tr>
+</table>
+</section>
+
+<section>
+<h2>🔹 Ordenação</h2>
+<table>
+<tr><th>Laravel / PHP</th><th>Python</th><th>Explicação</th></tr>
+<tr><td><code>sort()</code></td><td><code>list.sort()</code></td><td class="desc">Ordena a lista.</td></tr>
+<tr><td><code>rsort()</code></td><td><code>sort(reverse=True)</code></td><td class="desc">Ordem decrescente.</td></tr>
+<tr><td><code>sortBy()</code></td><td><code>sorted(key=)</code></td><td class="desc">Ordenação personalizada.</td></tr>
+</table>
+</section>
+
+<section>
+<h2>🔹 Multidimensional</h2>
+<table>
+<tr><th>Laravel / PHP</th><th>Python</th><th>Explicação</th></tr>
+<tr><td><code>pluck()</code><br><code>array_column()</code></td><td><code>[x['campo'] for x in lista]</code></td><td class="desc">Extrai coluna específica.</td></tr>
+<tr><td><code>array_combine()</code></td><td><code>dict(zip())</code></td><td class="desc">Cria dicionário a partir de duas listas.</td></tr>
+<tr><td><code>array_flip()</code></td><td><code>{v:k for k,v in d.items()}</code></td><td class="desc">Inverte chave e valor.</td></tr>
+<tr><td><code>Arr::get()</code></td><td><code>dict.get()</code></td><td class="desc">Acesso seguro a chaves.</td></tr>
+</table>
+</section>
+
+<footer>
+  <p>📘 Guia prático — Laravel ↔ Python</p>
+</footer>
+
+</body>
+</html>
