@@ -9,11 +9,11 @@ class ServicoRepository
     public function __construct(
         private Servico $servicoModel, 
     ){}
-
-    public function salvarServico(array $data)
-    {
-        
-    }
-
     
+    public function existeServico(int $id_servico): bool
+    {
+        return $this->servicoModel
+        ->where('id',$id_servico)
+        ->exists();
+    }
 }

@@ -4,6 +4,7 @@ use App\Http\Controllers\AgendamentoController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarbeiroController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\ServicoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -42,6 +43,7 @@ Route::middleware('auth:api')->group( function () {
     Route::patch('/agendamentos/{id}/reagendar',[AgendamentoController::class, 'reagendarAgendamento'])->name('reagendar_agendamentos');
     Route::patch('/agendamentos/{id}/cancelar',[AgendamentoController::class, 'cancelarAgendamentos'])->name('cancelar_agendamentos');
     Route::patch('/agendamentos/{id}/concluir',[AgendamentoController::class, 'concluirAgendamentos'])->name('concluir_agendamentos');
+    Route::delete('/agendamentos/{id_agendamento}/servicos/{id_servico}',[AgendamentoController::class, 'removerServicos'])->name('remover_servicos');
 
     Route::post('/barbeiros',[BarbeiroController::class, 'criarBarbeiros'])->name('criar_barbeiros');
 });
