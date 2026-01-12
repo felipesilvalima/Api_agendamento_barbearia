@@ -6,6 +6,7 @@ use App\Exceptions\NaoExisteRecursoException;
 use App\Exceptions\NaoPermitidoExecption;
 use App\Repository\AgendamentoRepository;
 use App\Repository\AgendamentoServicoRepository;
+use App\Repository\ServicoRepository;
 use Illuminate\Support\Facades\DB;
 
 class AgendamentoService
@@ -15,6 +16,8 @@ class AgendamentoService
         private ValidarService $validarService,
         private HorarioService $horarioService,
         private AgendamentoServicoRepository $agendamento_ServicoRepository,
+        private ServicoRepository $servicoRepository,
+        private AgendamentoServicoRepository $agendamento_servico_repository,
     ){}
 
     public function agendar($id_cliente, array $data): int
@@ -340,6 +343,39 @@ class AgendamentoService
             
         return $agendaCliente;
         
+    }
+
+    public function removerDeAgendamentos($cliente_id, int $id_agendamento, int $id_servico)
+    {
+
+        //invalidar aceso de barbeiro
+        $this->validarService->invalidaPermissaoBarbeiro();
+
+        //verificar se cliente existe
+        $this->validarService->validaCliente($cliente_id);
+
+        //verificar se agendamento existe
+        $this->validarService->validarExistenciaAgendamento($id_agendamento);
+
+        //verificar existentencia do Servico
+        if(!$this->servicoRepository->existeServico($id_servico))
+        {
+           throw new NaoExisteRecursoException("Serviço não existe");
+        }
+
+        //verificar se o clinte tem permissao para remover
+        $this->validarService->validarPermissaoAgendaCliente($id_agendamento, $cliente_id);
+        
+        //verificar se o servico e do agendamento
+        if(!$this->agendamento_servico_repository->existeServicoAgendamento($id_agendamento, $id_servico))
+        {
+            throw new NaoExisteRecursoException("Esse serviço não está relacionado com esse agendamento");
+        }
+
+        //remover
+        $this->agendamento_servico_repository->remover($id_agendamento, $id_servico);
+        
+
     }
 
 

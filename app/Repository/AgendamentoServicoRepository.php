@@ -18,4 +18,20 @@ class AgendamentoServicoRepository
             ]);
         }
     }
+
+    public function existeServicoAgendamento(int $id_agendamento, int $id_servico): bool
+    {
+       return $this->agendamentoServicoModel
+       ->where('id_agendamento',$id_agendamento)
+       ->where('id_servico',$id_servico)
+        ->exists();
+    }
+
+    public function remover(int $id_agendamento, int $id_servico)
+    {
+       return $this->agendamentoServicoModel
+        ->where('id_agendamento',$id_agendamento)
+        ->where('id_servico',$id_servico)
+        ->delete();
+    }
 }

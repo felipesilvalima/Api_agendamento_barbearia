@@ -75,6 +75,12 @@ class AgendamentoController extends Controller
         ],200);  
     }
 
+    public function removerServicos(int $id_agendamento, int $id_servico)
+    {
+        $this->agendamentoService->removerDeAgendamentos($this->id_cliente(), $id_agendamento, $id_servico); 
+        return response()->json(["mensagem" => "Serviço removido de agendamento com sucesso"],200);
+    }
+
 
 
 
