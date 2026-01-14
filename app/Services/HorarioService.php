@@ -6,6 +6,7 @@ namespace App\Services;
 use App\Exceptions\HorarioIndisponivelException;
 use App\Exceptions\NaoPermitidoExecption;
 use App\Repository\AgendamentoRepository;
+use App\Repository\Contratos\AgendamentosRepositoryInterface;
 use Carbon\Carbon;
 
 
@@ -19,7 +20,7 @@ class HorarioService
         ];
 
      public function __construct(
-        private AgendamentoRepository $agendamentoRepository, 
+        private AgendamentosRepositoryInterface $agendamentoRepository, 
     ){}
 
     public function validarDisponibilidade($id_barbeiro, string $hora, string $data)

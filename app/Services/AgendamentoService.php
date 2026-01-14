@@ -7,20 +7,20 @@ use App\DTOS\CriarReagendamentoDtos;
 use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoExisteRecursoException;
 use App\Exceptions\NaoPermitidoExecption;
-use App\Repository\AgendamentoRepository;
-use App\Repository\AgendamentoServicoRepository;
+use App\Repository\Contratos\AgendamentoServicoRepositoyInterface;
+use App\Repository\Contratos\AgendamentosRepositoryInterface;
+use App\Repository\Contratos\ServicoRepositoryInteface;
 use App\Repository\ServicoRepository;
 use Illuminate\Support\Facades\DB;
 
 class AgendamentoService
 {
     public function __construct(
-        private AgendamentoRepository $agendamentoRepository,
+        private AgendamentosRepositoryInterface $agendamentoRepository,
+        private AgendamentoServicoRepositoyInterface $agendamento_ServicoRepository,
+        private ServicoRepositoryInteface $servicoRepository,
         private ValidarService $validarService,
         private HorarioService $horarioService,
-        private AgendamentoServicoRepository $agendamento_ServicoRepository,
-        private ServicoRepository $servicoRepository,
-        private AgendamentoServicoRepository $agendamento_servico_repository,
     ){}
 
     public function agendar(CriarAgendamentosDtos $dtos): int
@@ -33,7 +33,7 @@ class AgendamentoService
         $this->validarService->validaBarbeiro($dtos->id_barbeiro);
 
         //verificar a quantidade máxima de agendamentos
-        if($this->agendamentoRepository->listaAgendaCliente($dtos->id_cliente)->count() > 3)
+        if($this->agendamentoRepository->listaAgendasCliente($dtos->id_cliente)->count() > 3)
         {
             throw new NaoPermitidoExecption("Atingiu o máximo de agendamento. o Máximo de agendamento e 3 agendamento");
         }
@@ -90,7 +90,7 @@ class AgendamentoService
         $this->validarService->validarPermissaoAgendaCliente($dtos->id_agendamento, $dtos->id_cliente);
 
         //pegar agenda
-        $agenda = $this->agendamentoRepository->visualizarAgendaCliente($dtos->id_agendamento);
+        $agenda = $this->agendamentoRepository->buscarAgendaCliente($dtos->id_agendamento);
 
         //validar horario disponivel
         $this->horarioService->validarDisponibilidade(
@@ -146,7 +146,7 @@ class AgendamentoService
         $this->validarService->validarPermissaoAgendaCliente($id_agenda, $cliente_id);
 
         //buscar registro do agendamento de cliente
-        $agendaCliente = $this->agendamentoRepository->visualizarAgendaCliente($id_agenda);
+        $agendaCliente = $this->agendamentoRepository->buscarAgendaCliente($id_agenda);
        
         //limitando horário de cancelamento do agendamento
         $this->horarioService->horarioCancelarAgendamento($agendaCliente->hora);
@@ -183,7 +183,7 @@ class AgendamentoService
         $this->validarService->validarPermissaoAgendaBarbeiro($id_agenda, $id_barbeiro);
 
         //buscar registro do agendamento de cliente
-        $agendaCliente = $this->agendamentoRepository->visualizarAgendaCliente($id_agenda);
+        $agendaCliente = $this->agendamentoRepository->buscarAgendaCliente($id_agenda);
         
         //criando regras para status do agendamento 
         if($agendaCliente->status === 'CONCLUIDO')
@@ -217,7 +217,7 @@ class AgendamentoService
         $this->validarService->validarPermissaoAgendaBarbeiro($id_agenda, $id_barbeiro);
         
         //buscar registro do agendamento de cliente
-        $agendaCliente = $this->agendamentoRepository->visualizarAgendaCliente($id_agenda);
+        $agendaCliente = $this->agendamentoRepository->buscarAgendaCliente($id_agenda);
 
             //criando regras para status do agendamento 
             if($agendaCliente->status === 'CANCELADO')
@@ -270,7 +270,7 @@ class AgendamentoService
         $this->validarService->invalidaPermissaoBarbeiro();
 
         //buscar coleção de agendamentos de um cliente
-        $agendamentos = $this->agendamentoRepository->listaAgendaCliente($cliente_id);
+        $agendamentos = $this->agendamentoRepository->listaAgendasCliente($cliente_id);
 
         //verificar se exister algum recurso
         if($agendamentos ->isEmpty())
@@ -294,7 +294,7 @@ class AgendamentoService
         $this->validarService->invalidaPermissaoCliente();
 
         //buscar coleção de agendamentos de um cliente
-        $agendamentos = $this->agendamentoRepository->listaAgendaBarbeiro($barbeiro_id);
+        $agendamentos = $this->agendamentoRepository->listaAgendasBarbeiro($barbeiro_id);
 
         //verificar se exister algum recurso
         if(empty($agendamentos))
@@ -324,7 +324,7 @@ class AgendamentoService
         $this->validarService->validarPermissaoAgendaCliente($id_agenda, $cliente_id);
        
         //buscar registro do agendamento de cliente
-        $agendaCliente = $this->agendamentoRepository->visualizarAgendaCliente($id_agenda);
+        $agendaCliente = $this->agendamentoRepository->buscarAgendaCliente($id_agenda);
 
         //somar preco de todos os servicos do registro 
         $precoTotal = $this->agendamentoRepository->precoTotalAgendamento($id_agenda);
@@ -349,7 +349,7 @@ class AgendamentoService
         $this->validarService->validarPermissaoAgendaBarbeiro($id_agenda, $barbeiro_id);
        
         //buscar registro do agendamento de cliente
-        $agendaCliente = $this->agendamentoRepository->visualizarAgendaBarbeiro($id_agenda);
+        $agendaCliente = $this->agendamentoRepository->buscarAgendaBarbeiro($id_agenda);
 
         //somar preco de todos os servicos do registro 
         $precoTotal = $this->agendamentoRepository->precoTotalAgendamento($id_agenda);
@@ -381,13 +381,13 @@ class AgendamentoService
         $this->validarService->validarPermissaoAgendaCliente($id_agendamento, $cliente_id);
         
         //verificar se o servico e do agendamento
-        if(!$this->agendamento_servico_repository->existeServicoAgendamento($id_agendamento, $id_servico))
+        if(!$this->agendamento_ServicoRepository->existeServicoAgendamento($id_agendamento, $id_servico))
         {
             throw new NaoExisteRecursoException("Esse serviço não está relacionado com esse agendamento");
         }
 
         //remover
-        $this->agendamento_servico_repository->remover($id_agendamento, $id_servico);
+        $this->agendamento_ServicoRepository->remover($id_agendamento, $id_servico);
         
 
     }

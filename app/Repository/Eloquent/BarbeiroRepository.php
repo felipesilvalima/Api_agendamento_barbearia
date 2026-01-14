@@ -4,8 +4,9 @@ namespace App\Repository;
 
 use App\DTOS\CriarBarbeiroDtos;
 use App\Models\Barbeiro;
+use App\Repository\Contratos\BarbeiroRepositoryInterface;
 
-class BarbeiroRepository
+class BarbeiroRepository implements BarbeiroRepositoryInterface
 {
     public function __construct(private Barbeiro $barbeiroModel){}
 

@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Models\Servico;
+use App\Repository\Contratos\ServicoRepositoryInteface;
 
-class ServicoRepository
+class ServicoRepository implements ServicoRepositoryInteface
 {
     public function __construct(
         private Servico $servicoModel, 

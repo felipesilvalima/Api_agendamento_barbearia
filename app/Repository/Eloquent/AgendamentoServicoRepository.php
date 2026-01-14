@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Models\Agendamento_servico;
+use App\Repository\Contratos\AgendamentoServicoRepositoyInterface;
 
-class AgendamentoServicoRepository
+class AgendamentoServicoRepository implements AgendamentoServicoRepositoyInterface
 {
     public function __construct(private Agendamento_servico $agendamentoServicoModel){}
 
@@ -31,7 +32,7 @@ class AgendamentoServicoRepository
         ->exists();
     }
 
-    public function remover(int $id_agendamento, int $id_servico)
+    public function remover(int $id_agendamento, int $id_servico): bool
     {
        return $this->agendamentoServicoModel
         ->where('id_agendamento',$id_agendamento)

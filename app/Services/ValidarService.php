@@ -7,14 +7,17 @@ use App\Exceptions\NaoPermitidoExecption;
 use App\Repository\AgendamentoRepository;
 use App\Repository\BarbeiroRepository;
 use App\Repository\ClienteRepository;
+use App\Repository\Contratos\AgendamentosRepositoryInterface;
+use App\Repository\Contratos\BarbeiroRepositoryInterface;
+use App\Repository\Contratos\ClienteRepositoryInterface;
 
 class ValidarService
 {
 
     public function __construct(
-        private BarbeiroRepository $barbeiroRepository,
-        private ClienteRepository $clienteRepository,
-        private AgendamentoRepository $agendamentoRepository
+        private BarbeiroRepositoryInterface $barbeiroRepository,
+        private ClienteRepositoryInterface $clienteRepository,
+        private AgendamentosRepositoryInterface $agendamentoRepository
     ){}
 
         public function invalidaPermissaoBarbeiro()

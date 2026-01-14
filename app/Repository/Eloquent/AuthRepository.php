@@ -6,10 +6,11 @@ use App\DTOS\CriarBarbeiroDtos;
 use App\DTOS\CriarClienteDtos;
 use App\DTOS\LoginDtos;
 use App\Models\User;
+use App\Repository\Contratos\AuthRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class AuthRepository
+class AuthRepository implements AuthRepositoryInterface
 {
     public function __construct(private User $userModel){}
 

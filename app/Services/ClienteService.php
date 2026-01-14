@@ -8,15 +8,15 @@ use App\Exceptions\NaoExisteRecursoException;
 use App\Repository\AgendamentoRepository;
 use App\Repository\AuthRepository;
 use App\Repository\ClienteRepository;
+use App\Repository\Contratos\AuthRepositoryInterface;
+use App\Repository\Contratos\ClienteRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
 class ClienteService
 {
     public function __construct(
-        private ClienteRepository $clienteRepository,
-        private AuthRepository $authRepository,
-        private ValidarService $validarService
-        
+        private ClienteRepositoryInterface $clienteRepository,
+        private AuthRepositoryInterface $authRepository, 
     ){}
 
     public function CadastrarCliente(CriarClienteDtos $dtos)

@@ -7,13 +7,15 @@ use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoPermitidoExecption;
 use App\Repository\AuthRepository;
 use App\Repository\BarbeiroRepository;
+use App\Repository\Contratos\AuthRepositoryInterface;
+use App\Repository\Contratos\BarbeiroRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
 class BarbeiroService
 {
      public function __construct(
-        private BarbeiroRepository $barbeiroRepository,
-        private AuthRepository $authRepository
+        private BarbeiroRepositoryInterface $barbeiroRepository,
+        private AuthRepositoryInterface $authRepository
     ){}
 
     public function CadastrarBarbeiro(CriarBarbeiroDtos $dtos)

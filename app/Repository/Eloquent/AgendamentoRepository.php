@@ -5,11 +5,10 @@ namespace App\Repository;
 use App\DTOS\CriarAgendamentosDtos;
 use App\Models\Agendamento;
 
+use App\Repository\Contratos\AgendamentosRepositoryInterface;
 
-
-class AgendamentoRepository
+class AgendamentoRepository implements AgendamentosRepositoryInterface
 {
-    
     
     public function __construct(private Agendamento $agendamentoModel){}
 
@@ -95,7 +94,7 @@ class AgendamentoRepository
                                 return $total;
                             }
 
-                                public function listaAgendaCliente($id_cliente): object
+                                public function listaAgendasCliente($id_cliente): object
                                 {
                                     $listaAgendas = $this->agendamentoModel
                                     ->select('id','data','hora','status','id_cliente','id_barbeiro')->where('id_cliente', $id_cliente)
@@ -110,7 +109,7 @@ class AgendamentoRepository
                                         return $listaAgendas;
                                 }
 
-                                public function listaAgendaBarbeiro($barbeiro_id): object
+                                public function listaAgendasBarbeiro($barbeiro_id): object
                                 {
                                     $listaAgendas = $this->agendamentoModel
                                     ->select('id','data','hora','status','id_cliente','id_barbeiro')->where('id_barbeiro', $barbeiro_id)
@@ -125,7 +124,7 @@ class AgendamentoRepository
                                         return $listaAgendas;
                                 }
 
-                                    public function visualizarAgendaCliente(int $id_agenda): object
+                                    public function buscarAgendaCliente(int $id_agenda): object
                                     {
                                         $listaAgendas = $this->agendamentoModel
                                         ->select('id','data','hora','status','id_cliente','id_barbeiro')
@@ -139,7 +138,7 @@ class AgendamentoRepository
                                             return $listaAgendas;
                                     }
 
-                                    public function visualizarAgendaBarbeiro(int $id_agenda): object
+                                    public function buscarAgendaBarbeiro(int $id_agenda): object
                                     {
                                         $listaAgendas = $this->agendamentoModel
                                         ->select('id','data','hora','status','id_cliente','id_barbeiro')

@@ -4,9 +4,10 @@ namespace App\Repository;
 
 use App\DTOS\CriarClienteDtos;
 use App\Models\Cliente;
+use App\Repository\Contratos\ClienteRepositoryInterface;
 use Carbon\Carbon;
 
-class ClienteRepository
+class ClienteRepository implements ClienteRepositoryInterface
 {
     public function __construct(private Cliente $clienteModel){}
 

@@ -8,6 +8,8 @@ use App\Exceptions\NaoExisteRecursoException;
 use App\Repository\AuthRepository;
 use App\Repository\BarbeiroRepository;
 use App\Repository\ClienteRepository;
+use App\Repository\Contratos\AuthRepositoryInterface;
+use App\Repository\Contratos\ClienteRepositoryInterface;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 
@@ -15,8 +17,8 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 class AuthService
 {
     public function __construct(
-        private AuthRepository $authRepository,
-        private ClienteRepository $clienteRepository,
+        private AuthRepositoryInterface $authRepository,
+        private ClienteRepositoryInterface $clienteRepository,
         private BarbeiroRepository $barbeiroRepository,
     
     ){}
