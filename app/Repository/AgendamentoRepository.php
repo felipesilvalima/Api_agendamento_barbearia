@@ -2,8 +2,9 @@
 
 namespace App\Repository;
 
+use App\DTOS\CriarAgendamentosDtos;
 use App\Models\Agendamento;
-use Brick\Math\BigInteger;
+
 
 
 class AgendamentoRepository
@@ -20,9 +21,15 @@ class AgendamentoRepository
             return $result;
         }
 
-            public function salvarAgendamento(array $data): object
+            public function salvarAgendamento(CriarAgendamentosDtos $dtos): object
             {
-                return $this->agendamentoModel->create($data);
+                return $this->agendamentoModel->create([
+                    'data' => $dtos->data,
+                    'hora' => $dtos->hora,
+                    'id_cliente' => $dtos->id_cliente,
+                    'id_barbeiro' => $dtos->id_barbeiro,
+                    'status' => $dtos->status
+                ]);
             }
 
                 public function existeAgenda($id_agenda): bool
@@ -96,7 +103,9 @@ class AgendamentoRepository
                                         'barbeiro:id,nome,especialidade,status',
                                         'agendamento_servico:id,id_agendamento,id_servico',
                                         'agendamento_servico.servico:id,nome,descricao,duracao_minutos,preco'
-                                        ])->get();
+                                        ])
+                                        ->where('status','AGENDADO')
+                                        ->get();
 
                                         return $listaAgendas;
                                 }
@@ -143,5 +152,6 @@ class AgendamentoRepository
 
                                             return $listaAgendas;
                                     }
+
         
 }

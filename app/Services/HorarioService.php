@@ -53,7 +53,7 @@ class HorarioService
 
             if($hora < $horaAtual && $data  === Carbon::now()->toDateString()) 
             {
-                throw new HorarioIndisponivelException("Horário indisponível. Esse horário no momento está inválido!",422);
+                throw new HorarioIndisponivelException("Horário indisponível. Horário não pode ser no passado!",422);
             }
     }
 

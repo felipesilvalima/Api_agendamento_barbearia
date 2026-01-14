@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOS\LoginDtos;
 use App\Http\Requests\AuthRequest;
 use App\Http\Requests\RequestCliente;
 use App\Models\User;
@@ -16,8 +17,13 @@ class AuthController extends Controller
   public function login(AuthRequest $request)
   {
         $credencias = $request->validated();
-        $token = $this->authService->logarUsuario($credencias);
 
+        $dtos = new LoginDtos(
+          email: $credencias['email'],
+          password: $credencias['password']
+        );
+        $token = $this->authService->logarUsuario($dtos);
+  
       return response()->json([
         "token" => $token
         ],200);

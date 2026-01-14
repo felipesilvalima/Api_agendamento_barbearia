@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\DTOS\CriarBarbeiroDtos;
 use App\Models\Barbeiro;
 
 class BarbeiroRepository
@@ -14,16 +15,16 @@ class BarbeiroRepository
             return $result;
         }
 
-            public function salvarBarbeiro($data): int
+            public function salvarBarbeiro(CriarBarbeiroDtos $dtos): int
             {
-                $data['status'] = "ATIVO";
-                $especialidade = !isset($data['especialidade']) ? "completo" : $data['especialidade'];
+                
+                $dtos->especialidade = !isset($dtos->especialidade) ? "Barbeiro Completo" : $dtos->especialidade;
 
                 $cadastro = $this->barbeiroModel->create([
-                    "nome" => $data['nome'],
-                    "telefone" => $data['telefone'],
-                    "especialidade" => $especialidade,
-                    "status" => $data['status'],
+                    "nome" => $dtos->nome,
+                    "telefone" => $dtos->telefone,
+                    "especialidade" => $dtos->especialidade,
+                    "status" => $dtos->status,
                 ]);
         
                 return $cadastro->id;

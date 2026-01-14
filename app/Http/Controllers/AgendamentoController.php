@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOS\CriarAgendamentosDtos;
+use App\DTOS\CriarReagendamentoDtos;
 use App\Http\Requests\AgendamentoRequest;
 use App\Services\AgendamentoService;
 use Illuminate\Http\Request;
@@ -15,7 +17,15 @@ class AgendamentoController extends Controller
     {
         $data = $request->validated();
 
-        $agendamento_id = $this->agendamentoService->agendar($this->id_cliente(), $data);
+        $dtos = new CriarAgendamentosDtos(
+            id_barbeiro: $data['id_barbeiro'],
+            id_cliente: $this->id_cliente(),
+            data: $data['data'],
+            hora: $data['hora'],
+            servicos: $data['servicos']
+        );
+
+        $agendamento_id = $this->agendamentoService->agendar($dtos);
 
         return response()->json([
             "mensagem" => "Agendamento criado com sucesso. ID do seu agendamento {$agendamento_id}"
@@ -35,9 +45,14 @@ class AgendamentoController extends Controller
             'after_or_equal' => 'Data inválida. Escolha uma data mais atual', 
         ]);
 
-        $data['id_cliente'] = $this->id_cliente();
+        $dtos = new CriarReagendamentoDtos(
+            data: $data['data'],
+            hora: $data['hora'],
+            id_cliente: $this->id_cliente(),
+            id_agendamento: $id_agenda
+        );
 
-        $this->agendamentoService->reagendamento($id_agenda, $data);
+        $this->agendamentoService->reagendamento($dtos);
 
         return response()->json([
             "mensagem" => "Reagendado com sucesso"

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\DTOS\CriarClienteDtos;
 use App\Models\Cliente;
 use Carbon\Carbon;
 
@@ -15,12 +16,12 @@ class ClienteRepository
         }
 
         
-    public function salvarCliente($data): int
+    public function salvarCliente(CriarClienteDtos $dtos): int
     {
 
         $cadastro = $this->clienteModel->create([
-            "nome" => $data['nome'],
-            "telefone" => $data['telefone'],
+            "nome" => $dtos->nome,
+            "telefone" => $dtos->telefone,
             "data_cadastro" => Carbon::now(),
         ]);
         

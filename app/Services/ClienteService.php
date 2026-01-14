@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-
+use App\DTOS\CriarClienteDtos;
 use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoExisteRecursoException;
 use App\Repository\AgendamentoRepository;
@@ -19,11 +19,11 @@ class ClienteService
         
     ){}
 
-    public function CadastrarCliente(array $data)
+    public function CadastrarCliente(CriarClienteDtos $dtos)
     {
-        DB::transaction(function () use($data) { 
+        DB::transaction(function () use($dtos) { 
  
-            $cliente_id = $this->clienteRepository->salvarCliente($data);
+            $cliente_id = $this->clienteRepository->salvarCliente($dtos);
 
                 if(!$cliente_id)
                 {
@@ -31,7 +31,7 @@ class ClienteService
                 }
                  
 
-                $this->authRepository->salvarUsuario($data, $cliente_id);
+                $this->authRepository->salvarUsuario($dtos);
 
         });
     }

@@ -1,0 +1,14 @@
+<?php declare(strict_types=1); 
+
+namespace App\DTOS;
+
+class CriarReagendamentoDtos
+{
+    public function __construct(
+        public string $data,
+        public string $hora,
+        public int $id_cliente,
+        public int $id_agendamento
+        
+    ){}
+}

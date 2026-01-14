@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\DTOS\CriarAgendamentosDtos;
+use App\DTOS\CriarReagendamentoDtos;
 use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoExisteRecursoException;
 use App\Exceptions\NaoPermitidoExecption;
@@ -21,20 +23,26 @@ class AgendamentoService
         private AgendamentoServicoRepository $agendamento_servico_repository,
     ){}
 
-    public function agendar($id_cliente, array $data): int
+    public function agendar(CriarAgendamentosDtos $dtos): int
     {
         //invalidar acesso de barbeiro
         $this->validarService->invalidaPermissaoBarbeiro();
         
         //validar existencia de dominio
-        $this->validarService->validaCliente($id_cliente);
-        $this->validarService->validaBarbeiro($data['id_barbeiro']);
+        $this->validarService->validaCliente($dtos->id_cliente);
+        $this->validarService->validaBarbeiro($dtos->id_barbeiro);
+
+        //verificar a quantidade máxima de agendamentos
+        if($this->agendamentoRepository->listaAgendaCliente($dtos->id_cliente)->count() > 3)
+        {
+            throw new NaoPermitidoExecption("Atingiu o máximo de agendamento. o Máximo de agendamento e 3 agendamento");
+        }
        
         //validar horario disponivel
         $this->horarioService->validarDisponibilidade(
-            $data['id_barbeiro'],
-            $data['hora'], 
-            $data['data']
+            $dtos->id_barbeiro,
+            $dtos->hora, 
+            $dtos->data
         );
 
         //validar horário expediente
@@ -42,23 +50,21 @@ class AgendamentoService
 
         //validar hora passada
         $this->horarioService->validarHorarioPassado(
-            $data['data'],
-            $data['hora']
+            $dtos->data,
+            $dtos->hora
         );
      
-        $data['id_cliente'] = $id_cliente;
-        $data["status" ] = "AGENDADO";
         
         //transação
-       $id_agendamento = DB::transaction(function () use($data){
+       $id_agendamento = DB::transaction(function () use($dtos){
 
             //salvar agendamento no banco
-            $id_agendamento = $this->agendamentoRepository->salvarAgendamento($data);
+            $id_agendamento = $this->agendamentoRepository->salvarAgendamento($dtos);
             
             //salvar o registro de agendamento e servico
-            $agendamentoServico = $this->agendamento_ServicoRepository->SalvarAgendamentoServico($id_agendamento->id, $data['servicos']);
+            $agendamentoServico = $this->agendamento_ServicoRepository->SalvarAgendamentoServico($id_agendamento->id, $dtos->servicos);
 
-            if(!$agendamentoServico or $id_agendamento->isEmpty())
+            if(!$agendamentoServico or empty($id_agendamento))
             {
                 throw new ErrorInternoException("Error ao criar agendamento");
             }
@@ -69,28 +75,28 @@ class AgendamentoService
         return $id_agendamento;
     }
 
-    public function reagendamento(int $id_agenda, array $data)
+    public function reagendamento(CriarReagendamentoDtos $dtos)
     {
         //invalidar acesso do barbeiro
         $this->validarService->invalidaPermissaoBarbeiro();
 
         //verificar se cliente existe
-        $this->validarService->validaCliente($data['id_cliente']);
+        $this->validarService->validaCliente($dtos->id_cliente);
 
         //verificar se existe agenda
-        $this->validarService->validarExistenciaAgendamento($id_agenda);
+        $this->validarService->validarExistenciaAgendamento($dtos->id_agendamento);
 
         //verificar se a agenda e do cliente
-        $this->validarService->validarPermissaoAgendaCliente($id_agenda, $data['id_cliente']);
+        $this->validarService->validarPermissaoAgendaCliente($dtos->id_agendamento, $dtos->id_cliente);
 
         //pegar agenda
-        $agenda = $this->agendamentoRepository->visualizarAgendaCliente($id_agenda);
+        $agenda = $this->agendamentoRepository->visualizarAgendaCliente($dtos->id_agendamento);
 
         //validar horario disponivel
         $this->horarioService->validarDisponibilidade(
             $agenda->id_barbeiro,
-            $data['hora'], 
-            $data['data']
+            $dtos->hora, 
+            $dtos->data
         );
 
         //validar horário expediente
@@ -98,15 +104,16 @@ class AgendamentoService
 
         //validar hora passada
         $this->horarioService->validarHorarioPassado(
-            $data['data'],
-            $data['hora']
+            $dtos->data,
+            $dtos->hora
         );
 
-        $data['id_agendamento'] = $id_agenda;
-
         //reagendar
-        $agenda->data = $data['data'];
-        $agenda->hora = $data['hora'];
+        $agenda->fill([
+            'data' => $dtos->data,
+            'hora' => $dtos->hora,
+        ]);
+
         $agenda->save();
        
     }
@@ -289,7 +296,7 @@ class AgendamentoService
         $agendamentos = $this->agendamentoRepository->listaAgendaBarbeiro($barbeiro_id);
 
         //verificar se exister algum recurso
-        if($agendamentos ->isEmpty())
+        if(empty($agendamentos))
         {
             throw new NaoExisteRecursoException("Agenda vazia");
         }

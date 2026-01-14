@@ -2,6 +2,9 @@
 
 namespace App\Repository;
 
+use App\DTOS\CriarBarbeiroDtos;
+use App\DTOS\CriarClienteDtos;
+use App\DTOS\LoginDtos;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -11,21 +14,24 @@ class AuthRepository
     public function __construct(private User $userModel){}
 
 
-    public function salvarUsuario(array $data, $cliente_id = null, $barbeiro_id = null): bool
+    public function salvarUsuario(CriarBarbeiroDtos | CriarClienteDtos $dtos): bool
     {
 
        return $this->userModel->create([
-            "email" => $data['email'],
-            "password" =>  Hash::make($data['password']),
-            "id_cliente" => $cliente_id,
-            "id_barbeiro" => $barbeiro_id,
+            "email" => $dtos->email,
+            "password" =>  Hash::make($dtos->password),
+            "id_cliente" => $dtos->id_cliente ?? null,
+            "id_barbeiro" => $dtos->id_barbeiro ?? null,
         ]);
 
     }
 
-        public function verificarCredenciasUser(array $credencias): bool | string
+        public function verificarCredenciasUser(LoginDtos $credencias): bool | string
         {
-            $token = Auth::attempt($credencias);
+            $token = Auth::attempt([
+                "email" => $credencias->email,
+                "password" => $credencias->password,
+            ]);
 
             if($token)
             {

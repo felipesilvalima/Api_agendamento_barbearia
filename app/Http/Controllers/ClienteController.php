@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOS\CriarClienteDtos;
 use App\Http\Requests\ClienteRequest;
 use App\Services\AgendamentoService;
 use App\Services\ClienteService;
@@ -17,7 +18,15 @@ class ClienteController extends Controller
     public function criarClientes(ClienteRequest $request)
     {
         $data = $request->validated();
-        $this->clienteService->CadastrarCliente($data);
+
+        $dtos = new CriarClienteDtos(
+            nome: $data['nome'],
+            email: $data['email'],
+            password: $data['password'],
+            telefone: $data['telefone']
+        );
+
+        $this->clienteService->CadastrarCliente($dtos);
         
         return response()->json([
             "mensagem" => "Usuário cadastrado com sucesso",
