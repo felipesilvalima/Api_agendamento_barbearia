@@ -148,6 +148,9 @@ class AgendamentoService
         //buscar registro do agendamento de cliente
         $agendaCliente = $this->agendamentoRepository->visualizarAgendaCliente($id_agenda);
        
+        //limitando horário de cancelamento do agendamento
+        $this->horarioService->horarioCancelarAgendamento($agendaCliente->hora);
+        
          //criando regras para status do agendamento 
         if($agendaCliente->status === 'CONCLUIDO')
         {
@@ -157,13 +160,11 @@ class AgendamentoService
             {
                 throw new NaoPermitidoExecption("Esse Agendamento já foi cancelado",409);
             }
-                //limitando horário de cancelamento do agendamento
-                $this->horarioService->horarioCancelarAgendamento($agendaCliente->hora);
                 
-                    $agendaCliente->status = 'CANCELADO';
-                    $agendaCliente->save();
+                $agendaCliente->status = 'CANCELADO';
+                $agendaCliente->save();
 
-                    return $agendaCliente;
+                return $agendaCliente;
          
     }
 

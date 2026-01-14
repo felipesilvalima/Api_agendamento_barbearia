@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Exceptions\NaoPermitidoExecption;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -27,7 +28,5 @@ class Agendamento extends Model
     {
         return $this->hasMany(Agendamento_servico::class,'id_agendamento', 'id');
     }
-
-    
 
 }
