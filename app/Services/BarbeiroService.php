@@ -5,8 +5,6 @@ namespace App\Services;
 use App\DTOS\CriarBarbeiroDtos;
 use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoPermitidoExecption;
-use App\Repository\AuthRepository;
-use App\Repository\BarbeiroRepository;
 use App\Repository\Contratos\AuthRepositoryInterface;
 use App\Repository\Contratos\BarbeiroRepositoryInterface;
 use Illuminate\Support\Facades\DB;

@@ -5,7 +5,6 @@ namespace App\Services;
 
 use App\Exceptions\HorarioIndisponivelException;
 use App\Exceptions\NaoPermitidoExecption;
-use App\Repository\AgendamentoRepository;
 use App\Repository\Contratos\AgendamentosRepositoryInterface;
 use Carbon\Carbon;
 

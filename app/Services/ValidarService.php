@@ -4,9 +4,6 @@ namespace App\Services;
 
 use App\Exceptions\NaoExisteRecursoException;
 use App\Exceptions\NaoPermitidoExecption;
-use App\Repository\AgendamentoRepository;
-use App\Repository\BarbeiroRepository;
-use App\Repository\ClienteRepository;
 use App\Repository\Contratos\AgendamentosRepositoryInterface;
 use App\Repository\Contratos\BarbeiroRepositoryInterface;
 use App\Repository\Contratos\ClienteRepositoryInterface;

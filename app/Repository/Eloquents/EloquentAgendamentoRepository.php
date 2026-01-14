@@ -1,13 +1,13 @@
 <?php declare(strict_types=1); 
 
-namespace App\Repository;
+namespace App\Repository\Eloquents;
 
 use App\DTOS\CriarAgendamentosDtos;
 use App\Models\Agendamento;
 
 use App\Repository\Contratos\AgendamentosRepositoryInterface;
 
-class AgendamentoRepository implements AgendamentosRepositoryInterface
+class EloquentAgendamentoRepository implements AgendamentosRepositoryInterface
 {
     
     public function __construct(private Agendamento $agendamentoModel){}
@@ -133,7 +133,9 @@ class AgendamentoRepository implements AgendamentosRepositoryInterface
                                             'barbeiro:id,nome,especialidade,status',
                                             'agendamento_servico:id,id_agendamento,id_servico',
                                             'agendamento_servico.servico:id,nome,descricao,duracao_minutos,preco',
-                                           ])->first();
+                                            
+                                           ])
+                                           ->first();
 
                                             return $listaAgendas;
                                     }

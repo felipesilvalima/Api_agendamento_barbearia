@@ -10,7 +10,6 @@ use App\Exceptions\NaoPermitidoExecption;
 use App\Repository\Contratos\AgendamentoServicoRepositoyInterface;
 use App\Repository\Contratos\AgendamentosRepositoryInterface;
 use App\Repository\Contratos\ServicoRepositoryInteface;
-use App\Repository\ServicoRepository;
 use Illuminate\Support\Facades\DB;
 
 class AgendamentoService

@@ -1,12 +1,12 @@
 <?php declare(strict_types=1); 
 
-namespace App\Repository;
+namespace App\Repository\Eloquents;
 
 use App\DTOS\CriarBarbeiroDtos;
 use App\Models\Barbeiro;
 use App\Repository\Contratos\BarbeiroRepositoryInterface;
 
-class BarbeiroRepository implements BarbeiroRepositoryInterface
+class EloquentBarbeiroRepository implements BarbeiroRepositoryInterface
 {
     public function __construct(private Barbeiro $barbeiroModel){}
 

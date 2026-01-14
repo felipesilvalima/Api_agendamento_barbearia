@@ -1,11 +1,11 @@
 <?php declare(strict_types=1); 
 
-namespace App\Repository;
+namespace App\Repository\Eloquents;
 
 use App\Models\Servico;
 use App\Repository\Contratos\ServicoRepositoryInteface;
 
-class ServicoRepository implements ServicoRepositoryInteface
+class EloquentServicoRepository implements ServicoRepositoryInteface
 {
     public function __construct(
         private Servico $servicoModel, 

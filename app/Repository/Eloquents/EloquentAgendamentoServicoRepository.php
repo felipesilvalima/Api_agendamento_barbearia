@@ -1,11 +1,11 @@
 <?php declare(strict_types=1); 
 
-namespace App\Repository;
+namespace App\Repository\Eloquents;
 
 use App\Models\Agendamento_servico;
 use App\Repository\Contratos\AgendamentoServicoRepositoyInterface;
 
-class AgendamentoServicoRepository implements AgendamentoServicoRepositoyInterface
+class EloquentAgendamentoServicoRepository implements AgendamentoServicoRepositoyInterface
 {
     public function __construct(private Agendamento_servico $agendamentoServicoModel){}
 

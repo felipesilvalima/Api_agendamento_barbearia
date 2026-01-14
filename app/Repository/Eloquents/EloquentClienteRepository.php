@@ -1,13 +1,13 @@
 <?php declare(strict_types=1); 
 
-namespace App\Repository;
+namespace App\Repository\Eloquents;
 
 use App\DTOS\CriarClienteDtos;
 use App\Models\Cliente;
 use App\Repository\Contratos\ClienteRepositoryInterface;
 use Carbon\Carbon;
 
-class ClienteRepository implements ClienteRepositoryInterface
+class EloquentClienteRepository implements ClienteRepositoryInterface
 {
     public function __construct(private Cliente $clienteModel){}
 

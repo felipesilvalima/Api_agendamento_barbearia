@@ -1,6 +1,6 @@
 <?php declare(strict_types=1); 
 
-namespace App\Repository;
+namespace App\Repository\Eloquents;
 
 use App\DTOS\CriarBarbeiroDtos;
 use App\DTOS\CriarClienteDtos;
@@ -10,7 +10,7 @@ use App\Repository\Contratos\AuthRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class AuthRepository implements AuthRepositoryInterface
+class EloquentAuthRepository implements AuthRepositoryInterface
 {
     public function __construct(private User $userModel){}
 

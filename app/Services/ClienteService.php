@@ -4,10 +4,6 @@ namespace App\Services;
 
 use App\DTOS\CriarClienteDtos;
 use App\Exceptions\ErrorInternoException;
-use App\Exceptions\NaoExisteRecursoException;
-use App\Repository\AgendamentoRepository;
-use App\Repository\AuthRepository;
-use App\Repository\ClienteRepository;
 use App\Repository\Contratos\AuthRepositoryInterface;
 use App\Repository\Contratos\ClienteRepositoryInterface;
 use Illuminate\Support\Facades\DB;
