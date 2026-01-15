@@ -17,17 +17,20 @@ class ClienteService
 
     public function CadastrarCliente(CriarClienteDtos $dtos)
     {
-        DB::transaction(function () use($dtos) { 
- 
-            $cliente_id = $this->clienteRepository->salvarCliente($dtos);
+        //criando o objeto
+        $cliente = $dtos->createClienteObjetc();
 
-                if(!$cliente_id)
+        DB::transaction(function () use($cliente) { 
+ 
+            $cliente->setId_cliente($this->clienteRepository->salvarCliente($cliente));
+
+                if(!$cliente->getId_cliente())
                 {
                     throw new ErrorInternoException();
                 }
                  
 
-                $this->authRepository->salvarUsuario($dtos);
+                $this->authRepository->salvarUsuario($cliente);
 
         });
     }

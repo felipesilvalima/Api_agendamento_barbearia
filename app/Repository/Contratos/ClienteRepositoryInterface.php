@@ -3,11 +3,12 @@
 namespace App\Repository\Contratos;
 
 use App\DTOS\CriarClienteDtos;
+use App\Entitys\ClienteEntity;
 
 interface ClienteRepositoryInterface
 {
     public function verificarClienteExiste($id_cliente): bool;     
-    public function salvarCliente(CriarClienteDtos $dtos): int;
+    public function salvarCliente(ClienteEntity $cliente): int;
     public function PerfilCliente($id_cliente): object | bool;
     
 }

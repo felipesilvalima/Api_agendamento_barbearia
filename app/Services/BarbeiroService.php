@@ -18,13 +18,16 @@ class BarbeiroService
 
     public function CadastrarBarbeiro(CriarBarbeiroDtos $dtos)
     { 
-        DB::transaction(function () use($dtos) { 
+        //criando o objeto
+        $barbeiro = $dtos->createBarbeiroObjetc();
+
+        DB::transaction(function () use($barbeiro) { 
  
             if(auth('api')->check() && !is_null(auth('api')->user()->id_barbeiro))
             {
-                $dtos->id_barbeiro = $this->barbeiroRepository->salvarBarbeiro($dtos);
+                $barbeiro->setId_barbeiro($this->barbeiroRepository->salvarBarbeiro($barbeiro));
 
-                if(!$$dtos->id_barbeiro)
+                if(!$barbeiro->getId_barbeiro())
                 {
                     throw new ErrorInternoException();
                 }
@@ -34,7 +37,7 @@ class BarbeiroService
                     throw new NaoPermitidoExecption();
                 }
 
-                $this->authRepository->salvarUsuario($dtos);
+                $this->authRepository->salvarUsuario($barbeiro);
 
         });
     }

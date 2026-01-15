@@ -10,7 +10,7 @@ use App\Repository\Contratos\BarbeiroRepositoryInterface;
 use App\Repository\Contratos\ClienteRepositoryInterface;
 use App\Repository\Contratos\ServicoRepositoryInteface;
 
-class ValidarService
+class ValidarDomainService
 {
 
     public function __construct(

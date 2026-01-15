@@ -3,6 +3,7 @@
 namespace App\Repository\Eloquents;
 
 use App\DTOS\CriarBarbeiroDtos;
+use App\Entitys\BarbeiroEntity;
 use App\Models\Barbeiro;
 use App\Repository\Contratos\BarbeiroRepositoryInterface;
 
@@ -16,16 +17,13 @@ class EloquentBarbeiroRepository implements BarbeiroRepositoryInterface
             return $result;
         }
 
-            public function salvarBarbeiro(CriarBarbeiroDtos $dtos): int
+            public function salvarBarbeiro(BarbeiroEntity $barbeiro): int
             {
-                
-                $dtos->especialidade = !isset($dtos->especialidade) ? "Barbeiro Completo" : $dtos->especialidade;
-
                 $cadastro = $this->barbeiroModel->create([
-                    "nome" => $dtos->nome,
-                    "telefone" => $dtos->telefone,
-                    "especialidade" => $dtos->especialidade,
-                    "status" => $dtos->status,
+                    "nome" => $barbeiro->getNome(),
+                    "telefone" => $barbeiro->getTelefone(),
+                    "especialidade" => $barbeiro->getEspecialidade(),
+                    "status" => $barbeiro->getStatus(),
                 ]);
         
                 return $cadastro->id;

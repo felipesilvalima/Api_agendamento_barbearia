@@ -17,8 +17,8 @@ class AgendamentoService
     public function __construct(
         private AgendamentosRepositoryInterface $agendamentoRepository,
         private AgendamentoServicoRepositoyInterface $agendamento_ServicoRepository,
-        private ValidarService $validarService,
-        private HorarioService $horarioService,
+        private ValidarDomainService $validarService,
+        private HorarioDomainService $horarioService,
     ){}
 
     public function agendar(CriarAgendamentosDtos $dtos): int
@@ -27,20 +27,23 @@ class AgendamentoService
         $this->validarService->invalidaPermissaoBarbeiro();
         $this->validarService->validaCliente($dtos->id_cliente);
         $this->validarService->validaBarbeiro($dtos->id_barbeiro);
-        $this->validarService->validarLimiteAgendamentoPorCliente($dtos->id_cliente);
 
         //Regras de négocio
+        $this->validarService->validarLimiteAgendamentoPorCliente($dtos->id_cliente);
         $this->horarioService->validarDisponibilidade($dtos);
         $this->horarioService->validarExpedienteHorario();
         $this->horarioService->validarHorarioFuturo($dtos);
         $this->horarioService->validarAgendamentoAntecedente($dtos->data);
+
+        //criando o objeto de dominio
+        $agamento = $dtos->createAgendamentoObject();
      
         
         //percistencia
-       $id_agendamento = DB::transaction(function () use($dtos){
+       $id_agendamento = DB::transaction(function () use($agamento){
 
             //salvar agendamento no banco
-            $id_agendamento = $this->agendamentoRepository->salvar($dtos);
+            $id_agendamento = $this->agendamentoRepository->salvar($agamento);
 
             if(empty($id_agendamento) || empty($id_agendamento->id))
             {
@@ -48,7 +51,7 @@ class AgendamentoService
             }
             
             //salvar o registro de agendamento e servico
-            $agendamentoServico = $this->agendamento_ServicoRepository->vincular($id_agendamento->id, $dtos->servicos);
+            $agendamentoServico = $this->agendamento_ServicoRepository->vincular($id_agendamento->id, $agamento->getServicos());
 
             if(!$agendamentoServico)
             {

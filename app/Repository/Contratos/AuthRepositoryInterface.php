@@ -2,13 +2,14 @@
 
 namespace App\Repository\Contratos;
 
-use App\DTOS\CriarBarbeiroDtos;
 use App\DTOS\CriarClienteDtos;
 use App\DTOS\LoginDtos;
+use App\Entitys\BarbeiroEntity;
+use App\Entitys\ClienteEntity;
 
 interface AuthRepositoryInterface
 {
-    public function salvarUsuario(CriarBarbeiroDtos | CriarClienteDtos $dtos): bool;
+    public function salvarUsuario(BarbeiroEntity | ClienteEntity $user): bool;
     public function verificarCredenciasUser(LoginDtos $credencias): bool | string;
         
 }

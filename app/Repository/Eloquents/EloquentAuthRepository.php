@@ -5,6 +5,8 @@ namespace App\Repository\Eloquents;
 use App\DTOS\CriarBarbeiroDtos;
 use App\DTOS\CriarClienteDtos;
 use App\DTOS\LoginDtos;
+use App\Entitys\BarbeiroEntity;
+use App\Entitys\ClienteEntity;
 use App\Models\User;
 use App\Repository\Contratos\AuthRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
@@ -15,14 +17,14 @@ class EloquentAuthRepository implements AuthRepositoryInterface
     public function __construct(private User $userModel){}
 
 
-    public function salvarUsuario(CriarBarbeiroDtos | CriarClienteDtos $dtos): bool
+    public function salvarUsuario(BarbeiroEntity | ClienteEntity $user): bool
     {
 
        return $this->userModel->create([
-            "email" => $dtos->email,
-            "password" =>  Hash::make($dtos->password),
-            "id_cliente" => $dtos->id_cliente ?? null,
-            "id_barbeiro" => $dtos->id_barbeiro ?? null,
+            "email" => $user->getEmail(),
+            "password" =>  Hash::make($user->getPassword()),
+            "id_cliente" => $user->getId_cliente() ?? null,
+            "id_barbeiro" => $user->getId_barbeiro() ?? null,
         ]);
 
     }

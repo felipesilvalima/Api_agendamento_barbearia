@@ -3,10 +3,12 @@
 namespace App\Repository\Contratos;
 
 use App\DTOS\CriarAgendamentosDtos;
+use App\Entitys\AgendamentoEntity;
+use App\Models\Agendamento;
 
 interface AgendamentosRepositoryInterface
 {
-    public function salvar(CriarAgendamentosDtos $agendamento): object; 
+    public function salvar(AgendamentoEntity $agendamento): Agendamento; 
     
     public function existeAgendamentoHorario(int $id_barbeiro, string $hora, string $data): bool;
     public function existeAgenda($id_agenda): bool;     

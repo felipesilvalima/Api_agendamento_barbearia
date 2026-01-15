@@ -3,6 +3,7 @@
 namespace App\Repository\Eloquents;
 
 use App\DTOS\CriarAgendamentosDtos;
+use App\Entitys\AgendamentoEntity;
 use App\Models\Agendamento;
 
 use App\Repository\Contratos\AgendamentosRepositoryInterface;
@@ -20,14 +21,14 @@ class EloquentAgendamentoRepository implements AgendamentosRepositoryInterface
             return $result;
         }
 
-            public function salvar(CriarAgendamentosDtos $dtos): object
+            public function salvar(AgendamentoEntity $agendamento): Agendamento
             {
                 return $this->agendamentoModel->create([
-                    'data' => $dtos->data,
-                    'hora' => $dtos->hora,
-                    'id_cliente' => $dtos->id_cliente,
-                    'id_barbeiro' => $dtos->id_barbeiro,
-                    'status' => $dtos->status
+                    'data' => $agendamento->getData(),
+                    'hora' => $agendamento->getHora(),
+                    'id_cliente' => $agendamento->getId_cliente(),
+                    'id_barbeiro' => $agendamento->getId_barbeiro(),
+                    'status' => $agendamento->getStatus()
                 ]);
             }
 

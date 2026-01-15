@@ -2,6 +2,9 @@
 
 namespace App\DTOS;
 
+use App\Entitys\AgendamentoEntity;
+
+
 class CriarAgendamentosDtos
 {
     public function __construct(
@@ -12,5 +15,18 @@ class CriarAgendamentosDtos
         public array $servicos,
         public string $status = "AGENDADO"
     ){}
+
+
+    public function createAgendamentoObject()
+    {
+        return new AgendamentoEntity(
+            data: $this->data,
+            hora: $this->hora,
+            id_cliente: $this->id_cliente,
+            id_barbeiro: $this->id_barbeiro,
+            servicos: $this->servicos,
+            status: $this->status
+        );
+    }
     
 }

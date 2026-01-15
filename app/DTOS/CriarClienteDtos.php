@@ -2,10 +2,11 @@
 
 namespace App\DTOS;
 
+use App\Entitys\ClienteEntity;
+
 class CriarClienteDtos
 {
     public int $id_cliente;
-    public string $data_cadastro;
     
     public function __construct(
         public string $nome,
@@ -13,4 +14,16 @@ class CriarClienteDtos
         public string $password,
         public int $telefone,  
     ){}
+
+    public function createClienteObjetc()
+    {
+        return new ClienteEntity(
+            nome: $this->nome,
+            email: $this->email,
+            password: $this->password,
+            telefone: $this->telefone,
+            
+        );
+    }
+
 }

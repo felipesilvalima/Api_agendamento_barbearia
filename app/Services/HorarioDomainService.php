@@ -9,7 +9,7 @@ use App\Repository\Contratos\AgendamentosRepositoryInterface;
 use Carbon\Carbon;
 
 
-class HorarioService
+class HorarioDomainService
 {
 
     private const INTERVALOS = [
