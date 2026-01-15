@@ -32,7 +32,8 @@ class AgendamentoService
         //Regras de négocio
         $this->horarioService->validarDisponibilidade($dtos);
         $this->horarioService->validarExpedienteHorario();
-        $this->horarioService->validarHorarioPassado($dtos);
+        $this->horarioService->validarHorarioFuturo($dtos);
+        $this->horarioService->validarAgendamentoAntecedente($dtos->data);
      
         
         //percistencia
@@ -40,13 +41,18 @@ class AgendamentoService
 
             //salvar agendamento no banco
             $id_agendamento = $this->agendamentoRepository->salvar($dtos);
+
+            if(empty($id_agendamento) || empty($id_agendamento->id))
+            {
+                throw new ErrorInternoException("Error ao criar agendamento");
+            }
             
             //salvar o registro de agendamento e servico
             $agendamentoServico = $this->agendamento_ServicoRepository->vincular($id_agendamento->id, $dtos->servicos);
 
-            if(!$agendamentoServico or empty($id_agendamento))
+            if(!$agendamentoServico)
             {
-                throw new ErrorInternoException("Error ao criar agendamento");
+                throw new ErrorInternoException("Error ao vincular serviços ao agendamento");
             }
 
             return $id_agendamento->id;
@@ -69,7 +75,8 @@ class AgendamentoService
         $dtos->id_barbeiro = $agenda->id_barbeiro;
         $this->horarioService->validarDisponibilidade($dtos);
         $this->horarioService->validarExpedienteHorario();
-        $this->horarioService->validarHorarioPassado($dtos);
+        $this->horarioService->validarHorarioFuturo($dtos);
+        $this->horarioService->validarAgendamentoAntecedente($dtos->data);
 
         //salvar o reagendamento
         $agenda->fill([

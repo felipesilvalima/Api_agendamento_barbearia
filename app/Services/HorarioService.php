@@ -51,7 +51,7 @@ class HorarioService
             }
     }
 
-    public function validarHorarioPassado(object $dtos)
+    public function validarHorarioFuturo(object $dtos)
     {
         $horaAtual = Carbon::now()->format('H:i:s');
 
@@ -68,5 +68,13 @@ class HorarioService
             throw new NaoPermitidoExecption("Agendamento não pode ser mais cancelado. Horário de cancelar expirou");
         }         
         
+    }
+
+    public function validarAgendamentoAntecedente(string $data)
+    {
+        if($data > Carbon::now()->parse($data)->addDay(30)->format('Y:M:D'))
+        {
+            throw new HorarioIndisponivelException("Agendamento limitado a 30 dias de antecedência",422);
+        }
     }
 }
