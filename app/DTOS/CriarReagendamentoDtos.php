@@ -4,6 +4,8 @@ namespace App\DTOS;
 
 class CriarReagendamentoDtos
 {
+    public int $id_barbeiro;
+
     public function __construct(
         public string $data,
         public string $hora,

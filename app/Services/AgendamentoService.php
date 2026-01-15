@@ -17,51 +17,32 @@ class AgendamentoService
     public function __construct(
         private AgendamentosRepositoryInterface $agendamentoRepository,
         private AgendamentoServicoRepositoyInterface $agendamento_ServicoRepository,
-        private ServicoRepositoryInteface $servicoRepository,
         private ValidarService $validarService,
         private HorarioService $horarioService,
     ){}
 
     public function agendar(CriarAgendamentosDtos $dtos): int
     {
-        //invalidar acesso de barbeiro
+        //validação de segurança e permissoes
         $this->validarService->invalidaPermissaoBarbeiro();
-        
-        //validar existencia de dominio
         $this->validarService->validaCliente($dtos->id_cliente);
         $this->validarService->validaBarbeiro($dtos->id_barbeiro);
+        $this->validarService->validarLimiteAgendamentoPorCliente($dtos->id_cliente);
 
-        //verificar a quantidade máxima de agendamentos
-        if($this->agendamentoRepository->listaAgendasCliente($dtos->id_cliente)->count() > 3)
-        {
-            throw new NaoPermitidoExecption("Atingiu o máximo de agendamento. o Máximo de agendamento e 3 agendamento");
-        }
-       
-        //validar horario disponivel
-        $this->horarioService->validarDisponibilidade(
-            $dtos->id_barbeiro,
-            $dtos->hora, 
-            $dtos->data
-        );
-
-        //validar horário expediente
+        //Regras de négocio
+        $this->horarioService->validarDisponibilidade($dtos);
         $this->horarioService->validarExpedienteHorario();
-
-        //validar hora passada
-        $this->horarioService->validarHorarioPassado(
-            $dtos->data,
-            $dtos->hora
-        );
+        $this->horarioService->validarHorarioPassado($dtos);
      
         
-        //transação
+        //percistencia
        $id_agendamento = DB::transaction(function () use($dtos){
 
             //salvar agendamento no banco
-            $id_agendamento = $this->agendamentoRepository->salvarAgendamento($dtos);
+            $id_agendamento = $this->agendamentoRepository->salvar($dtos);
             
             //salvar o registro de agendamento e servico
-            $agendamentoServico = $this->agendamento_ServicoRepository->SalvarAgendamentoServico($id_agendamento->id, $dtos->servicos);
+            $agendamentoServico = $this->agendamento_ServicoRepository->vincular($id_agendamento->id, $dtos->servicos);
 
             if(!$agendamentoServico or empty($id_agendamento))
             {
@@ -76,38 +57,21 @@ class AgendamentoService
 
     public function reagendamento(CriarReagendamentoDtos $dtos)
     {
-        //invalidar acesso do barbeiro
+        //validação de segurança e permissoes
         $this->validarService->invalidaPermissaoBarbeiro();
-
-        //verificar se cliente existe
         $this->validarService->validaCliente($dtos->id_cliente);
-
-        //verificar se existe agenda
         $this->validarService->validarExistenciaAgendamento($dtos->id_agendamento);
-
-        //verificar se a agenda e do cliente
         $this->validarService->validarPermissaoAgendaCliente($dtos->id_agendamento, $dtos->id_cliente);
 
-        //pegar agenda
+
+        //regras de négocio
         $agenda = $this->agendamentoRepository->buscarAgendaCliente($dtos->id_agendamento);
-
-        //validar horario disponivel
-        $this->horarioService->validarDisponibilidade(
-            $agenda->id_barbeiro,
-            $dtos->hora, 
-            $dtos->data
-        );
-
-        //validar horário expediente
+        $dtos->id_barbeiro = $agenda->id_barbeiro;
+        $this->horarioService->validarDisponibilidade($dtos);
         $this->horarioService->validarExpedienteHorario();
+        $this->horarioService->validarHorarioPassado($dtos);
 
-        //validar hora passada
-        $this->horarioService->validarHorarioPassado(
-            $dtos->data,
-            $dtos->hora
-        );
-
-        //reagendar
+        //salvar o reagendamento
         $agenda->fill([
             'data' => $dtos->data,
             'hora' => $dtos->hora,
@@ -117,40 +81,18 @@ class AgendamentoService
        
     }
 
-    public function cancelar($id_agenda, $cliente_id = null, $barbeiro_id = null): object
+    public function cancelarPorClientes($id_agenda, $cliente_id): object
     {
-        if(!is_null($cliente_id))
-        {
-            return $this->cancelarPorClientes($id_agenda,  $cliente_id);
-        }
-            else
-            {
-                return $this->cancelarPorBarbeiros($id_agenda, $barbeiro_id);
-            }
-  
-    }
-
-    public function cancelarPorClientes( $id_agenda, $cliente_id): object
-    {
-        //verificar se cliente existe
+        //validação de segurança e permissoes
         $this->validarService->validaCliente($cliente_id);
-
-        //permissão apenas para clientes
         $this->validarService->invalidaPermissaoBarbeiro();
-
-        //validar existencia de um agendamento
         $this->validarService->validarExistenciaAgendamento($id_agenda);
-
-        //verificar se o agendamento e do cliente
         $this->validarService->validarPermissaoAgendaCliente($id_agenda, $cliente_id);
 
-        //buscar registro do agendamento de cliente
+        //regras de négocio
         $agendaCliente = $this->agendamentoRepository->buscarAgendaCliente($id_agenda);
-       
-        //limitando horário de cancelamento do agendamento
         $this->horarioService->horarioCancelarAgendamento($agendaCliente->hora);
-        
-         //criando regras para status do agendamento 
+         
         if($agendaCliente->status === 'CONCLUIDO')
         {
             throw new NaoPermitidoExecption("Agendamento não pode ser mais cancelado. O Agendamento já foi Concluido");
@@ -160,6 +102,7 @@ class AgendamentoService
                 throw new NaoPermitidoExecption("Esse Agendamento já foi cancelado",409);
             }
                 
+                //percistencia
                 $agendaCliente->status = 'CANCELADO';
                 $agendaCliente->save();
 
@@ -169,22 +112,16 @@ class AgendamentoService
 
     public function cancelarPorBarbeiros( $id_agenda, $id_barbeiro): object
     {
-        //verificar se barbeiro existe
+        //validação de segurança e permissoes
         $this->validarService->validaBarbeiro($id_barbeiro);
-
-        //permissão apenas para clientes
         $this->validarService->invalidaPermissaoCliente();
-
-        //verificar existencia de um agendamento
         $this->validarService->validarExistenciaAgendamento($id_agenda);
-
-        //validar Permissão do barbeiro
         $this->validarService->validarPermissaoAgendaBarbeiro($id_agenda, $id_barbeiro);
 
         //buscar registro do agendamento de cliente
         $agendaCliente = $this->agendamentoRepository->buscarAgendaCliente($id_agenda);
         
-        //criando regras para status do agendamento 
+        //regras 
         if($agendaCliente->status === 'CONCLUIDO')
         {
             throw new NaoPermitidoExecption("Agendamento não pode ser mais cancelado. O Agendamento já foi Concluido");
@@ -193,7 +130,7 @@ class AgendamentoService
             {
                 throw new NaoPermitidoExecption("Esse Agendamento já foi cancelado",409);
             }
-                
+                //percistencia
                 $agendaCliente->status = 'CANCELADO';
                 $agendaCliente->save();
 
@@ -203,22 +140,16 @@ class AgendamentoService
 
     public function concluirAgendamentos( $id_agenda, $id_barbeiro)
     {
-        //verificar se barbeiro existe
+        //validação de segurança e permissoes
         $this->validarService->validaBarbeiro($id_barbeiro);
-
-        //permissão apenas para barbeiros
         $this->validarService->invalidaPermissaoCliente();
-
-        //verificar existencia de um agendamento
         $this->validarService->validarExistenciaAgendamento($id_agenda);
-
-        //validar permissão do barbeiro
         $this->validarService->validarPermissaoAgendaBarbeiro($id_agenda, $id_barbeiro);
         
         //buscar registro do agendamento de cliente
         $agendaCliente = $this->agendamentoRepository->buscarAgendaCliente($id_agenda);
 
-            //criando regras para status do agendamento 
+            //regras
             if($agendaCliente->status === 'CANCELADO')
             {
                 throw new NaoPermitidoExecption("Agendamento não pode ser mais concluido. O Agendamento já foi Cancelado");
@@ -228,51 +159,24 @@ class AgendamentoService
                     throw new NaoPermitidoExecption("Esse Agendamento já foi Concluido",409);
                 }
 
+                    //percistencia
                     $agendaCliente->status = 'CONCLUIDO';
                     $agendaCliente->save();
 
                     return $agendaCliente;
     }
 
-    public function agendamentos($cliente_id = null, $barbeiro_id = null)
-    {
-        //regra para verificar acesso de cliente ou barbeiro
-        if(!is_null($cliente_id))
-        {
-           return $this->listarAgendamentosPorClientes($cliente_id);
-        }
-            else
-            {
-                return $this->listarAgendamentosPorBarbeiro($barbeiro_id);
-            }
-    }
-
-    public function agenda(int $id_agenda, $cliente_id = null, $barbeiro_id = null)
-    {
-        //regra para verificar acesso de cliente ou barbeiro
-        if(!is_null($cliente_id))
-        {
-           return $this->buscarAgendasPorClientes($id_agenda, $cliente_id);
-        }
-            else
-            {
-                return $this->buscarAgendasPorBarbeiro($id_agenda, $barbeiro_id);
-            }
-    }
-
     public function listarAgendamentosPorClientes($cliente_id): object
     {
-        //verificar se cliente existe
+        //validação de segurança e permissoes
         $this->validarService->validaCliente($cliente_id);
-
-        //permissão apenas para clientes
         $this->validarService->invalidaPermissaoBarbeiro();
 
         //buscar coleção de agendamentos de um cliente
         $agendamentos = $this->agendamentoRepository->listaAgendasCliente($cliente_id);
 
         //verificar se exister algum recurso
-        if($agendamentos ->isEmpty())
+        if(empty($agendamentos))
         {
             throw new NaoExisteRecursoException("Lista de agendamentos vazia");
         }
@@ -286,10 +190,8 @@ class AgendamentoService
 
     public function listarAgendamentosPorBarbeiro($barbeiro_id): object
     {
-        //verificar se barbeiro existe
+        //validação de segurança e permissoes
         $this->validarService->validaBarbeiro($barbeiro_id);
-
-        //permissão apenas para clientes
         $this->validarService->invalidaPermissaoCliente();
 
         //buscar coleção de agendamentos de um cliente
@@ -310,16 +212,10 @@ class AgendamentoService
 
     public function buscarAgendasPorClientes(int $id_agenda, $cliente_id): object
     {
-         //verificar se cliente existe
+        //validação de segurança e permissoes
         $this->validarService->validaCliente($cliente_id);
-
-        //permissão apenas para clientes
         $this->validarService->invalidaPermissaoBarbeiro();
-
-        //validar existencia do agendamento
         $this->validarService->validarExistenciaAgendamento($id_agenda);
-        
-        //verificar se o agendamento e do cliente
         $this->validarService->validarPermissaoAgendaCliente($id_agenda, $cliente_id);
        
         //buscar registro do agendamento de cliente
@@ -335,16 +231,10 @@ class AgendamentoService
 
     public function buscarAgendasPorBarbeiro(int $id_agenda, $barbeiro_id): object
     {
-        //verificar se barbeiro existe
+        //validação de segurança e permissoes
         $this->validarService->validaBarbeiro($barbeiro_id);
-
-        //permissão apenas para clientes
         $this->validarService->invalidaPermissaoCliente();
-
-        //validar existencia do agendamento
         $this->validarService->validarExistenciaAgendamento($id_agenda);
-        
-        //verificar se o agendamento e do cliente
         $this->validarService->validarPermissaoAgendaBarbeiro($id_agenda, $barbeiro_id);
        
         //buscar registro do agendamento de cliente
@@ -361,34 +251,57 @@ class AgendamentoService
     public function removerDeAgendamentos($cliente_id, int $id_agendamento, int $id_servico)
     {
 
-        //invalidar aceso de barbeiro
+       //validação de segurança e permissoes
         $this->validarService->invalidaPermissaoBarbeiro();
-
-        //verificar se cliente existe
         $this->validarService->validaCliente($cliente_id);
-
-        //verificar se agendamento existe
         $this->validarService->validarExistenciaAgendamento($id_agendamento);
-
-        //verificar existentencia do Servico
-        if(!$this->servicoRepository->existeServico($id_servico))
-        {
-           throw new NaoExisteRecursoException("Serviço não existe");
-        }
-
-        //verificar se o clinte tem permissao para remover
         $this->validarService->validarPermissaoAgendaCliente($id_agendamento, $cliente_id);
-        
-        //verificar se o servico e do agendamento
-        if(!$this->agendamento_ServicoRepository->existeServicoAgendamento($id_agendamento, $id_servico))
-        {
-            throw new NaoExisteRecursoException("Esse serviço não está relacionado com esse agendamento");
-        }
+        $this->validarService->validarExistenciaServico($id_servico);
+        $this->validarService->validarServicoExisteAgendamento($id_agendamento, $id_servico);
 
         //remover
         $this->agendamento_ServicoRepository->remover($id_agendamento, $id_servico);
         
+    }
 
+    public function cancelar($id_agenda, $cliente_id = null, $barbeiro_id = null): object
+    {
+        //verificar acesso
+        if(!is_null($cliente_id))
+        {
+            return $this->cancelarPorClientes($id_agenda,  $cliente_id);
+        }
+            else
+            {
+                return $this->cancelarPorBarbeiros($id_agenda, $barbeiro_id);
+            }
+  
+    }
+
+    public function agendamentos($cliente_id = null, $barbeiro_id = null)
+    {
+        //verificar acesso
+        if(!is_null($cliente_id))
+        {
+           return $this->listarAgendamentosPorClientes($cliente_id);
+        }
+            else
+            {
+                return $this->listarAgendamentosPorBarbeiro($barbeiro_id);
+            }
+    }
+
+    public function agenda(int $id_agenda, $cliente_id = null, $barbeiro_id = null)
+    {
+        //verificar acesso
+        if(!is_null($cliente_id))
+        {
+           return $this->buscarAgendasPorClientes($id_agenda, $cliente_id);
+        }
+            else
+            {
+                return $this->buscarAgendasPorBarbeiro($id_agenda, $barbeiro_id);
+            }
     }
 
 

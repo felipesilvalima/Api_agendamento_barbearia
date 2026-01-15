@@ -6,7 +6,7 @@ use App\DTOS\CriarAgendamentosDtos;
 
 interface AgendamentosRepositoryInterface
 {
-    public function salvarAgendamento(CriarAgendamentosDtos $agendamento): object; 
+    public function salvar(CriarAgendamentosDtos $agendamento): object; 
     
     public function existeAgendamentoHorario(int $id_barbeiro, string $hora, string $data): bool;
     public function existeAgenda($id_agenda): bool;     

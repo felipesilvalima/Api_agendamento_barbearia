@@ -4,9 +4,11 @@ namespace App\Services;
 
 use App\Exceptions\NaoExisteRecursoException;
 use App\Exceptions\NaoPermitidoExecption;
+use App\Repository\Contratos\AgendamentoServicoRepositoyInterface;
 use App\Repository\Contratos\AgendamentosRepositoryInterface;
 use App\Repository\Contratos\BarbeiroRepositoryInterface;
 use App\Repository\Contratos\ClienteRepositoryInterface;
+use App\Repository\Contratos\ServicoRepositoryInteface;
 
 class ValidarService
 {
@@ -14,7 +16,9 @@ class ValidarService
     public function __construct(
         private BarbeiroRepositoryInterface $barbeiroRepository,
         private ClienteRepositoryInterface $clienteRepository,
-        private AgendamentosRepositoryInterface $agendamentoRepository
+        private AgendamentosRepositoryInterface $agendamentoRepository,
+        private AgendamentoServicoRepositoyInterface $agendamento_ServicoRepository,
+        private ServicoRepositoryInteface $servicoRepository, 
     ){}
 
         public function invalidaPermissaoBarbeiro()
@@ -72,4 +76,30 @@ class ValidarService
                 throw new NaoPermitidoExecption(); 
             }
         }
+
+        public function validarLimiteAgendamentoPorCliente(int $id_cliente)
+        {
+            if($this->agendamentoRepository->listaAgendasCliente($id_cliente)->count() > 3)
+            {
+                throw new NaoPermitidoExecption("Atingiu o máximo de agendamento. o Máximo de agendamento e 3 agendamento");
+            }
+        }
+
+        public function validarExistenciaServico(int $id_servico)
+        {
+            //verificar se existe servico
+            if(!$this->servicoRepository->existeServico($id_servico))
+            {
+              throw new NaoExisteRecursoException("Serviço não existe");
+            }
+        }
+
+    public function validarServicoExisteAgendamento(int $id_agendamento, int $id_servico)
+    {
+         //verificar se o servico e do agendamento
+        if(!$this->agendamento_ServicoRepository->existeServicoAgendamento($id_agendamento, $id_servico))
+        {
+            throw new NaoExisteRecursoException("Esse serviço não está relacionado com esse agendamento");
+        }
+    }
 }

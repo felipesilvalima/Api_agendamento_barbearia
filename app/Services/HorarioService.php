@@ -22,9 +22,13 @@ class HorarioService
         private AgendamentosRepositoryInterface $agendamentoRepository, 
     ){}
 
-    public function validarDisponibilidade($id_barbeiro, string $hora, string $data)
+    public function validarDisponibilidade(object $dtos)
     {
-        if($this->agendamentoRepository->existeAgendamentoHorario($id_barbeiro, $hora, $data))
+        if($this->agendamentoRepository->existeAgendamentoHorario(
+            $dtos->id_barbeiro,
+            $dtos->hora, 
+            $dtos->data
+        ))
         {
             throw new HorarioIndisponivelException();   
         }
@@ -47,11 +51,11 @@ class HorarioService
             }
     }
 
-    public function validarHorarioPassado(string $data, string $hora)
+    public function validarHorarioPassado(object $dtos)
     {
         $horaAtual = Carbon::now()->format('H:i:s');
 
-            if($hora < $horaAtual && $data  === Carbon::now()->toDateString()) 
+            if($dtos->hora < $horaAtual && $dtos->data  === Carbon::now()->toDateString()) 
             {
                 throw new HorarioIndisponivelException("Horário indisponível. Horário não pode ser no passado!",422);
             }

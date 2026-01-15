@@ -9,7 +9,7 @@ class EloquentAgendamentoServicoRepository implements AgendamentoServicoReposito
 {
     public function __construct(private Agendamento_servico $agendamentoServicoModel){}
 
-    public function SalvarAgendamentoServico(int $id_agendamento, array $servicos): bool
+    public function vincular(int $id_agendamento, array $servicos): bool
     {   
         $servicos = collect($servicos)->unique()->values();// remover valores iguais
         

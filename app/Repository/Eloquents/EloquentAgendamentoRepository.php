@@ -20,7 +20,7 @@ class EloquentAgendamentoRepository implements AgendamentosRepositoryInterface
             return $result;
         }
 
-            public function salvarAgendamento(CriarAgendamentosDtos $dtos): object
+            public function salvar(CriarAgendamentosDtos $dtos): object
             {
                 return $this->agendamentoModel->create([
                     'data' => $dtos->data,
