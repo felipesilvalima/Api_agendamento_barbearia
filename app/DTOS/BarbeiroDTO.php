@@ -4,7 +4,7 @@ namespace App\DTOS;
 
 use App\Entitys\BarbeiroEntity;
 
-class CriarBarbeiroDtos
+class BarbeiroDTO
 {
     public int $id_barbeiro;
     
@@ -18,15 +18,5 @@ class CriarBarbeiroDtos
     ){}
 
 
-    public function createBarbeiroObjetc()
-    {
-        return new BarbeiroEntity(
-            nome: $this->nome,
-            email: $this->email,
-            password: $this->password,
-            telefone: $this->telefone,
-            especialidade: $this->especialidade,
-            status:  $this->status,
-        );
-    }
+  
 }

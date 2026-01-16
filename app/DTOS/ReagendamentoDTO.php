@@ -2,7 +2,7 @@
 
 namespace App\DTOS;
 
-class CriarReagendamentoDtos
+class ReagendamentoDTO
 {
     public int $id_barbeiro;
 

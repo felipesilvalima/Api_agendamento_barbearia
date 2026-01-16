@@ -2,6 +2,7 @@
 
 namespace App\Repository\Eloquents;
 
+use App\DTOS\ClienteDTO;
 use App\DTOS\CriarClienteDtos;
 use App\Entitys\ClienteEntity;
 use App\Models\Cliente;
@@ -18,12 +19,12 @@ class EloquentClienteRepository implements ClienteRepositoryInterface
         }
 
         
-    public function salvarCliente(ClienteEntity $cliente): int
+    public function salvarCliente(ClienteDTO $clienteDto): int
     {
 
         $cadastro = $this->clienteModel->create([
-            "nome" => $cliente->getNome(),
-            "telefone" => $cliente->getTelefone(),
+            "nome" => $clienteDto->nome,
+            "telefone" => $clienteDto->telefone,
             "data_cadastro" => Carbon::now(),
         ]);
         

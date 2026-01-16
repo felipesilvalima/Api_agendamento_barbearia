@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOS\BarbeiroDTO;
 use App\DTOS\CriarBarbeiroDtos;
 use App\Http\Requests\BarbeiroRequest;
 use App\Services\BarbeiroService;
@@ -15,15 +16,14 @@ class BarbeiroController extends Controller
     {
         $data = $request->validated();
 
-        $dtos = new CriarBarbeiroDtos(
+        
+        $this->barbeiroService->CadastrarBarbeiro(new BarbeiroDTO(
             nome: $data['nome'],
             email: $data['email'],
             password: $data['password'],
             telefone: $data['telefone'],
             especialidade: $data['especialidade']
-        );
-
-        $this->barbeiroService->CadastrarBarbeiro($dtos);
+        ));
         
         return response()->json([
             "mensagem" => "Usuário cadastrado com sucesso",

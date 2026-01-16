@@ -2,13 +2,14 @@
 
 namespace App\Repository\Contratos;
 
+use App\DTOS\AgendamentoDTO;
 use App\DTOS\CriarAgendamentosDtos;
 use App\Entitys\AgendamentoEntity;
 use App\Models\Agendamento;
 
 interface AgendamentosRepositoryInterface
 {
-    public function salvar(AgendamentoEntity $agendamento): Agendamento; 
+    public function salvar(AgendamentoDTO $agendamentoDto): Agendamento; 
     
     public function existeAgendamentoHorario(int $id_barbeiro, string $hora, string $data): bool;
     public function existeAgenda($id_agenda): bool;     

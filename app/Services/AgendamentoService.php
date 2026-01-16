@@ -2,14 +2,13 @@
 
 namespace App\Services;
 
-use App\DTOS\CriarAgendamentosDtos;
-use App\DTOS\CriarReagendamentoDtos;
+use App\DTOS\AgendamentoDTO;
+use App\DTOS\ReagendamentoDTO;
 use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoExisteRecursoException;
 use App\Exceptions\NaoPermitidoExecption;
 use App\Repository\Contratos\AgendamentoServicoRepositoyInterface;
 use App\Repository\Contratos\AgendamentosRepositoryInterface;
-use App\Repository\Contratos\ServicoRepositoryInteface;
 use Illuminate\Support\Facades\DB;
 
 class AgendamentoService
@@ -21,29 +20,25 @@ class AgendamentoService
         private HorarioDomainService $horarioService,
     ){}
 
-    public function agendar(CriarAgendamentosDtos $dtos): int
+    public function agendar(AgendamentoDTO $agendamentoDto): int
     {
         //validação de segurança e permissoes
         $this->validarService->invalidaPermissaoBarbeiro();
-        $this->validarService->validaCliente($dtos->id_cliente);
-        $this->validarService->validaBarbeiro($dtos->id_barbeiro);
+        $this->validarService->validaCliente($agendamentoDto->id_cliente);
+        $this->validarService->validaBarbeiro($agendamentoDto->id_barbeiro);
 
         //Regras de négocio
-        $this->validarService->validarLimiteAgendamentoPorCliente($dtos->id_cliente);
-        $this->horarioService->validarDisponibilidade($dtos);
+        $this->validarService->validarLimiteAgendamentoPorCliente($agendamentoDto->id_cliente);
+        $this->horarioService->validarDisponibilidade($agendamentoDto);
         $this->horarioService->validarExpedienteHorario();
-        $this->horarioService->validarHorarioFuturo($dtos);
-        $this->horarioService->validarAgendamentoAntecedente($dtos->data);
-
-        //criando o objeto de dominio
-        $agamento = $dtos->createAgendamentoObject();
-     
+        $this->horarioService->validarHorarioFuturo($agendamentoDto);
+        $this->horarioService->validarAgendamentoAntecedente($agendamentoDto->data);
         
         //percistencia
-       $id_agendamento = DB::transaction(function () use($agamento){
+       $id_agendamento = DB::transaction(function () use($agendamentoDto){
 
             //salvar agendamento no banco
-            $id_agendamento = $this->agendamentoRepository->salvar($agamento);
+            $id_agendamento = $this->agendamentoRepository->salvar($agendamentoDto);
 
             if(empty($id_agendamento) || empty($id_agendamento->id))
             {
@@ -51,7 +46,7 @@ class AgendamentoService
             }
             
             //salvar o registro de agendamento e servico
-            $agendamentoServico = $this->agendamento_ServicoRepository->vincular($id_agendamento->id, $agamento->getServicos());
+            $agendamentoServico = $this->agendamento_ServicoRepository->vincular($id_agendamento->id, $agendamentoDto->servicos);
 
             if(!$agendamentoServico)
             {
@@ -64,27 +59,27 @@ class AgendamentoService
         return $id_agendamento;
     }
 
-    public function reagendamento(CriarReagendamentoDtos $dtos)
+    public function reagendamento(ReagendamentoDTO $reagendamentoDto)
     {
         //validação de segurança e permissoes
         $this->validarService->invalidaPermissaoBarbeiro();
-        $this->validarService->validaCliente($dtos->id_cliente);
-        $this->validarService->validarExistenciaAgendamento($dtos->id_agendamento);
-        $this->validarService->validarPermissaoAgendaCliente($dtos->id_agendamento, $dtos->id_cliente);
+        $this->validarService->validaCliente($reagendamentoDto->id_cliente);
+        $this->validarService->validarExistenciaAgendamento($reagendamentoDto->id_agendamento);
+        $this->validarService->validarPermissaoAgendaCliente($reagendamentoDto->id_agendamento, $reagendamentoDto->id_cliente);
 
 
         //regras de négocio
-        $agenda = $this->agendamentoRepository->buscarAgendaCliente($dtos->id_agendamento);
-        $dtos->id_barbeiro = $agenda->id_barbeiro;
-        $this->horarioService->validarDisponibilidade($dtos);
+        $agenda = $this->agendamentoRepository->buscarAgendaCliente($reagendamentoDto->id_agendamento);
+        $reagendamentoDto->id_barbeiro = $agenda->id_barbeiro;
+        $this->horarioService->validarDisponibilidade($reagendamentoDto);
         $this->horarioService->validarExpedienteHorario();
-        $this->horarioService->validarHorarioFuturo($dtos);
-        $this->horarioService->validarAgendamentoAntecedente($dtos->data);
+        $this->horarioService->validarHorarioFuturo($reagendamentoDto);
+        $this->horarioService->validarAgendamentoAntecedente($reagendamentoDto->data);
 
         //salvar o reagendamento
         $agenda->fill([
-            'data' => $dtos->data,
-            'hora' => $dtos->hora,
+            'data' => $reagendamentoDto->data,
+            'hora' => $reagendamentoDto->hora,
         ]);
 
         $agenda->save();

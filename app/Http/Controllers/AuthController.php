@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\DTOS\LoginDtos;
+use App\DTOS\LoginDTO;
 use App\Http\Requests\AuthRequest;
-use App\Http\Requests\RequestCliente;
-use App\Models\User;
 use App\Services\AuthService;
-use Illuminate\Http\Request;
-use Tymon\JWTAuth\Facades\JWTAuth;
+
 
 class AuthController extends Controller
 {
@@ -18,7 +15,7 @@ class AuthController extends Controller
   {
         $credencias = $request->validated();
 
-        $dtos = new LoginDtos(
+        $dtos = new LoginDTO(
           email: $credencias['email'],
           password: $credencias['password']
         );

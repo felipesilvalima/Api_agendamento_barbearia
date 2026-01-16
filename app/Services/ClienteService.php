@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTOS\ClienteDTO;
 use App\DTOS\CriarClienteDtos;
 use App\Exceptions\ErrorInternoException;
 use App\Repository\Contratos\AuthRepositoryInterface;
@@ -15,22 +16,20 @@ class ClienteService
         private AuthRepositoryInterface $authRepository, 
     ){}
 
-    public function CadastrarCliente(CriarClienteDtos $dtos)
+    public function CadastrarCliente(ClienteDTO $clienteDto)
     {
-        //criando o objeto
-        $cliente = $dtos->createClienteObjetc();
-
-        DB::transaction(function () use($cliente) { 
+       
+        DB::transaction(function () use($clienteDto) { 
  
-            $cliente->setId_cliente($this->clienteRepository->salvarCliente($cliente));
+            $clienteDto->id_cliente = $this->clienteRepository->salvarCliente($clienteDto);
 
-                if(!$cliente->getId_cliente())
+                if(!$clienteDto->id_cliente)
                 {
                     throw new ErrorInternoException();
                 }
                  
 
-                $this->authRepository->salvarUsuario($cliente);
+                $this->authRepository->salvarUsuario($clienteDto);
 
         });
     }

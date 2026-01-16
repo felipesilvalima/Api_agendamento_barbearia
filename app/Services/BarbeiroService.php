@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTOS\BarbeiroDTO;
 use App\DTOS\CriarBarbeiroDtos;
 use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoPermitidoExecption;
@@ -16,18 +17,16 @@ class BarbeiroService
         private AuthRepositoryInterface $authRepository
     ){}
 
-    public function CadastrarBarbeiro(CriarBarbeiroDtos $dtos)
+    public function CadastrarBarbeiro(BarbeiroDTO $BarbeiroDto)
     { 
-        //criando o objeto
-        $barbeiro = $dtos->createBarbeiroObjetc();
-
-        DB::transaction(function () use($barbeiro) { 
+       
+        DB::transaction(function () use($BarbeiroDto) { 
  
             if(auth('api')->check() && !is_null(auth('api')->user()->id_barbeiro))
             {
-                $barbeiro->setId_barbeiro($this->barbeiroRepository->salvarBarbeiro($barbeiro));
+                $BarbeiroDto->id_barbeiro = $this->barbeiroRepository->salvarBarbeiro($BarbeiroDto);
 
-                if(!$barbeiro->getId_barbeiro())
+                if(!$BarbeiroDto->id_barbeiro)
                 {
                     throw new ErrorInternoException();
                 }
@@ -37,7 +36,7 @@ class BarbeiroService
                     throw new NaoPermitidoExecption();
                 }
 
-                $this->authRepository->salvarUsuario($barbeiro);
+                $this->authRepository->salvarUsuario($BarbeiroDto);
 
         });
     }

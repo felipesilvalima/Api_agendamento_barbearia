@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\DTOS\LoginDtos;
+use App\DTOS\LoginDTO;
 use App\Exceptions\AutenticacaoException;
 use App\Exceptions\NaoExisteRecursoException;
 use App\Repository\Contratos\AuthRepositoryInterface;
@@ -19,7 +19,7 @@ class AuthService
     ){}
 
 
-    public function logarUsuario(LoginDtos $credencias)
+    public function logarUsuario(LoginDTO $credencias)
     {
         $response = $this->authRepository->verificarCredenciasUser($credencias);
 

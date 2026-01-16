@@ -2,7 +2,7 @@
 
 namespace App\DTOS;
 
-class LoginDtos
+class LoginDTO
 {
      public function __construct(
         public string $email,
