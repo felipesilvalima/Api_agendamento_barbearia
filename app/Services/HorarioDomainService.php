@@ -7,7 +7,7 @@ use App\Exceptions\HorarioIndisponivelException;
 use App\Exceptions\NaoPermitidoExecption;
 use App\Repository\Contratos\AgendamentosRepositoryInterface;
 use Carbon\Carbon;
-
+use DomainException;
 
 class HorarioDomainService
 {
@@ -22,7 +22,7 @@ class HorarioDomainService
         private AgendamentosRepositoryInterface $agendamentoRepository, 
     ){}
 
-    public function validarDisponibilidade(object $dtos)
+    public function validarDisponibilidade(object $dtos): void
     {
         if($this->agendamentoRepository->existeAgendamentoHorario(
             $dtos->id_barbeiro,
@@ -30,11 +30,11 @@ class HorarioDomainService
             $dtos->data
         ))
         {
-            throw new HorarioIndisponivelException();   
+            throw new DomainException("Não foi possivel fazer o agendamento. Já tem um agendamento nesse horario!",409);   
         }
     }
 
-    public function validarExpedienteHorario()
+    public function validarExpedienteHorario(): void
     {
        
         $horaAtual = Carbon::now();
@@ -46,35 +46,35 @@ class HorarioDomainService
 
                     if($horaAtual->between($inicio, $fim))
                     {
-                        throw new HorarioIndisponivelException("Não é possivel fazer agendamento nesse Horário. Fim de expediente!",422);
+                        throw new DomainException("Não é possivel fazer agendamento nesse Horário. Fim de expediente!",422);
                     }
             }
     }
 
-    public function validarHorarioFuturo(object $dtos)
+    public function validarHorarioFuturo(object $dtos): void
     {
         $horaAtual = Carbon::now()->format('H:i:s');
 
             if($dtos->hora < $horaAtual && $dtos->data  === Carbon::now()->toDateString()) 
             {
-                throw new HorarioIndisponivelException("Horário indisponível. Horário não pode ser no passado!",422);
+                throw new DomainException("Horário indisponível. Horário não pode ser no passado!",422);
             }
     }
 
-    public function horarioCancelarAgendamento(string $hora)
+    public function horarioCancelarAgendamento(string $hora): void
     {
         if($hora > Carbon::now()->parse($hora)->addHour(1)->format('H:i:s'))
         {
-            throw new NaoPermitidoExecption("Agendamento não pode ser mais cancelado. Horário de cancelar expirou");
+            throw new DomainException("Agendamento não pode ser mais cancelado. Horário de cancelar expirou");
         }         
         
     }
 
-    public function validarAgendamentoAntecedente(string $data)
+    public function validarAgendamentoAntecedente(string $data): void
     {
         if($data > Carbon::now()->parse($data)->addDay(30)->format('Y:M:D'))
         {
-            throw new HorarioIndisponivelException("Agendamento limitado a 30 dias de antecedência",422);
+            throw new DomainException("Agendamento limitado a 30 dias de antecedência",422);
         }
     }
 }

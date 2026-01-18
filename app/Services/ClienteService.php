@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\DTOS\ClienteDTO;
-use App\DTOS\CriarClienteDtos;
 use App\Exceptions\ErrorInternoException;
 use App\Repository\Contratos\AuthRepositoryInterface;
 use App\Repository\Contratos\ClienteRepositoryInterface;
@@ -16,7 +15,7 @@ class ClienteService
         private AuthRepositoryInterface $authRepository, 
     ){}
 
-    public function CadastrarCliente(ClienteDTO $clienteDto)
+    public function CadastrarCliente(ClienteDTO $clienteDto): void
     {
        
         DB::transaction(function () use($clienteDto) { 

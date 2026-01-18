@@ -11,25 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-         Schema::table('users', function (Blueprint $table) {
-            $table->softDeletes();
-        });
+        //  Schema::table('users', function (Blueprint $table) {
+        //     $table->softDeletes();
+        // });
 
-         Schema::table('clientes', function (Blueprint $table) {
-            $table->softDeletes();
-        });
+        //  Schema::table('clientes', function (Blueprint $table) {
+        //     $table->softDeletes();
+        // });
 
-         Schema::table('barbeiros', function (Blueprint $table) {
-            $table->softDeletes();
-        });
+        //  Schema::table('barbeiros', function (Blueprint $table) {
+        //     $table->softDeletes();
+        // });
 
-         Schema::table('agendamentos', function (Blueprint $table) {
-            $table->softDeletes();
-        });
+        //  Schema::table('agendamentos', function (Blueprint $table) {
+        //     $table->softDeletes();
+        // });
 
-         Schema::table('servicos', function (Blueprint $table) {
-            $table->softDeletes();
-        });
+        //  Schema::table('servicos', function (Blueprint $table) {
+        //     $table->softDeletes();
+        // });
         
     }
 
@@ -38,24 +38,24 @@ return new class extends Migration
      */
     public function down(): void
     {
-         Schema::table('users', function (Blueprint $table) {
-            $table->dropSoftDeletes();
-        });
+        //  Schema::table('users', function (Blueprint $table) {
+        //     $table->dropSoftDeletes();
+        // });
 
-         Schema::table('clientes', function (Blueprint $table) {
-             $table->dropSoftDeletes();
-        });
+        //  Schema::table('clientes', function (Blueprint $table) {
+        //      $table->dropSoftDeletes();
+        // });
 
-         Schema::table('barbeiros', function (Blueprint $table) {
-             $table->dropSoftDeletes();
-        });
+        //  Schema::table('barbeiros', function (Blueprint $table) {
+        //      $table->dropSoftDeletes();
+        // });
 
-         Schema::table('agendamentos', function (Blueprint $table) {
-             $table->dropSoftDeletes();
-        });
+        //  Schema::table('agendamentos', function (Blueprint $table) {
+        //      $table->dropSoftDeletes();
+        // });
 
-         Schema::table('servicos', function (Blueprint $table) {
-             $table->dropSoftDeletes();
-        });
+        //  Schema::table('servicos', function (Blueprint $table) {
+        //      $table->dropSoftDeletes();
+        // });
     }
 };

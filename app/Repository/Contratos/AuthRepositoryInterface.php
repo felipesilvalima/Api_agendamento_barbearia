@@ -4,11 +4,8 @@ namespace App\Repository\Contratos;
 
 use App\DTOS\BarbeiroDTO;
 use App\DTOS\ClienteDTO;
-use App\DTOS\CriarClienteDtos;
 use App\DTOS\LoginDTO;
-use App\DTOS\LoginDtos;
-use App\Entitys\BarbeiroEntity;
-use App\Entitys\ClienteEntity;
+
 
 interface AuthRepositoryInterface
 {

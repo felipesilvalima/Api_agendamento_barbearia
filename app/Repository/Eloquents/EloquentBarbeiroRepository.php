@@ -3,8 +3,6 @@
 namespace App\Repository\Eloquents;
 
 use App\DTOS\BarbeiroDTO;
-use App\DTOS\CriarBarbeiroDtos;
-use App\Entitys\BarbeiroEntity;
 use App\Models\Barbeiro;
 use App\Repository\Contratos\BarbeiroRepositoryInterface;
 
@@ -30,7 +28,7 @@ class EloquentBarbeiroRepository implements BarbeiroRepositoryInterface
                 return $cadastro->id;
             }
 
-            public function PerfilBarbeiro($id_barbeiro): object | bool
+            public function PerfilBarbeiro(int $id_barbeiro): object | bool
             {
                 return $this->barbeiroModel
                 ->select('id','nome','telefone','especialidade','status')

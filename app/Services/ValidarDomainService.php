@@ -9,6 +9,7 @@ use App\Repository\Contratos\AgendamentosRepositoryInterface;
 use App\Repository\Contratos\BarbeiroRepositoryInterface;
 use App\Repository\Contratos\ClienteRepositoryInterface;
 use App\Repository\Contratos\ServicoRepositoryInteface;
+use DomainException;
 
 class ValidarDomainService
 {
@@ -21,23 +22,8 @@ class ValidarDomainService
         private ServicoRepositoryInteface $servicoRepository, 
     ){}
 
-        public function invalidaPermissaoBarbeiro()
-        {
-            if(!is_null(auth()->user()->id_barbeiro))
-            {
-                throw new NaoPermitidoExecption();
-            }
-        }
 
-        public function invalidaPermissaoCliente()
-        {
-            if(!is_null(auth()->user()->id_cliente))
-            {
-                throw new NaoPermitidoExecption();
-            }
-        }
-
-        public function validaCliente($id_cliente)
+        public function validaCliente(?int $id_cliente): void
         {
             if(!$this->clienteRepository->verificarClienteExiste($id_cliente))
             {
@@ -45,7 +31,7 @@ class ValidarDomainService
             }
         }
 
-        public function validaBarbeiro($id_barbeiro)
+        public function validaBarbeiro(?int $id_barbeiro): void
         {
             if(!$this->barbeiroRepository->verificarBarbeiroExiste($id_barbeiro))
             {
@@ -53,7 +39,7 @@ class ValidarDomainService
             }
         }
 
-        public function validarExistenciaAgendamento($id_agenda)
+        public function validarExistenciaAgendamento(int $id_agenda): void
         {
             if(!$this->agendamentoRepository->existeAgenda($id_agenda))
             {
@@ -61,31 +47,15 @@ class ValidarDomainService
             }
         }
 
-        public function validarPermissaoAgendaCliente($id_agenda, $cliente_id)
-        {
-            if(!$this->agendamentoRepository->existeAgendaCliente($id_agenda, $cliente_id))
-            {
-                throw new NaoPermitidoExecption(); 
-            }
-        }
-
-        public function validarPermissaoAgendaBarbeiro($id_agenda, $id_barbeiro)
-        {
-            if(!$this->agendamentoRepository->existeAgendaBarbeiro($id_agenda, $id_barbeiro))
-            {
-                throw new NaoPermitidoExecption(); 
-            }
-        }
-
-        public function validarLimiteAgendamentoPorCliente(int $id_cliente)
+        public function validarLimiteAgendamentoPorCliente(int $id_cliente): void
         {
             if($this->agendamentoRepository->listaAgendasCliente($id_cliente)->count() > 3)
             {
-                throw new NaoPermitidoExecption("Atingiu o máximo de agendamento. o Máximo de agendamento e 3 agendamento");
+                throw new DomainException("Atingiu o máximo de agendamento. o Máximo de agendamento e 3 agendamento",403);
             }
         }
 
-        public function validarExistenciaServico(int $id_servico)
+        public function validarExistenciaServico(int $id_servico): void
         {
             //verificar se existe servico
             if(!$this->servicoRepository->existeServico($id_servico))
@@ -94,7 +64,7 @@ class ValidarDomainService
             }
         }
 
-    public function validarServicoExisteAgendamento(int $id_agendamento, int $id_servico)
+    public function validarServicoExisteAgendamento(int $id_agendamento, int $id_servico): void
     {
          //verificar se o servico e do agendamento
         if(!$this->agendamento_ServicoRepository->existeServicoAgendamento($id_agendamento, $id_servico))

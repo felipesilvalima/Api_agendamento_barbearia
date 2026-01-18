@@ -3,8 +3,6 @@
 namespace App\Repository\Eloquents;
 
 use App\DTOS\ClienteDTO;
-use App\DTOS\CriarClienteDtos;
-use App\Entitys\ClienteEntity;
 use App\Models\Cliente;
 use App\Repository\Contratos\ClienteRepositoryInterface;
 use Carbon\Carbon;
@@ -31,7 +29,7 @@ class EloquentClienteRepository implements ClienteRepositoryInterface
         return $cadastro->id;
     }
 
-    public function PerfilCliente($id_cliente): object | bool
+    public function PerfilCliente(int $id_cliente): object | bool
     {
        return $this->clienteModel
        ->select('id','nome','telefone','data_cadastro')

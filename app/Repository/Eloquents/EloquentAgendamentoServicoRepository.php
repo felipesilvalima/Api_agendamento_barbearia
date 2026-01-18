@@ -32,7 +32,7 @@ class EloquentAgendamentoServicoRepository implements AgendamentoServicoReposito
         ->exists();
     }
 
-    public function remover(int $id_agendamento, int $id_servico): bool
+    public function remover(int $id_agendamento, int $id_servico): int
     {
        return $this->agendamentoServicoModel
         ->where('id_agendamento',$id_agendamento)

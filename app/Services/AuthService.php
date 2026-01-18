@@ -19,7 +19,7 @@ class AuthService
     ){}
 
 
-    public function logarUsuario(LoginDTO $credencias)
+    public function logarUsuario(LoginDTO $credencias): string
     {
         $response = $this->authRepository->verificarCredenciasUser($credencias);
 
@@ -31,7 +31,7 @@ class AuthService
         return $response;
     }
 
-    public function perfilUser(object $id_user)
+    public function perfilUser(object $id_user): object
     {
         if(!is_null($id_user->id_cliente))
         {
@@ -42,7 +42,7 @@ class AuthService
                 $perfil = $this->barbeiroRepository->PerfilBarbeiro($id_user->id_barbeiro);   
             }
 
-                if(empty($perfil))
+                if(collect($perfil)->isEmpty())
                 {
                     throw new  NaoExisteRecursoException("Perfil não encontrado. Usuário não existe");
                 }

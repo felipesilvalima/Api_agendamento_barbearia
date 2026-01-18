@@ -3,16 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\DTOS\AgendamentoDTO;
-use App\DTOS\CriarReagendamentoDtos;
 use App\DTOS\ReagendamentoDTO;
 use App\Http\Requests\AgendamentoRequest;
+use App\Http\Requests\ReagendamentoRequest;
+use App\Models\Agendamento;
 use App\Services\AgendamentoService;
+use App\Services\ValidarDomainService;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
+
+
+use const Dom\VALIDATION_ERR;
 
 class AgendamentoController extends Controller
 {
     
-    public function __construct(private AgendamentoService $agendamentoService){}
+    public function __construct(
+        private AgendamentoService $agendamentoService,
+        private ValidarDomainService $validarService,
+        ){}
 
     public function criarAgendamento(AgendamentoRequest $request)
     {
@@ -32,19 +42,12 @@ class AgendamentoController extends Controller
         
     }
 
-    public function reagendarAgendamento(Request $request, int $id_agenda)
+    public function reagendarAgendamento(ReagendamentoRequest $request, int $id_agenda)
     {
-        $data = $request->validate([
-            'data' => 'required|date|date_format:Y-m-d|after_or_equal:today',
-            'hora' => 'required|date_format:H:i:s'
-        ],[
-           'required' => 'O campo :attribute é obrigatório',
-            'date' => 'O campo :attribute precisar ser do tipo data',
-            'date_format' => 'O campo :attribute precisar ter um formato válido',
-            'after_or_equal' => 'Data inválida. Escolha uma data mais atual', 
-        ]);
+       
+        $data = $request->validated();
 
-
+        $this->authorize('reagendar',$this->agendamentoInstancia($id_agenda));
         $this->agendamentoService->reagendamento(new ReagendamentoDTO(
             data: $data['data'],
             hora: $data['hora'],
@@ -59,18 +62,22 @@ class AgendamentoController extends Controller
 
     public function listarAgendamentos()
     {
+        $this->authorize('listar',Agendamento::class);
         $agendamentos = $this->agendamentoService->agendamentos($this->id_cliente(), $this->id_barbeiro());
         return response()->json($agendamentos,200);
     }
 
     public function buscarAgenda(int $id_agenda)
     {
+        $this->authorize('buscar',$this->agendamentoInstancia($id_agenda));
         $agenda = $this->agendamentoService->agenda($id_agenda, $this->id_cliente(), $this->id_barbeiro());
         return response()->json($agenda,200);
     }
 
     public function cancelarAgendamentos(int $id_agenda)
     {
+
+        $this->authorize('cancelar',$this->agendamentoInstancia($id_agenda));
         $agenda = $this->agendamentoService->cancelar($id_agenda, $this->id_cliente(), $this->id_barbeiro());
 
             return response()->json([
@@ -80,6 +87,7 @@ class AgendamentoController extends Controller
 
     public function concluirAgendamentos(int $id_agenda)
     {
+        $this->authorize('concluir',Agendamento::class);
         $agenda = $this->agendamentoService->concluirAgendamentos($id_agenda, $this->id_barbeiro());
 
         return response()->json([
@@ -89,20 +97,27 @@ class AgendamentoController extends Controller
 
     public function removerServicos(int $id_agendamento, int $id_servico)
     {
+        $this->authorize('removerServico',$this->agendamentoInstancia($id_agendamento));
         $this->agendamentoService->removerDeAgendamentos($this->id_cliente(), $id_agendamento, $id_servico); 
         return response()->json(["mensagem" => "Serviço removido de agendamento com sucesso"],200);
     }
 
 
 
-        private function id_cliente(): int | null
+        private function id_cliente(): ?int 
         {
             return auth('api')->user()->id_cliente;
         }
 
-        private function id_barbeiro(): int | null
+        private function id_barbeiro(): ?int
         {
             return auth('api')->user()->id_barbeiro;
+        }
+
+        private function agendamentoInstancia(int $id_agenda): ?Agendamento
+        {
+            $this->validarService->validarExistenciaAgendamento($id_agenda);
+            return Agendamento::findOrFail($id_agenda);
         }
 
 
