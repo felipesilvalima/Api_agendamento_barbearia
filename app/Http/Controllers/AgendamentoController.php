@@ -9,6 +9,7 @@ use App\Http\Requests\ReagendamentoRequest;
 use App\Models\Agendamento;
 use App\Services\AgendamentoService;
 use App\Services\ValidarDomainService;
+use Symfony\Component\HttpFoundation\Request;
 
 class AgendamentoController extends Controller
 {
@@ -36,9 +37,26 @@ class AgendamentoController extends Controller
         
     }
 
-    public function listarAgendamentos()
+    public function listarAgendamentos(Request $request)
     {
-        $agendamentos = $this->agendamentoService->agendamentos($this->id_cliente(), $this->id_barbeiro());  
+        $atributos =  $request->atributos ?? null;
+        $atributos_barbeiro = $request->atributos_barbeiro ?? null;
+        $atributos_cliente = $request->atributos_cliente ?? null;
+        $condicao_atributo = $request->condicao_atributo ?? null;
+        $condicao_atributo_barbeiro = $request->condicao_atributo_barbeiro ?? null;
+        $condicao_atributo_cliente = $request->condicao_atributo_cliente ?? null;
+        
+        $agendamentos = $this->agendamentoService->agendamentos(
+            $this->id_cliente(),
+            $this->id_barbeiro(),
+            $atributos,
+            $atributos_barbeiro,
+            $atributos_cliente,
+            $condicao_atributo,
+            $condicao_atributo_barbeiro,
+            $condicao_atributo_cliente
+        );
+
         return response()->json($agendamentos,200);
     }
 
@@ -100,7 +118,7 @@ class AgendamentoController extends Controller
             return auth('api')->user()->id_barbeiro;
         }
 
-        private function agendamentoInstancia(int $id_agenda): ?Agendamento
+        public function agendamentoInstancia(int $id_agenda): ?Agendamento
         {
             $this->validarService->validarExistenciaAgendamento($id_agenda);
             return Agendamento::findOrFail($id_agenda);

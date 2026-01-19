@@ -6,6 +6,7 @@ use App\DTOS\AgendamentoDTO;
 use App\DTOS\ReagendamentoDTO;
 use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoExisteRecursoException;
+use App\Helpers\ValidarAtributos;
 use App\Repository\Contratos\AgendamentoServicoRepositoyInterface;
 use App\Repository\Contratos\AgendamentosRepositoryInterface;
 use DomainException;
@@ -58,15 +59,48 @@ class AgendamentoService
         return $id_agendamento;
     }
 
-    public function agendamentos(?int $cliente_id, ?int $barbeiro_id): object
+    public function agendamentos(
+        ?int $cliente_id,
+        ?int $barbeiro_id,
+        ?string $atributos,
+        ?string $atributos_barbeiro,
+        ?string $atributos_cliente,
+        ?string $condicao_atributo,
+        ?string $condicao_atributo_barbeiro,
+        ?string $condicao_atributo_cliente,
+    ): object
     {
+
+        $atributosPermitido = ['data','hora','status','id_barbeiro','id_cliente'];
+        $atributosBarbeiroPermitido = ['nome','telefone','status','especialidade'];
+        $atributosClientePermitido = ['nome','telefone','data_cadastro'];
+
+        //atributos condição
+        $condicao_atributo_valida = ValidarAtributos::validarAtributosCondicao($condicao_atributo,$atributosPermitido);
+        $condicao_atributo_barbeiro_valida = ValidarAtributos::validarAtributosCondicao($condicao_atributo_barbeiro,$atributosBarbeiroPermitido);
+        $condicao_atributo_cliente_valida = ValidarAtributos::validarAtributosCondicao($condicao_atributo_cliente,$atributosClientePermitido);
+
+        //atributos
+        $atributos_valido = ValidarAtributos::validarAtributos($atributos,$atributosPermitido);
+        $atributos_barbeiro_valido = ValidarAtributos::validarAtributos($atributos_barbeiro,$atributosBarbeiroPermitido);
+        $atributos_cliente_valido = ValidarAtributos::validarAtributos($atributos_cliente,$atributosClientePermitido);
+
         //listar coleção de agendamentos
-        $agendamentos = $this->agendamentoRepository->listar($cliente_id, $barbeiro_id);
+        $agendamentos = $this->agendamentoRepository->listar(
+            $cliente_id,
+            $barbeiro_id,
+            $atributos_valido,
+            $atributos_barbeiro_valido,
+            $atributos_cliente_valido,
+            $condicao_atributo_valida,
+            $condicao_atributo_barbeiro_valida,
+            $condicao_atributo_cliente_valida
+        );
         
         //verificar se exister algum recurso
         if(collect($agendamentos)->isEmpty())
         {
-            throw new NaoExisteRecursoException("Lista de agendamentos vazia");
+            throw new NaoExisteRecursoException("Nenhuma lista encontrado");
         }
 
             return $agendamentos;
@@ -76,8 +110,7 @@ class AgendamentoService
     public function detalhesAgenda(int $id_agenda): object
     {  
         //buscar registro do agendamento de cliente
-        $agendaCliente = $this->agendamentoRepository->detalhes($id_agenda);
-            
+        $agendaCliente = $this->agendamentoRepository->detalhes($id_agenda); 
         return $agendaCliente; 
     }
 

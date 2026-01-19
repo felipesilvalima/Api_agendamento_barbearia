@@ -42,7 +42,4 @@ class BarbeiroController extends Controller
 
     //GET /barbeiros/{id}/agenda: Consulta a agenda disponível/ocupada de um barbeiro.
 
-    
-    //GET /barbeiros/disponiveis?servico_id=X&data=YYYY-MM-DD: Filtra barbeiros disponíveis para um serviço e data.
-
 }

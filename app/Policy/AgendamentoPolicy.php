@@ -37,4 +37,11 @@ class AgendamentoPolicy
         : Response::deny('Você não tem permissão para buscar esse recurso',403);
     }
 
+    public function removerServico(User $user, Agendamento $agendamento)
+    {
+        return ($user->id_cliente === $agendamento->id_cliente)
+        ? Response::allow() 
+        : Response::deny('Você não tem permissão para remover esse serviço',403);
+    }
+
 }

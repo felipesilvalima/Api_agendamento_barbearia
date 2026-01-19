@@ -9,11 +9,12 @@ class AgendamentoServicoController extends Controller
 
     public function __construct(
         private AgendamentoServicoService $agendamentoService,
+        private AgendamentoController $agendamento_controller
     ){}
 
     public function removerServicos(int $id_agendamento, int $id_servico)
     {
-        $this->authorize('removerServico',$this->agendamentoInstancia($id_agendamento));
+        $this->authorize('removerServico',$this->agendamento_controller->agendamentoInstancia($id_agendamento));
         $this->agendamentoService->removerDeAgendamentos($this->id_cliente(), $id_agendamento, $id_servico); 
         return response()->json(["mensagem" => "Serviço removido de agendamento com sucesso"],200);
     }
@@ -22,6 +23,8 @@ class AgendamentoServicoController extends Controller
 //GET/agendamentos_servico - todos os serviços vinculados a um agendamento específico.
 
 //POST /agendamentos/{agendamento_id}/servicos - Adiciona um ou mais serviços a um agendamento existente.
+
+
 
 
 }
