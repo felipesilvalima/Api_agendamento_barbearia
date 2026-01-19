@@ -9,10 +9,6 @@ use App\Http\Requests\ReagendamentoRequest;
 use App\Models\Agendamento;
 use App\Services\AgendamentoService;
 use App\Services\ValidarDomainService;
-use Illuminate\Http\Request;
-
-
-
 
 class AgendamentoController extends Controller
 {
@@ -20,7 +16,7 @@ class AgendamentoController extends Controller
     public function __construct(
         private AgendamentoService $agendamentoService,
         private ValidarDomainService $validarService,
-        ){}
+    ){}
 
     public function criarAgendamento(AgendamentoRequest $request)
     {
@@ -40,13 +36,26 @@ class AgendamentoController extends Controller
         
     }
 
-    public function reagendarAgendamento(ReagendamentoRequest $request, int $id_agenda)
+    public function listarAgendamentos()
+    {
+        $agendamentos = $this->agendamentoService->agendamentos($this->id_cliente(), $this->id_barbeiro());  
+        return response()->json($agendamentos,200);
+    }
+
+    public function verAgenda(int $id_agenda)
+    {
+        $this->authorize('detalhes',$this->agendamentoInstancia($id_agenda));
+        $agenda = $this->agendamentoService->detalhesAgenda($id_agenda);
+        return response()->json($agenda,200);
+    }
+
+    public function reagendarAgendamentos(ReagendamentoRequest $request, int $id_agenda)
     {
        
         $data = $request->validated();
 
         $this->authorize('reagendar',$this->agendamentoInstancia($id_agenda));
-        $this->agendamentoService->reagendamento(new ReagendamentoDTO(
+        $this->agendamentoService->reagendar(new ReagendamentoDTO(
             data: $data['data'],
             hora: $data['hora'],
             id_cliente: $this->id_cliente(),
@@ -58,19 +67,14 @@ class AgendamentoController extends Controller
         ],200);
     }
 
-    public function listarAgendamentos()
+    public function finalizarAgendamentos(int $id_agenda)
     {
+        $this->authorize('finalizar',$this->agendamentoInstancia($id_agenda));
+        $agenda = $this->agendamentoService->finalizar($id_agenda, $this->id_barbeiro());
 
-        $this->authorize('listar',Agendamento::class);
-        $agendamentos = $this->agendamentoService->agendamentos($this->id_cliente(),$this->id_barbeiro());  
-        return response()->json($agendamentos,200);
-    }
-
-    public function buscarAgenda(int $id_agenda)
-    {
-        $this->authorize('buscar',$this->agendamentoInstancia($id_agenda));
-        $agenda = $this->agendamentoService->agenda($id_agenda, $this->id_cliente(), $this->id_barbeiro());
-        return response()->json($agenda,200);
+        return response()->json([
+            "mensagem" => "Agendamento Concluido com sucesso. ID do agendamento {$agenda->id}"
+        ],200);  
     }
 
     public function cancelarAgendamentos(int $id_agenda)
@@ -84,24 +88,7 @@ class AgendamentoController extends Controller
             ],200);
     }
 
-    public function concluirAgendamentos(int $id_agenda)
-    {
-        $this->authorize('concluir',Agendamento::class);
-        $agenda = $this->agendamentoService->concluirAgendamentos($id_agenda, $this->id_barbeiro());
-
-        return response()->json([
-            "mensagem" => "Agendamento Concluido com sucesso. ID do agendamento {$agenda->id}"
-        ],200);  
-    }
-
-    public function removerServicos(int $id_agendamento, int $id_servico)
-    {
-        $this->authorize('removerServico',$this->agendamentoInstancia($id_agendamento));
-        $this->agendamentoService->removerDeAgendamentos($this->id_cliente(), $id_agendamento, $id_servico); 
-        return response()->json(["mensagem" => "Serviço removido de agendamento com sucesso"],200);
-    }
-
-
+   
 
         private function id_cliente(): ?int 
         {

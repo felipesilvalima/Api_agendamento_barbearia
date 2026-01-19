@@ -32,15 +32,16 @@ class ClienteController extends Controller
         ],201); 
     }
 
-    public function alterarPerfil()
-    {
-        
-    }
+    //GET /clientes: Lista todos os clientes (com paginação e filtros).
 
-    private function id_cliente(): int | null
-    {
-        return auth('api')->user()->id_cliente;
-    }
+    
+    //GET /clientes/{id}: Obtém detalhes de um cliente específico.
+
+
+    //PUT /clientes/{id}: Atualiza dados de um cliente.
+    
+
+    //GET /clientes/{id}/agendamentos: Lista o histórico de agendamentos de um cliente.
 
     
 }

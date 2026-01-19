@@ -6,6 +6,7 @@ namespace App\Providers;
 
 use App\Models\Agendamento;
 use App\Policy\AgendamentoPolicy;
+use App\Policy\AgendamentoServicoPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -17,6 +18,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
     Agendamento::class => AgendamentoPolicy::class,
+    Agendamento::class => AgendamentoServicoPolicy::class
 
     ];
 

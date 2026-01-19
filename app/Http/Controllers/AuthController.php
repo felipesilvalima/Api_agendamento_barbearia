@@ -45,9 +45,8 @@ class AuthController extends Controller
       return response()->json($perfil,200);
   }
 
-  public function deletarPerfil()
-  {
+  //PUT /me - Atualizar próprio perfil
 
-  }
+  //DELETE /me - Deletar próprio perfil usando softDeletes
 
 }

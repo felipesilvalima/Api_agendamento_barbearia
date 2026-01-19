@@ -29,4 +29,20 @@ class BarbeiroController extends Controller
             "mensagem" => "Usuário cadastrado com sucesso",
         ],201); 
     }
+
+
+    // GET /barbeiros: Lista todos os barbeiros ativos.
+
+
+    //GET /barbeiros/{id}: Obtém perfil e especialidades de um barbeiro.
+
+
+    //PUT /barbeiros/{id}: Atualiza dados (como jornada de trabalho).
+
+
+    //GET /barbeiros/{id}/agenda: Consulta a agenda disponível/ocupada de um barbeiro.
+
+    
+    //GET /barbeiros/disponiveis?servico_id=X&data=YYYY-MM-DD: Filtra barbeiros disponíveis para um serviço e data.
+
 }
