@@ -13,6 +13,7 @@ interface AgendamentosRepositoryInterface
 
     public function listaAgendasCliente(int $id_cliente): ?object;
     public function listaAgendasBarbeiro(int $id_barbeiro): ?object;
+  
 
     public function buscarAgendaCliente(int $id_agenda): ?object;                             
     public function buscarAgendaBarbeiro(int $id_agenda): ?object;

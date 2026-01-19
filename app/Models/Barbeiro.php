@@ -14,6 +14,12 @@ class Barbeiro extends Model
     protected $table = "barbeiros";
     protected $fillable = ["nome","telefone","especialidade","status"];
 
+     protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
+
     public function agendamento()
     {
         return $this->hasMany(Agendamento::class,'id_cliente', 'id');

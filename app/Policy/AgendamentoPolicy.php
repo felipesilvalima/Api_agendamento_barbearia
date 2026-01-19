@@ -12,7 +12,7 @@ class AgendamentoPolicy
    {
         return ($user->id_cliente === $agendamento->id_cliente)
         ? Response::allow() 
-        : Response::deny('Você não tem permissão para criar agendamneto',403);
+        : Response::deny('Você não tem permissão para criar agendamento',403);
    }
 
         public function cancelar(User $user, Agendamento $agendamento)

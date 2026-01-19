@@ -9,12 +9,10 @@ use App\Http\Requests\ReagendamentoRequest;
 use App\Models\Agendamento;
 use App\Services\AgendamentoService;
 use App\Services\ValidarDomainService;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 
 
-use const Dom\VALIDATION_ERR;
+
 
 class AgendamentoController extends Controller
 {
@@ -60,10 +58,11 @@ class AgendamentoController extends Controller
         ],200);
     }
 
-    public function listarAgendamentos()
+    public function listarAgendamentos(Request $request)
     {
+
         $this->authorize('listar',Agendamento::class);
-        $agendamentos = $this->agendamentoService->agendamentos($this->id_cliente(), $this->id_barbeiro());
+        $agendamentos = $this->agendamentoService->agendamentos($this->id_cliente(),$this->id_barbeiro());  
         return response()->json($agendamentos,200);
     }
 

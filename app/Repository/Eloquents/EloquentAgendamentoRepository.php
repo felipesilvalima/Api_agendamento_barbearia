@@ -81,12 +81,8 @@ class EloquentAgendamentoRepository implements AgendamentosRepositoryInterface
                             public function listaAgendasCliente(?int $id_cliente): ?object
                             {
                                 $listaAgendas = $this->agendamentoModel
-                                ->select('id','data','hora','status','id_cliente','id_barbeiro')->where('id_cliente', $id_cliente)
-                                ->with([
-                                    'barbeiro:id,nome,especialidade,status',
-                                    'agendamento_servico:id,id_agendamento,id_servico',
-                                    'agendamento_servico.servico:id,nome,descricao,duracao_minutos,preco'
-                                ])
+                                ->with(['barbeiro','cliente','agendamento_servico.servico'])
+                                ->where('id_cliente', $id_cliente)
                                 ->where('status','AGENDADO')
                                 ->get();
 

@@ -14,6 +14,12 @@ class Servico extends Model
     protected $table = "servicos";
     protected $fillable = ["nome","descricao","duracao_minutos","preco"];
 
+     protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
+
 
     public function agendamento_servico()
     {

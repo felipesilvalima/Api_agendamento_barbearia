@@ -172,7 +172,7 @@ class AgendamentoService
 
         //buscar coleção de agendamentos de um cliente
         $agendamentos = $this->agendamentoRepository->listaAgendasCliente($cliente_id);
-
+        
         //verificar se exister algum recurso
         if(collect($agendamentos)->isEmpty())
         {
@@ -265,7 +265,7 @@ class AgendamentoService
   
     }
 
-    public function agendamentos(?int $cliente_id,?int $barbeiro_id): object
+    public function agendamentos(?int $cliente_id, ?int $barbeiro_id): object
     {
         //verificar acesso
         if(!is_null($cliente_id))
@@ -277,6 +277,7 @@ class AgendamentoService
                 return $this->listarAgendamentosPorBarbeiro($barbeiro_id);
             }
     }
+
 
     public function agenda(int $id_agenda, ?int $cliente_id, ?int $barbeiro_id): object
     {
