@@ -58,7 +58,7 @@ class AgendamentoController extends Controller
         ],200);
     }
 
-    public function listarAgendamentos(Request $request)
+    public function listarAgendamentos()
     {
 
         $this->authorize('listar',Agendamento::class);
