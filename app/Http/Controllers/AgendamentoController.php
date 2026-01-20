@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTOS\AgendamentoDTO;
+use App\DTOS\AgendamentosAtributosFiltrosPagincaoDTO;
 use App\DTOS\ReagendamentoDTO;
 use App\Http\Requests\AgendamentoRequest;
 use App\Http\Requests\ReagendamentoRequest;
@@ -39,28 +40,18 @@ class AgendamentoController extends Controller
 
     public function listarAgendamentos(Request $request)
     {
-        $atributos =  $request->atributos ?? null;
-        $atributos_barbeiro = $request->atributos_barbeiro ?? null;
-        $atributos_cliente = $request->atributos_cliente ?? null;
-        $filtro = $request->filtro ?? null;
-        $filtro_barbeiro = $request->filtro_barbeiro ?? null;
-        $filtro_cliente = $request->filtro_cliente ?? null;
-        $limit = $request->limit ?? null;
-        $page = $request->page ?? null;
-
-
-        $agendamentos = $this->agendamentoService->agendamentos(
-            $this->id_cliente(),
-            $this->id_barbeiro(),
-            $atributos,
-            $atributos_barbeiro,
-            $atributos_cliente,
-            $filtro,
-            $filtro_barbeiro,
-            $filtro_cliente,
-            (int)$limit,
-            (int)$page
-        );
+        $agendamentos = $this->agendamentoService->agendamentos(new AgendamentosAtributosFiltrosPagincaoDTO(
+            id_cliente: $this->id_cliente(),
+            id_barbeiro: $this->id_barbeiro(),
+            atributos: $request->atributos ?? null,
+            atributos_barbeiro: $request->atributos_barbeiro ?? null,
+            atributos_cliente: $request->atributos_cliente ?? null,
+            filtro: $request->filtro ?? null,
+            filtro_barbeiro:$request->filtro_barbeiro ?? null,
+            filtro_cliente: $request->filtro_cliente ?? null,
+            limit: $request->limit ?? null,
+            page: $request->page ?? null
+        ));
 
         return response()->json($agendamentos,200);
     }

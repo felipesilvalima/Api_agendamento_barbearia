@@ -23,8 +23,6 @@ class ValidarAtributos
 
         }
         
-        
-        
     }
 
     public  static function validarAtributosCondicao(?string $atributos_soliciatados, array $atributos_permitidos)

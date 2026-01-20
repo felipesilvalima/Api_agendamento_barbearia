@@ -3,6 +3,7 @@
 namespace App\Repository\Eloquents;
 
 use App\DTOS\AgendamentoDTO;
+use App\DTOS\AgendamentosAtributosFiltrosPagincaoDTO;
 use App\Models\Agendamento;
 
 use App\Repository\Contratos\AgendamentosRepositoryInterface;
@@ -38,33 +39,22 @@ class EloquentAgendamentoRepository implements AgendamentosRepositoryInterface
             ->exists();
         }
 
-        public function listar(
-            ?int $cliente_id,
-            ?int $barbeiro_id,
-            ?string $atributos,
-            ?string $atributos_barbeiro,
-            ?string $atributos_cliente,
-            ?array $filtro,
-            ?array $filtro_barbeiro,
-            ?array $filtro_cliente,
-            ?int $limit,
-            ?int $page
-        ): iterable
+        public function listar(AgendamentosAtributosFiltrosPagincaoDTO $agendamentoDTO): iterable
         {
             $agendamentos = [];
             
             $listaAgendas = $this->agendamentoModel->query();
 
-            if(!is_null($cliente_id))
+            if(!is_null($agendamentoDTO->id_cliente))
             {
-                if($atributos != null)
+                if($agendamentoDTO->atributos != null)
                 {
-                   $agendamentos = $listaAgendas->selectRaw($atributos);
+                   $agendamentos = $listaAgendas->selectRaw($agendamentoDTO->atributos );
 
                    
-                    if($filtro != null)
+                    if($agendamentoDTO->filtro_validado != null)
                     {
-                        foreach($filtro as $condicao)
+                        foreach($agendamentoDTO->filtro_validado as $condicao)
                         {
                             $f = explode(':',$condicao);
                             $agendamentos = $listaAgendas->where($f[0],$f[1],$f[2]);
@@ -74,15 +64,17 @@ class EloquentAgendamentoRepository implements AgendamentosRepositoryInterface
                     
                     $agendamentos = $listaAgendas
                     ->with(['barbeiro','cliente','agendamento_servico.servico'])
-                    ->where('id_cliente', $cliente_id)
+                    ->where('id_cliente', $agendamentoDTO->id_cliente)
                     ->get();
                     
-                        if($atributos_barbeiro != null)
+                        if($agendamentoDTO->atributos_barbeiro != null)
                         {
-                            $agendamentos = $listaAgendas->with('barbeiro:id,'.$atributos_barbeiro);
+                            $agendamentos = $listaAgendas->with('barbeiro:id,'.$agendamentoDTO->atributos_barbeiro);
                         
-                            if($filtro_barbeiro != null)
+                            if($agendamentoDTO->filtro_barbeiro_validado != null)
                             {
+                                $filtro_barbeiro = $agendamentoDTO->filtro_barbeiro_validado;
+
                                 $agendamentos = $listaAgendas->whereHas('barbeiro', function($b) use($filtro_barbeiro)
                                 {
                                     foreach($filtro_barbeiro as $condicao_barbeiro)
@@ -93,29 +85,34 @@ class EloquentAgendamentoRepository implements AgendamentosRepositoryInterface
                                 });
                             }
                         }
-                            
-                            if($limit !== 0 && $page !== 0)
+
+                            if($agendamentoDTO->atributos_cliente != null)
                             {
-                                $offset = ($page - 1) * $limit;
+                                $agendamentos = $listaAgendas->with('cliente:id,'.$agendamentoDTO->atributos_cliente);        
+                            }
+                            
+                            if($agendamentoDTO->limit !== null && $agendamentoDTO->page !== null)
+                            {
+                                $offset = ($agendamentoDTO->page- 1) * $agendamentoDTO->limit;
                             
                                 $agendamentos = $listaAgendas
-                                ->limit($limit)
+                                ->limit($agendamentoDTO->limit)
                                 ->offset($offset);
                             }
 
                             $agendamentos = $listaAgendas
-                            ->where('id_cliente', $cliente_id)
+                            ->where('id_cliente', $agendamentoDTO->id_cliente)
                             ->get();
             }
                 else
                 {
-                    if($atributos != null)
+                    if($agendamentoDTO->atributos != null)
                     {
-                       $agendamentos = $listaAgendas->selectRaw($atributos);
+                       $agendamentos = $listaAgendas->selectRaw($agendamentoDTO->atributos);
 
-                        if($filtro != null)
+                        if($agendamentoDTO->filtro_validado != null)
                         {
-                            foreach($filtro as $condicao)
+                            foreach($agendamentoDTO->filtro_validado as $condicao)
                             {
                                 $f = explode(':',$condicao);
                                 $agendamentos = $listaAgendas->where($f[0],$f[1],$f[2]);
@@ -126,15 +123,17 @@ class EloquentAgendamentoRepository implements AgendamentosRepositoryInterface
 
                         $agendamentos = $listaAgendas
                         ->with(['barbeiro','cliente','agendamento_servico.servico'])
-                        ->where('id_barbeiro', $barbeiro_id)
+                        ->where('id_barbeiro', $agendamentoDTO->id_barbeiro)
                         ->get();
 
-                                if($atributos_cliente != null)
+                                if($agendamentoDTO->atributos_cliente != null)
                                 {
-                                    $agendamentos = $listaAgendas->with('cliente:id,'.$atributos_cliente); 
+                                    $agendamentos = $listaAgendas->with('cliente:id,'.$agendamentoDTO->atributos_cliente); 
                                 
-                                    if($filtro_cliente != null)
+                                    if($agendamentoDTO->filtro_cliente_validado != null)
                                     {
+                                        $filtro_cliente = $agendamentoDTO->filtro_cliente_validado;
+
                                         $agendamentos = $listaAgendas->whereHas('cliente', function($c) use($filtro_cliente)
                                         {
                                             foreach($filtro_cliente as $condicao_cliente)
@@ -146,18 +145,23 @@ class EloquentAgendamentoRepository implements AgendamentosRepositoryInterface
                                     }
                                 }
 
-                                    if($limit !== 0 || $page !== 0 )
+                                    if($agendamentoDTO->atributos_barbeiro != null)
                                     {
-                                        $offset = ($page - 1) * $limit;
+                                        $agendamentos = $listaAgendas->with('barbeiro:id,'.$agendamentoDTO->atributos_barbeiro);
+                                    }
 
+                                    if($agendamentoDTO->limit !== null && $agendamentoDTO->page !== null)
+                                    {
+                                        $offset = ($agendamentoDTO->page- 1) * $agendamentoDTO->limit;
+                            
                                         $agendamentos = $listaAgendas
-                                        ->limit($limit)
+                                        ->limit($agendamentoDTO->limit)
                                         ->offset($offset);
                                     }
 
 
                                         $agendamentos = $listaAgendas
-                                        ->where('id_barbeiro', $barbeiro_id)
+                                        ->where('id_barbeiro', $agendamentoDTO->id_barbeiro)
                                         ->get();
                 }
 

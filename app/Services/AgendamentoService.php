@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTOS\AgendamentoDTO;
+use App\DTOS\AgendamentosAtributosFiltrosPagincaoDTO;
 use App\DTOS\ReagendamentoDTO;
 use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoExisteRecursoException;
@@ -59,18 +60,7 @@ class AgendamentoService
         return $id_agendamento;
     }
 
-    public function agendamentos(
-        ?int $cliente_id,
-        ?int $barbeiro_id,
-        ?string $atributos,
-        ?string $atributos_barbeiro,
-        ?string $atributos_cliente,
-        ?string $filtro,
-        ?string $filtro_barbeiro,
-        ?string $filtro_cliente,
-        ?int $limit,
-        ?int $page
-    ): object
+    public function agendamentos(AgendamentosAtributosFiltrosPagincaoDTO $agendamentosDTO): object
     {
 
         $atributosPermitido = ['id','data','hora','status','id_barbeiro','id_cliente'];
@@ -78,28 +68,17 @@ class AgendamentoService
         $atributosClientePermitido = ['id','nome','telefone','data_cadastro'];
 
         //atributos condição
-        $filtro_validado = ValidarAtributos::validarAtributosCondicao($filtro,$atributosPermitido);
-        $filtro_barbeiro_validado = ValidarAtributos::validarAtributosCondicao($filtro_barbeiro,$atributosBarbeiroPermitido);
-        $filtro_cliente_validado = ValidarAtributos::validarAtributosCondicao($filtro_cliente,$atributosClientePermitido);
+        $agendamentosDTO->filtro_validado = ValidarAtributos::validarAtributosCondicao($agendamentosDTO->filtro,$atributosPermitido);
+        $agendamentosDTO->filtro_barbeiro_validado = ValidarAtributos::validarAtributosCondicao($agendamentosDTO->filtro_barbeiro,$atributosBarbeiroPermitido);
+        $agendamentosDTO->filtro_cliente_validado = ValidarAtributos::validarAtributosCondicao($agendamentosDTO->filtro_cliente,$atributosClientePermitido);
 
         //atributos
-        $atributos_valido = ValidarAtributos::validarAtributos($atributos,$atributosPermitido);
-        $atributos_barbeiro_valido = ValidarAtributos::validarAtributos($atributos_barbeiro,$atributosBarbeiroPermitido);
-        $atributos_cliente_valido = ValidarAtributos::validarAtributos($atributos_cliente,$atributosClientePermitido);
+        $agendamentosDTO->atributos = ValidarAtributos::validarAtributos($agendamentosDTO->atributos,$atributosPermitido);
+        $agendamentosDTO->atributos_barbeiro = ValidarAtributos::validarAtributos($agendamentosDTO->atributos_barbeiro,$atributosBarbeiroPermitido);
+        $agendamentosDTO->atributos_cliente = ValidarAtributos::validarAtributos($agendamentosDTO->atributos_cliente,$atributosClientePermitido);
         
         //listar coleção de agendamentos
-        $agendamentos = $this->agendamentoRepository->listar(
-            $cliente_id,
-            $barbeiro_id,
-            $atributos_valido,
-            $atributos_barbeiro_valido,
-            $atributos_cliente_valido,
-            $filtro_validado,
-            $filtro_barbeiro_validado,
-            $filtro_cliente_validado,
-            $limit,
-            $page
-        );
+        $agendamentos = $this->agendamentoRepository->listar($agendamentosDTO);
         
         //verificar se exister algum recurso
         if(collect($agendamentos)->isEmpty())
