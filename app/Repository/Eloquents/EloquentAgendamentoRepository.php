@@ -47,6 +47,8 @@ class EloquentAgendamentoRepository implements AgendamentosRepositoryInterface
             ?array $condicao_atributo,
             ?array $condicao_atributo_barbeiro,
             ?array $condicao_atributo_cliente,
+            ?int $limit,
+            ?int $page
         ): iterable
         {
             $agendamentos = [];
@@ -102,6 +104,15 @@ class EloquentAgendamentoRepository implements AgendamentosRepositoryInterface
 
                         }
 
+                        if($limit !== null || $page !== null )
+                        {
+                            $offset = ($page - 1) * $limit;
+
+                            $agendamentos = $listaAgendas
+                            ->limit($limit)
+                            ->offset($offset);
+                        }
+
                         $agendamentos = $listaAgendas
                         ->where('id_cliente', $cliente_id)
                         ->get();
@@ -153,9 +164,19 @@ class EloquentAgendamentoRepository implements AgendamentosRepositoryInterface
                                 }
                             }
 
-                            $agendamentos = $listaAgendas
-                            ->where('id_barbeiro', $barbeiro_id)
-                            ->get();
+                                if($limit !== null || $page !== null )
+                                {
+                                    $offset = ($page - 1) * $limit;
+
+                                    $agendamentos = $listaAgendas
+                                    ->limit($limit)
+                                    ->offset($offset);
+                                }
+
+
+                                    $agendamentos = $listaAgendas
+                                    ->where('id_barbeiro', $barbeiro_id)
+                                    ->get();
                 }
 
             return $agendamentos;

@@ -45,7 +45,10 @@ class AgendamentoController extends Controller
         $condicao_atributo = $request->condicao_atributo ?? null;
         $condicao_atributo_barbeiro = $request->condicao_atributo_barbeiro ?? null;
         $condicao_atributo_cliente = $request->condicao_atributo_cliente ?? null;
-        
+        $limit = $request->limit ?? null;
+        $page = $request->page ?? null;
+
+
         $agendamentos = $this->agendamentoService->agendamentos(
             $this->id_cliente(),
             $this->id_barbeiro(),
@@ -54,7 +57,9 @@ class AgendamentoController extends Controller
             $atributos_cliente,
             $condicao_atributo,
             $condicao_atributo_barbeiro,
-            $condicao_atributo_cliente
+            $condicao_atributo_cliente,
+            (int)$limit,
+            (int)$page
         );
 
         return response()->json($agendamentos,200);

@@ -37,15 +37,19 @@ class ValidarAtributos
             {
                 $atributo = explode(':',$atributo);
 
-                if($atributo[0] === null)
+                if($atributo[0] !== null)
                 {
-                    break;
+                    if(!in_array($atributo[0], $atributos_permitidos))
+                    {
+                        abort(422, 'O Atributo '. $atributo[0]. ' Não é permitido');
+                    }
                 }
+                    else
+                    {
+                        break;
+                    }
+                
 
-                if(!in_array($atributo[0], $atributos_permitidos))
-                {
-                    abort(422, 'O Atributo '. $atributo[0]. ' Não é permitido');
-                }
             }
 
             return $atributo;

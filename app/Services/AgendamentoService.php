@@ -68,6 +68,8 @@ class AgendamentoService
         ?string $condicao_atributo,
         ?string $condicao_atributo_barbeiro,
         ?string $condicao_atributo_cliente,
+        ?int $limit,
+        ?int $page
     ): object
     {
 
@@ -84,7 +86,7 @@ class AgendamentoService
         $atributos_valido = ValidarAtributos::validarAtributos($atributos,$atributosPermitido);
         $atributos_barbeiro_valido = ValidarAtributos::validarAtributos($atributos_barbeiro,$atributosBarbeiroPermitido);
         $atributos_cliente_valido = ValidarAtributos::validarAtributos($atributos_cliente,$atributosClientePermitido);
-
+        
         //listar coleção de agendamentos
         $agendamentos = $this->agendamentoRepository->listar(
             $cliente_id,
@@ -94,7 +96,9 @@ class AgendamentoService
             $atributos_cliente_valido,
             $condicao_atributo_valida,
             $condicao_atributo_barbeiro_valida,
-            $condicao_atributo_cliente_valida
+            $condicao_atributo_cliente_valida,
+            $limit,
+            $page
         );
         
         //verificar se exister algum recurso

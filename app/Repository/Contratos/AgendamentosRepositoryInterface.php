@@ -17,7 +17,9 @@ interface AgendamentosRepositoryInterface
         ?string $atributos_cliente,
         ?array $condicao_atributo,
         ?array $condicao_atributo_barbeiro,
-        ?array $condicao_atributo_cliente
+        ?array $condicao_atributo_cliente,
+        ?int $limit,
+        ?int $page
     ): iterable;
     public function detalhes(int $id_agenda): object;                             
   
