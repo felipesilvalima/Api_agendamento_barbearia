@@ -15,9 +15,9 @@ interface AgendamentosRepositoryInterface
         ?string $atributos,
         ?string $atributos_barbeiro,
         ?string $atributos_cliente,
-        ?array $condicao_atributo,
-        ?array $condicao_atributo_barbeiro,
-        ?array $condicao_atributo_cliente,
+        ?array $filtro,
+        ?array $filtro_barbeiro,
+        ?array $filtro_cliente,
         ?int $limit,
         ?int $page
     ): iterable;

@@ -42,9 +42,9 @@ class AgendamentoController extends Controller
         $atributos =  $request->atributos ?? null;
         $atributos_barbeiro = $request->atributos_barbeiro ?? null;
         $atributos_cliente = $request->atributos_cliente ?? null;
-        $condicao_atributo = $request->condicao_atributo ?? null;
-        $condicao_atributo_barbeiro = $request->condicao_atributo_barbeiro ?? null;
-        $condicao_atributo_cliente = $request->condicao_atributo_cliente ?? null;
+        $filtro = $request->filtro ?? null;
+        $filtro_barbeiro = $request->filtro_barbeiro ?? null;
+        $filtro_cliente = $request->filtro_cliente ?? null;
         $limit = $request->limit ?? null;
         $page = $request->page ?? null;
 
@@ -55,9 +55,9 @@ class AgendamentoController extends Controller
             $atributos,
             $atributos_barbeiro,
             $atributos_cliente,
-            $condicao_atributo,
-            $condicao_atributo_barbeiro,
-            $condicao_atributo_cliente,
+            $filtro,
+            $filtro_barbeiro,
+            $filtro_cliente,
             (int)$limit,
             (int)$page
         );

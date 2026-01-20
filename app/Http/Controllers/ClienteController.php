@@ -42,6 +42,6 @@ class ClienteController extends Controller
     
 
     //GET /clientes/{id}/agendamentos: Lista o histórico de agendamentos de um cliente.
-
+    
     
 }

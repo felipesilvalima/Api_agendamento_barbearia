@@ -65,22 +65,22 @@ class AgendamentoService
         ?string $atributos,
         ?string $atributos_barbeiro,
         ?string $atributos_cliente,
-        ?string $condicao_atributo,
-        ?string $condicao_atributo_barbeiro,
-        ?string $condicao_atributo_cliente,
+        ?string $filtro,
+        ?string $filtro_barbeiro,
+        ?string $filtro_cliente,
         ?int $limit,
         ?int $page
     ): object
     {
 
-        $atributosPermitido = ['data','hora','status','id_barbeiro','id_cliente'];
-        $atributosBarbeiroPermitido = ['nome','telefone','status','especialidade'];
-        $atributosClientePermitido = ['nome','telefone','data_cadastro'];
+        $atributosPermitido = ['id','data','hora','status','id_barbeiro','id_cliente'];
+        $atributosBarbeiroPermitido = ['id','nome','telefone','status','especialidade'];
+        $atributosClientePermitido = ['id','nome','telefone','data_cadastro'];
 
         //atributos condição
-        $condicao_atributo_valida = ValidarAtributos::validarAtributosCondicao($condicao_atributo,$atributosPermitido);
-        $condicao_atributo_barbeiro_valida = ValidarAtributos::validarAtributosCondicao($condicao_atributo_barbeiro,$atributosBarbeiroPermitido);
-        $condicao_atributo_cliente_valida = ValidarAtributos::validarAtributosCondicao($condicao_atributo_cliente,$atributosClientePermitido);
+        $filtro_validado = ValidarAtributos::validarAtributosCondicao($filtro,$atributosPermitido);
+        $filtro_barbeiro_validado = ValidarAtributos::validarAtributosCondicao($filtro_barbeiro,$atributosBarbeiroPermitido);
+        $filtro_cliente_validado = ValidarAtributos::validarAtributosCondicao($filtro_cliente,$atributosClientePermitido);
 
         //atributos
         $atributos_valido = ValidarAtributos::validarAtributos($atributos,$atributosPermitido);
@@ -94,9 +94,9 @@ class AgendamentoService
             $atributos_valido,
             $atributos_barbeiro_valido,
             $atributos_cliente_valido,
-            $condicao_atributo_valida,
-            $condicao_atributo_barbeiro_valida,
-            $condicao_atributo_cliente_valida,
+            $filtro_validado,
+            $filtro_barbeiro_validado,
+            $filtro_cliente_validado,
             $limit,
             $page
         );

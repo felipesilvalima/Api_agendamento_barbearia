@@ -44,9 +44,9 @@ class EloquentAgendamentoRepository implements AgendamentosRepositoryInterface
             ?string $atributos,
             ?string $atributos_barbeiro,
             ?string $atributos_cliente,
-            ?array $condicao_atributo,
-            ?array $condicao_atributo_barbeiro,
-            ?array $condicao_atributo_cliente,
+            ?array $filtro,
+            ?array $filtro_barbeiro,
+            ?array $filtro_cliente,
             ?int $limit,
             ?int $page
         ): iterable
@@ -62,60 +62,50 @@ class EloquentAgendamentoRepository implements AgendamentosRepositoryInterface
                    $agendamentos = $listaAgendas->selectRaw($atributos);
 
                    
-                    if($condicao_atributo != null)
+                    if($filtro != null)
                     {
-                        $agendamentos = $listaAgendas->where($condicao_atributo[0],$condicao_atributo[1],$condicao_atributo[2]);
+                        foreach($filtro as $condicao)
+                        {
+                            $f = explode(':',$condicao);
+                            $agendamentos = $listaAgendas->where($f[0],$f[1],$f[2]);
+                        }
                     }
                 }
-                
-                $agendamentos = $listaAgendas
-                ->with(['barbeiro','cliente','agendamento_servico.servico'])
-                ->where('id_cliente', $cliente_id)
-                ->get();
-
-                    if($atributos_barbeiro != null)
-                    {
-                        $agendamentos = $listaAgendas->with('barbeiro:id,'.$atributos_barbeiro);
-                        
-                        if($condicao_atributo_barbeiro != null)
-                        {
-                            $agendamentos = $listaAgendas->whereHas('barbeiro', function($b) use($condicao_atributo_barbeiro)
-                            {
-                                $b->where($condicao_atributo_barbeiro[0],$condicao_atributo_barbeiro[1],$condicao_atributo_barbeiro[2]);
-                            });
-                        }
-                    }
-
+                    
                     $agendamentos = $listaAgendas
+                    ->with(['barbeiro','cliente','agendamento_servico.servico'])
                     ->where('id_cliente', $cliente_id)
                     ->get();
-
-                        if($atributos_cliente != null)
+                    
+                        if($atributos_barbeiro != null)
                         {
-                            $agendamentos = $listaAgendas->with('cliente:id,'.$atributos_cliente);
-                            
-                            if($condicao_atributo_cliente != null)
+                            $agendamentos = $listaAgendas->with('barbeiro:id,'.$atributos_barbeiro);
+                        
+                            if($filtro_barbeiro != null)
                             {
-                                $agendamentos = $listaAgendas->whereHas('cliente', function($c) use($condicao_atributo_cliente)
+                                $agendamentos = $listaAgendas->whereHas('barbeiro', function($b) use($filtro_barbeiro)
                                 {
-                                    $c->where($condicao_atributo_cliente[0],$condicao_atributo_cliente[1],$condicao_atributo_cliente[2]);
+                                    foreach($filtro_barbeiro as $condicao_barbeiro)
+                                    {
+                                        $cb = explode(':',$condicao_barbeiro);
+                                        $b->where($cb[0],$cb[1],$cb[2]);
+                                    }
                                 });
                             }
-
                         }
-
-                        if($limit !== null || $page !== null )
-                        {
-                            $offset = ($page - 1) * $limit;
+                            
+                            if($limit !== 0 && $page !== 0)
+                            {
+                                $offset = ($page - 1) * $limit;
+                            
+                                $agendamentos = $listaAgendas
+                                ->limit($limit)
+                                ->offset($offset);
+                            }
 
                             $agendamentos = $listaAgendas
-                            ->limit($limit)
-                            ->offset($offset);
-                        }
-
-                        $agendamentos = $listaAgendas
-                        ->where('id_cliente', $cliente_id)
-                        ->get();
+                            ->where('id_cliente', $cliente_id)
+                            ->get();
             }
                 else
                 {
@@ -123,63 +113,55 @@ class EloquentAgendamentoRepository implements AgendamentosRepositoryInterface
                     {
                        $agendamentos = $listaAgendas->selectRaw($atributos);
 
-                        if($condicao_atributo != null)
+                        if($filtro != null)
                         {
-                            $agendamentos = $listaAgendas->where($condicao_atributo[0],$condicao_atributo[1],$condicao_atributo[2]);
+                            foreach($filtro as $condicao)
+                            {
+                                $f = explode(':',$condicao);
+                                $agendamentos = $listaAgendas->where($f[0],$f[1],$f[2]);
+                            }
+
                         }
                     }
 
-                    $agendamentos = $listaAgendas
-                    ->with(['barbeiro','cliente','agendamento_servico.servico'])
-                    ->where('id_barbeiro', $barbeiro_id)
-                    ->get();
-
-                        if($atributos_barbeiro != null)
-                        {
-                            $agendamentos = $listaAgendas->with('barbeiro:id,'.$atributos_barbeiro);
-                            
-                            if($condicao_atributo_barbeiro != null)
-                            {
-                                $agendamentos = $listaAgendas->whereHas('barbeiro', function($b) use($condicao_atributo_barbeiro)
-                                {
-                                    $b->where($condicao_atributo_barbeiro[0],$condicao_atributo_barbeiro[1],$condicao_atributo_barbeiro[2]);
-                                });
-                            }
-                        }
-
                         $agendamentos = $listaAgendas
+                        ->with(['barbeiro','cliente','agendamento_servico.servico'])
                         ->where('id_barbeiro', $barbeiro_id)
                         ->get();
 
-                            if($atributos_cliente != null)
-                            {
-                                $agendamentos = $listaAgendas->with('cliente:id,'.$atributos_cliente); 
+                                if($atributos_cliente != null)
+                                {
+                                    $agendamentos = $listaAgendas->with('cliente:id,'.$atributos_cliente); 
                                 
-                                if($condicao_atributo_cliente != null)
-                                {
-                                    $agendamentos = $listaAgendas->whereHas('cliente', function($c) use($condicao_atributo_cliente)
+                                    if($filtro_cliente != null)
                                     {
-                                        $c->where($condicao_atributo_cliente[0],$condicao_atributo_cliente[1],$condicao_atributo_cliente[2]);
-                                    });
-                                }
-                            }
-
-                                if($limit !== null || $page !== null )
-                                {
-                                    $offset = ($page - 1) * $limit;
-
-                                    $agendamentos = $listaAgendas
-                                    ->limit($limit)
-                                    ->offset($offset);
+                                        $agendamentos = $listaAgendas->whereHas('cliente', function($c) use($filtro_cliente)
+                                        {
+                                            foreach($filtro_cliente as $condicao_cliente)
+                                            {
+                                                $cc = explode(':',$condicao_cliente);
+                                                $c->where($cc[0],$cc[1],$cc[2]);
+                                            }
+                                        });
+                                    }
                                 }
 
+                                    if($limit !== 0 || $page !== 0 )
+                                    {
+                                        $offset = ($page - 1) * $limit;
 
-                                    $agendamentos = $listaAgendas
-                                    ->where('id_barbeiro', $barbeiro_id)
-                                    ->get();
+                                        $agendamentos = $listaAgendas
+                                        ->limit($limit)
+                                        ->offset($offset);
+                                    }
+
+
+                                        $agendamentos = $listaAgendas
+                                        ->where('id_barbeiro', $barbeiro_id)
+                                        ->get();
                 }
 
-            return $agendamentos;
+                return $agendamentos;
         }
 
         public function detalhes(int $id_agenda): object

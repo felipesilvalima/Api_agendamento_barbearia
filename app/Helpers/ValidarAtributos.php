@@ -51,8 +51,8 @@ class ValidarAtributos
                 
 
             }
-
-            return $atributo;
+    
+            return $atributos_soliciatados;
 
         }
         
