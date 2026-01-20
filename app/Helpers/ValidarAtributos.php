@@ -31,15 +31,24 @@ class ValidarAtributos
     {
         if($atributos_soliciatados != null){
             
-            $atributos_soliciatados = explode("'",$atributos_soliciatados);
+            $atributos_soliciatados = explode(";",$atributos_soliciatados);
 
-                if(!in_array($atributos_soliciatados[0], $atributos_permitidos))
+            foreach($atributos_soliciatados as $atributo)
+            {
+                $atributo = explode(':',$atributo);
+
+                if($atributo[0] === null)
                 {
-                    abort(422, 'O Atributo '. $atributos_soliciatados[0]. ' Não é permitido');
+                    break;
                 }
-            
 
-            return $atributos_soliciatados;
+                if(!in_array($atributo[0], $atributos_permitidos))
+                {
+                    abort(422, 'O Atributo '. $atributo[0]. ' Não é permitido');
+                }
+            }
+
+            return $atributo;
 
         }
         
