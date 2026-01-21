@@ -32,6 +32,8 @@ Route::post('/clientes',[ClienteController::class, 'criarClientes'])->name('cria
 Route::middleware('auth:api','permissao:Cliente|Barbeiro')->prefix('auth')->group( function () {
     Route::post('/refresh',[AuthController::class, 'refresh'])->name('refresh');
     Route::get('/me',[AuthController::class, 'me'])->name('me');
+    Route::put('/update/me',[AuthController::class, 'uptdateMe'])->name('atualizar_password');
+    Route::delete('/desativar/me',[AuthController::class, 'desativarMe'])->name('desativar_conta');
     Route::post('/logout',[AuthController::class, 'logout'])->name('logout');
 });
 

@@ -24,7 +24,7 @@ class ClienteService
 
                 if(!$clienteDto->id_cliente)
                 {
-                    throw new ErrorInternoException();
+                    throw new ErrorInternoException("error ao criar cliente");
                 }
                  
 

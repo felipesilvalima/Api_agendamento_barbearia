@@ -25,7 +25,7 @@ class BarbeiroService
 
                 if(!$BarbeiroDto->id_barbeiro)
                 {
-                    throw new ErrorInternoException();
+                    throw new ErrorInternoException("error criar barbeiro");
                 }
             
 

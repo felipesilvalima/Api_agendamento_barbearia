@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTOS\LoginDTO;
 use App\Exceptions\AutenticacaoException;
+use App\Exceptions\ConflitoExecption;
 use App\Exceptions\NaoExisteRecursoException;
 use App\Models\User;
 use App\Repository\Contratos\AuthRepositoryInterface;
@@ -69,19 +70,55 @@ class AuthService
                 return $perfil;
     }
 
-    public function update(string $password, User $user)
+    public function update(array $password, User $user)
     {
+        
         if(!$this->authRepository->verificarExistenciaUsuario($user->id))
         {
             throw new NaoExisteRecursoException("Não foi possivel atualizar a senha. Usuário não existe");
         }
         
-        if (!Hash::check($password, $user->password)) 
+        if (!Hash::check($password['password'], $user->password)) 
         {
-            $user->password = Hash::make($password);
+            $user->password = Hash::make($password['password']);
             $user->save();
         }
+            else
+            {
+                throw new ConflitoExecption("Digite uma nova senha");
+            }
 
+    }
+
+    public function delete(User $user)
+    {
+        if(!$this->authRepository->verificarExistenciaUsuario($user->id))
+        {
+            throw new NaoExisteRecursoException("Não e possivel deleta. Esse Usuário não existe");
+        }
+
+        if(!is_null($user->id_cliente))
+        {
+            if(!$this->clienteRepository->verificarClienteExiste($user->id_cliente))
+            {
+                throw new NaoExisteRecursoException("Não e possivel deleta. Esse Cliente não existe");
+            } 
+
+            $user->cliente->status = 'INATIVO';
+            $user->cliente->save();
+        }
+            else
+            {
+                if(!$this->barbeiroRepository->verificarBarbeiroExiste($user->id_barbeiro))
+                {
+                    throw new NaoExisteRecursoException("Não e possivel deleta. Esse Barbeiro não existe");
+                }
+                
+                $user->barbeiro->status = 'INATIVO';
+                $user->barbeiro->save();
+            }
+
+        $user->delete();
     }
 
 }

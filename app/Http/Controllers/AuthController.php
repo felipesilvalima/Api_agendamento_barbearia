@@ -7,7 +7,6 @@ use App\Http\Requests\AuthRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Services\AuthService;
 use App\Services\ValidarDomainService;
-use Symfony\Component\HttpFoundation\Request;
 
 class AuthController extends Controller
 {
@@ -52,10 +51,9 @@ class AuthController extends Controller
       return response()->json($perfil,200);
   }
 
-  //PUT /me - Atualizar próprio perfil
-
   public function uptdateMe(UpdatePasswordRequest $request)
   {
+    
     if ($request->filled('password')) {
     
       $senhaNova =  $request->validated();
@@ -66,11 +64,13 @@ class AuthController extends Controller
     }
   }
 
-  //DELETE /me - Deletar próprio perfil usando softDeletes
-
-  private function id_user(): ?int
+  public function desativarMe()
   {
-    return auth('api')->user()->id;
+    $this->authService->delete(auth('api')->user());
+
+    return response()->json(["mensagem" => 'Conta Desativada'],200);
   }
+
+ 
 
 }

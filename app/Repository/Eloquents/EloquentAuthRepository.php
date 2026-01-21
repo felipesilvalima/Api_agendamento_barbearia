@@ -15,10 +15,10 @@ class EloquentAuthRepository implements AuthRepositoryInterface
     public function __construct(private User $userModel){}
 
 
-    public function salvarUsuario(BarbeiroDTO | ClienteDTO $user): bool
+    public function salvarUsuario(BarbeiroDTO | ClienteDTO $user): void
     {
 
-       return $this->userModel->create([
+       $this->userModel->create([
             "email" => $user->email,
             "password" =>  Hash::make($user->password),
             "id_cliente" => $user->id_cliente ?? null,
