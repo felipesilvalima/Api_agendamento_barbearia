@@ -4,15 +4,22 @@ namespace App\Http\Controllers;
 
 use App\DTOS\LoginDTO;
 use App\Http\Requests\AuthRequest;
+use App\Http\Requests\UpdatePasswordRequest;
 use App\Services\AuthService;
-
+use App\Services\ValidarDomainService;
+use Symfony\Component\HttpFoundation\Request;
 
 class AuthController extends Controller
 {
-   public function __construct(private AuthService $authService){}
+   public function __construct(
+    private AuthService $authService,
+    private ValidarDomainService $validarService
+    
+  ){}
 
   public function login(AuthRequest $request)
   {
+   
         $credencias = $request->validated();
 
         $dtos = new LoginDTO(
@@ -47,6 +54,23 @@ class AuthController extends Controller
 
   //PUT /me - Atualizar próprio perfil
 
+  public function uptdateMe(UpdatePasswordRequest $request)
+  {
+    if ($request->filled('password')) {
+    
+      $senhaNova =  $request->validated();
+  
+      $this->authService->update($senhaNova, auth('api')->user());
+  
+      return response()->json(['mensagem' => 'Senha atualizada com sucesso'],200);
+    }
+  }
+
   //DELETE /me - Deletar próprio perfil usando softDeletes
+
+  private function id_user(): ?int
+  {
+    return auth('api')->user()->id;
+  }
 
 }

@@ -27,22 +27,29 @@ class EloquentAuthRepository implements AuthRepositoryInterface
 
     }
 
-        public function verificarCredenciasUser(LoginDTO $credencias): bool | string
-        {
-            $token = Auth::attempt([
+    public function verificarCredenciasUser(LoginDTO $credencias): bool | string
+    {
+        $token = Auth::attempt([
                 "email" => $credencias->email,
                 "password" => $credencias->password,
-            ]);
+        ]);
 
-            if($token)
-            {
-                return $token;
-            }
-                else
-                {
-                    return false;
-                }
-            
+        if($token)
+        {
+            return $token;
         }
+            else
+            {
+                return false;
+            }
+            
+    }
+
+    public function verificarExistenciaUsuario(int $id_user): bool
+    {
+        return $this->userModel->where('id',$id_user)->exists();
+    }
+
+        
 
 }

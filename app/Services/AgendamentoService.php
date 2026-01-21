@@ -10,6 +10,8 @@ use App\Exceptions\NaoExisteRecursoException;
 use App\Helpers\ValidarAtributos;
 use App\Repository\Contratos\AgendamentoServicoRepositoyInterface;
 use App\Repository\Contratos\AgendamentosRepositoryInterface;
+use App\Repository\Contratos\BarbeiroRepositoryInterface;
+use App\Repository\Contratos\ClienteRepositoryInterface;
 use DomainException;
 use Illuminate\Support\Facades\DB;
 
@@ -18,6 +20,8 @@ class AgendamentoService
     public function __construct(
         private AgendamentosRepositoryInterface $agendamentoRepository,
         private AgendamentoServicoRepositoyInterface $agendamento_ServicoRepository,
+        private ClienteRepositoryInterface $clienteRepository,
+        private BarbeiroRepositoryInterface $barbeiroRepository,
         private ValidarDomainService $validarService,
         private HorarioDomainService $horarioService,
     ){}
@@ -25,8 +29,15 @@ class AgendamentoService
     public function agendar(AgendamentoDTO $agendamentoDto): int
     {
         //validação de segurança
-        $this->validarService->validaCliente($agendamentoDto->id_cliente);
-        $this->validarService->validaBarbeiro($agendamentoDto->id_barbeiro);
+        if(!$this->clienteRepository->verificarClienteExiste($agendamentoDto->id_cliente))
+        {
+            throw new NaoExisteRecursoException("Não e possivel fazer agendamento. Esse cliente não existe");
+        }
+
+        if(!$this->barbeiroRepository->verificarBarbeiroExiste($agendamentoDto->id_barbeiro))
+        {
+            throw new NaoExisteRecursoException("Não e possivel fazer agendamento. Esse barbeiro não existe");
+        }
 
         //Regras de négocio
         $this->validarService->validarLimiteAgendamentoPorCliente($agendamentoDto->id_cliente);
@@ -100,7 +111,10 @@ class AgendamentoService
     public function reagendar(ReagendamentoDTO $reagendamentoDto): object
     {
         //validação de segurança e permissoes
-        $this->validarService->validaCliente($reagendamentoDto->id_cliente);
+        if(!$this->clienteRepository->verificarClienteExiste($reagendamentoDto->id_cliente))
+        {
+            throw new NaoExisteRecursoException("Não e possivel reagendar. esse Cliente não existe");
+        }
 
         //regras de négocio
         $agenda = $this->agendamentoRepository->detalhes($reagendamentoDto->id_agendamento);
@@ -130,7 +144,11 @@ class AgendamentoService
     public function finalizar(int $id_agenda, ?int $id_barbeiro): object
     {
         //validação de segurança e permissoes
-        $this->validarService->validaBarbeiro($id_barbeiro);
+        if(!$this->barbeiroRepository->verificarBarbeiroExiste($id_barbeiro))
+        {
+            throw new NaoExisteRecursoException("Não e possivel finalizar. esse Barbeiro não existe");
+        }
+
         $this->validarService->validarExistenciaAgendamento($id_agenda);
         
         //buscar registro do agendamento de cliente
@@ -161,14 +179,21 @@ class AgendamentoService
         if(!is_null($cliente_id))
         {
             //validação de segurança
-            $this->validarService->validaCliente($cliente_id);
+            if(!$this->clienteRepository->verificarClienteExiste($cliente_id))
+            {
+                throw new NaoExisteRecursoException("Não e possivel cancelar. esse Cliente não existe");
+            }
+
             $this->horarioService->horarioCancelarAgendamento($agendaCliente->hora);
 
         }
             else
             {
                 //validação de segurança
-                $this->validarService->validaBarbeiro($barbeiro_id);
+                if(!$this->barbeiroRepository->verificarBarbeiroExiste($barbeiro_id))
+                {
+                    throw new NaoExisteRecursoException("Não e possivel cancelar. esse Barbeiro não existe");
+                }
             }
          
                 if($agendaCliente->status === 'CONCLUIDO')
@@ -187,5 +212,8 @@ class AgendamentoService
                         return $agendaCliente;
          
     }
+
+
+    
 
 }

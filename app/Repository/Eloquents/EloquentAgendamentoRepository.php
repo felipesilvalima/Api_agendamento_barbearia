@@ -100,9 +100,9 @@ class EloquentAgendamentoRepository implements AgendamentosRepositoryInterface
                                 ->offset($offset);
                             }
 
-                            $agendamentos = $listaAgendas
-                            ->where('id_cliente', $agendamentoDTO->id_cliente)
-                            ->get();
+                                $agendamentos = $listaAgendas
+                                ->where('id_cliente', $agendamentoDTO->id_cliente)
+                                ->get();
             }
                 else
                 {
@@ -158,7 +158,6 @@ class EloquentAgendamentoRepository implements AgendamentosRepositoryInterface
                                         ->limit($agendamentoDTO->limit)
                                         ->offset($offset);
                                     }
-
 
                                         $agendamentos = $listaAgendas
                                         ->where('id_barbeiro', $agendamentoDTO->id_barbeiro)

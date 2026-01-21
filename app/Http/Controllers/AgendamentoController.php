@@ -68,6 +68,7 @@ class AgendamentoController extends Controller
        
         $data = $request->validated();
 
+
         $this->authorize('reagendar',$this->agendamentoInstancia($id_agenda));
         $this->agendamentoService->reagendar(new ReagendamentoDTO(
             data: $data['data'],

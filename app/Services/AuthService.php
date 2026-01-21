@@ -5,9 +5,12 @@ namespace App\Services;
 use App\DTOS\LoginDTO;
 use App\Exceptions\AutenticacaoException;
 use App\Exceptions\NaoExisteRecursoException;
+use App\Models\User;
 use App\Repository\Contratos\AuthRepositoryInterface;
 use App\Repository\Contratos\BarbeiroRepositoryInterface;
 use App\Repository\Contratos\ClienteRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthService
 {
@@ -27,8 +30,24 @@ class AuthService
         {
           throw new AutenticacaoException();
         }
+            else
+            {
+                $user = Auth('api')->user();
+                
+                if(Hash::check($credencias->password, $user->password))
+                {
+                    
+                    if(!Hash::needsRehash($user->password))
+                    {
+                        $user->password = Hash::make($credencias->password);
+                        $user->save();
+                    }
+        
+                }
+        
+                return $response;
+            }
 
-        return $response;
     }
 
     public function perfilUser(object $id_user): object
@@ -48,6 +67,21 @@ class AuthService
                 }
 
                 return $perfil;
+    }
+
+    public function update(string $password, User $user)
+    {
+        if(!$this->authRepository->verificarExistenciaUsuario($user->id))
+        {
+            throw new NaoExisteRecursoException("Não foi possivel atualizar a senha. Usuário não existe");
+        }
+        
+        if (!Hash::check($password, $user->password)) 
+        {
+            $user->password = Hash::make($password);
+            $user->save();
+        }
+
     }
 
 }
