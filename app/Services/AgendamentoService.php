@@ -29,12 +29,12 @@ class AgendamentoService
     public function agendar(AgendamentoDTO $agendamentoDto): int
     {
         //validação de segurança
-        if(!$this->clienteRepository->verificarClienteExiste($agendamentoDto->id_cliente))
+        if(!$this->clienteRepository->existeCliente($agendamentoDto->id_cliente))
         {
             throw new NaoExisteRecursoException("Não e possivel fazer agendamento. Esse cliente não existe");
         }
 
-        if(!$this->barbeiroRepository->verificarBarbeiroExiste($agendamentoDto->id_barbeiro))
+        if(!$this->barbeiroRepository->existeBarbeiro($agendamentoDto->id_barbeiro))
         {
             throw new NaoExisteRecursoException("Não e possivel fazer agendamento. Esse barbeiro não existe");
         }
@@ -111,7 +111,7 @@ class AgendamentoService
     public function reagendar(ReagendamentoDTO $reagendamentoDto): object
     {
         //validação de segurança e permissoes
-        if(!$this->clienteRepository->verificarClienteExiste($reagendamentoDto->id_cliente))
+        if(!$this->clienteRepository->existeCliente($reagendamentoDto->id_cliente))
         {
             throw new NaoExisteRecursoException("Não e possivel reagendar. esse Cliente não existe");
         }
@@ -144,7 +144,7 @@ class AgendamentoService
     public function finalizar(int $id_agenda, ?int $id_barbeiro): object
     {
         //validação de segurança e permissoes
-        if(!$this->barbeiroRepository->verificarBarbeiroExiste($id_barbeiro))
+        if(!$this->barbeiroRepository->existeBarbeiro($id_barbeiro))
         {
             throw new NaoExisteRecursoException("Não e possivel finalizar. esse Barbeiro não existe");
         }
@@ -179,7 +179,7 @@ class AgendamentoService
         if(!is_null($cliente_id))
         {
             //validação de segurança
-            if(!$this->clienteRepository->verificarClienteExiste($cliente_id))
+            if(!$this->clienteRepository->existeCliente($cliente_id))
             {
                 throw new NaoExisteRecursoException("Não e possivel cancelar. esse Cliente não existe");
             }
@@ -190,7 +190,7 @@ class AgendamentoService
             else
             {
                 //validação de segurança
-                if(!$this->barbeiroRepository->verificarBarbeiroExiste($barbeiro_id))
+                if(!$this->barbeiroRepository->existeBarbeiro($barbeiro_id))
                 {
                     throw new NaoExisteRecursoException("Não e possivel cancelar. esse Barbeiro não existe");
                 }

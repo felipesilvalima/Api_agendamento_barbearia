@@ -7,7 +7,7 @@ use App\DTOS\ClienteDTO;
 
 interface ClienteRepositoryInterface
 {
-    public function verificarClienteExiste(int $id_cliente): bool;     
+    public function existeCliente(int $id_cliente): bool;     
     public function salvarCliente(ClienteDTO $clienteDto): int;
     public function PerfilCliente(int $id_cliente): object | bool;
     

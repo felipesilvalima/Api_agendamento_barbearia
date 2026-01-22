@@ -39,4 +39,12 @@ class EloquentAgendamentoServicoRepository implements AgendamentoServicoReposito
         ->where('id_servico',$id_servico)
         ->delete();
     }
+
+    public function listarPorAgendamento(int $id_agendamento): iterable
+    {
+       return $this->agendamentoServicoModel
+       ->with('servico')
+       ->where('id_agendamento', $id_agendamento)
+       ->get();
+    }
 }

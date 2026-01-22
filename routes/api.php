@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use App\Http\Controllers\AgendamentoController;
+use App\Http\Controllers\AgendamentoServicoController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarbeiroController;
 use App\Http\Controllers\ClienteController;
@@ -43,6 +44,7 @@ Route::middleware('auth:api','permissao:Cliente')->group( function () {
     Route::post('/agendamentos',[AgendamentoController::class, 'criarAgendamento'])->name('criar_agendamentos');
     Route::patch('/agendamentos/{id}/reagendar',[AgendamentoController::class, 'reagendarAgendamentos'])->name('reagendar_agendamentos');
     Route::delete('/agendamentos/{id_agendamento}/servicos/{id_servico}',[AgendamentoController::class, 'removerServicos'])->name('remover_servicos');
+    Route::post('/agendamentos/{id_agendamento}/servicos/{id_servico}',[AgendamentoServicoController::class, 'adicionarServicosAgendamento'])->name('adiconar_servicos_no_agendamento');
 });
 
 //rotas Acessada por Barbeiros
@@ -55,6 +57,7 @@ Route::middleware('auth:api','permissao:Barbeiro')->group( function () {
 Route::middleware('auth:api','permissao:Cliente|Barbeiro')->group( function () {
     Route::get('/agendamentos',[AgendamentoController::class, 'listarAgendamentos'])->name('listar_agendamentos');
     Route::get('/agendamentos/{id}',[AgendamentoController::class, 'verAgenda'])->name('detalhes_agendamentos');
+    Route::get('/agendamentos/{id_agendamento}/servicos',[AgendamentoServicoController::class, 'listaServicosAgendamento'])->name('listar_servicos_por_agendamento');
     Route::patch('/agendamentos/{id}/cancelar',[AgendamentoController::class, 'cancelarAgendamentos'])->name('cancelar_agendamentos');
 });
 

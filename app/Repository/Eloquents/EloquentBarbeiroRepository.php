@@ -2,18 +2,22 @@
 
 namespace App\Repository\Eloquents;
 
+use App\Repository\Abstract\BaseRepository;
 use App\DTOS\BarbeiroDTO;
 use App\Models\Barbeiro;
 use App\Repository\Contratos\BarbeiroRepositoryInterface;
 
-class EloquentBarbeiroRepository implements BarbeiroRepositoryInterface
+class EloquentBarbeiroRepository extends BaseRepository implements BarbeiroRepositoryInterface
 {
-    public function __construct(private Barbeiro $barbeiroModel){}
+    public function __construct(private Barbeiro $barbeiroModel)
+    {
+        parent::__construct($barbeiroModel);
+    }
 
-        public function verificarBarbeiroExiste($id_barbeiro): bool
+        public function existeBarbeiro($id_barbeiro): bool
         {
-            $result = $this->barbeiroModel->where('id', $id_barbeiro)->exists();
-            return $result;
+            return $this->existe($id_barbeiro);
+            
         }
 
             public function salvarBarbeiro(BarbeiroDTO $barbeiroDto): int

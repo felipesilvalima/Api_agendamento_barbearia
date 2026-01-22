@@ -49,8 +49,8 @@ class AgendamentoRequest extends FormRequest
             'date' => 'O campo :attribute precisar ser do tipo data',
             'date_format' => 'O campo :attribute precisar ter um formato válido',
             'after_or_equal' => 'Data inválida. Escolha uma data mais atual',
-            'array' => ' campo :attribute precisar ser do tipo array',
-            'min' => ' O campo :attribute precisar ter no minimo :min :attribute'
+            'array' => 'O campo :attribute precisar ser do tipo array inteiro',
+            'min' => 'O campo :attribute precisar ter no minimo :min :attribute'
         ];
     }
 }

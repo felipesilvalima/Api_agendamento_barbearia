@@ -6,13 +6,17 @@ use App\DTOS\BarbeiroDTO;
 use App\DTOS\ClienteDTO;
 use App\DTOS\LoginDTO;
 use App\Models\User;
+use App\Repository\Abstract\BaseRepository;
 use App\Repository\Contratos\AuthRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class EloquentAuthRepository implements AuthRepositoryInterface
+class EloquentAuthRepository extends BaseRepository implements AuthRepositoryInterface
 {
-    public function __construct(private User $userModel){}
+    public function __construct(private User $userModel)
+    {
+        parent::__construct($userModel);
+    }
 
 
     public function salvarUsuario(BarbeiroDTO | ClienteDTO $user): void
@@ -45,9 +49,9 @@ class EloquentAuthRepository implements AuthRepositoryInterface
             
     }
 
-    public function verificarExistenciaUsuario(int $id_user): bool
+    public function existeUsuario(int $id_user): bool
     {
-        return $this->userModel->where('id',$id_user)->exists();
+        return $this->existe($id_user);
     }
 
         

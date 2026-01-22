@@ -44,7 +44,7 @@ class ValidarDomainService
             //verificar se existe servico
             if(!$this->servicoRepository->existeServico($id_servico))
             {
-              throw new NaoExisteRecursoException("Serviço não existe");
+              throw new NaoExisteRecursoException("Serviço inválido. Esse serviço não existe");
             }
         }
 

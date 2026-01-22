@@ -6,7 +6,7 @@ use App\DTOS\BarbeiroDTO;
 
 interface BarbeiroRepositoryInterface
 {
-    public function verificarBarbeiroExiste(int $id_barbeiro): bool;
+    public function existeBarbeiro(int $id_barbeiro): bool;
     public function salvarBarbeiro(BarbeiroDTO $barbeiroDto): int;
     public function PerfilBarbeiro(int $id_barbeiro): object | bool;
             

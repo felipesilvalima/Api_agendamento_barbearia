@@ -2,19 +2,23 @@
 
 namespace App\Repository\Eloquents;
 
+use App\Repository\Abstract\BaseRepository;
 use App\DTOS\ClienteDTO;
 use App\Models\Cliente;
 use App\Repository\Contratos\ClienteRepositoryInterface;
 use Carbon\Carbon;
 
-class EloquentClienteRepository implements ClienteRepositoryInterface
+class EloquentClienteRepository extends BaseRepository implements ClienteRepositoryInterface
 {
-    public function __construct(private Cliente $clienteModel){}
+    public function __construct(private Cliente $clienteModel)
+    {
+        parent::__construct($clienteModel);
+    }
 
-        public function verificarClienteExiste($id_cliente): bool
-        {
-            return $this->clienteModel->where('id', $id_cliente)->exists();
-        }
+    public function existeCliente($id_cliente): bool
+    {
+            return $this->existe($id_cliente);
+    }
 
         
     public function salvarCliente(ClienteDTO $clienteDto): int

@@ -73,7 +73,7 @@ class AuthService
     public function update(array $password, User $user)
     {
         
-        if(!$this->authRepository->verificarExistenciaUsuario($user->id))
+        if(!$this->authRepository->existeUsuario($user->id))
         {
             throw new NaoExisteRecursoException("Não foi possivel atualizar a senha. Usuário não existe");
         }
@@ -92,14 +92,14 @@ class AuthService
 
     public function delete(User $user)
     {
-        if(!$this->authRepository->verificarExistenciaUsuario($user->id))
+        if(!$this->authRepository->existeUsuario($user->id))
         {
             throw new NaoExisteRecursoException("Não e possivel deleta. Esse Usuário não existe");
         }
 
         if(!is_null($user->id_cliente))
         {
-            if(!$this->clienteRepository->verificarClienteExiste($user->id_cliente))
+            if(!$this->clienteRepository->existeCliente($user->id_cliente))
             {
                 throw new NaoExisteRecursoException("Não e possivel deleta. Esse Cliente não existe");
             } 
@@ -109,7 +109,7 @@ class AuthService
         }
             else
             {
-                if(!$this->barbeiroRepository->verificarBarbeiroExiste($user->id_barbeiro))
+                if(!$this->barbeiroRepository->existeBarbeiro($user->id_barbeiro))
                 {
                     throw new NaoExisteRecursoException("Não e possivel deleta. Esse Barbeiro não existe");
                 }

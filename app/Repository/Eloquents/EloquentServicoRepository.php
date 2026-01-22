@@ -2,19 +2,21 @@
 
 namespace App\Repository\Eloquents;
 
+use App\Repository\Abstract\BaseRepository;
 use App\Models\Servico;
 use App\Repository\Contratos\ServicoRepositoryInteface;
 
-class EloquentServicoRepository implements ServicoRepositoryInteface
+class EloquentServicoRepository extends BaseRepository implements ServicoRepositoryInteface
 {
     public function __construct(
         private Servico $servicoModel, 
-    ){}
+    )
+    {
+        parent::__construct($servicoModel);
+    }
     
     public function existeServico(int $id_servico): bool
     {
-        return $this->servicoModel
-        ->where('id',$id_servico)
-        ->exists();
+        return $this->existe($id_servico);
     }
 }

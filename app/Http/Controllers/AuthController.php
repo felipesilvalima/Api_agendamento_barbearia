@@ -54,7 +54,7 @@ class AuthController extends Controller
   public function uptdateMe(UpdatePasswordRequest $request)
   {
     
-    if ($request->filled('password')) {
+    if($request->filled('password')) {
     
       $senhaNova =  $request->validated();
   
