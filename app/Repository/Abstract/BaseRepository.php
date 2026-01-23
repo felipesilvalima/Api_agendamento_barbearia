@@ -40,7 +40,6 @@ Abstract class BaseRepository
                             $this->selectAtributosRelacionamentos('barbeiro');
                         }
 
-
                         //filtro de barbeiro
                         if($agendamentoDTO->filtro_barbeiro_validado != null)
                         {
@@ -63,8 +62,7 @@ Abstract class BaseRepository
                               $this->paginacao($agendamentoDTO->page, $agendamentoDTO->limit);
                             }
 
-                                $entidade = 'id_cliente';
-                                $id = $agendamentoDTO->id_cliente;
+                                $this->listaCompleta(['agendamento_servico.servico'],'id_cliente', $agendamentoDTO->id_cliente);
 
 
             }
@@ -114,12 +112,13 @@ Abstract class BaseRepository
                                                     $this->paginacao($agendamentoDTO->page, $agendamentoDTO->limit);
                                                 }
 
-                                                $entidade = 'id_barbeiro';
-                                                $id = $agendamentoDTO->id_barbeiro;
+                                                $this->listaCompleta(['agendamento_servico.servico'],'id_barbeiro', $agendamentoDTO->id_barbeiro);
+
+                                                                      
 
                 }
 
-                return $this->getResultado($entidade, $id, ['agendamento_servico.servico']);
+                return $this->getResultado();
     }
 
 
@@ -171,11 +170,16 @@ Abstract class BaseRepository
             return $this;
     }
 
-    public function getResultado(string $atributoRelacionamento, int $id, array $relacionamentos)
+    public function listaCompleta(array $relacionamentos, string $atributoRelacionamento,  int $id)
     {
         return $this->query
         ->with($relacionamentos)
-        ->where($atributoRelacionamento, $id)
+        ->where($atributoRelacionamento, $id);
+    }
+
+    public function getResultado()
+    {
+        return $this->query
         ->get();
     }
 

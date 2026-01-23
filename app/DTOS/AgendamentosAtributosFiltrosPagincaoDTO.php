@@ -4,9 +4,9 @@ namespace App\DTOS;
 
 class AgendamentosAtributosFiltrosPagincaoDTO
 {
-    public ?array $filtro_validado;
-    public ?array $filtro_barbeiro_validado;
-    public ?array $filtro_cliente_validado;
+    public ?array $filtro_validado = null;
+    public ?array $filtro_barbeiro_validado = null;
+    public ?array $filtro_cliente_validado = null;
 
     public function __construct(
         public ?int $id_cliente = null,
