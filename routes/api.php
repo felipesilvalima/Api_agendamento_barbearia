@@ -55,6 +55,7 @@ Route::middleware('auth:api','permissao:Barbeiro')->group( function () {
 
 //rotas Acessadas por Cliente e Barbeiro
 Route::middleware('auth:api','permissao:Cliente|Barbeiro')->group( function () {
+    Route::get('/clientes',[ClienteController::class, 'listarClientes'])->name('listar_clientes');
     Route::get('/agendamentos',[AgendamentoController::class, 'listarAgendamentos'])->name('listar_agendamentos');
     Route::get('/agendamentos/{id}',[AgendamentoController::class, 'verAgenda'])->name('detalhes_agendamentos');
     Route::get('/agendamentos/{id_agendamento}/servicos',[AgendamentoServicoController::class, 'listaServicosAgendamento'])->name('listar_servicos_por_agendamento');

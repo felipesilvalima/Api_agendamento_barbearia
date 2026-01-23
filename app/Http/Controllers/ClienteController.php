@@ -13,6 +13,7 @@ class ClienteController extends Controller
 {
     public function __construct(
         private ClienteService $clienteService,
+        private AgendamentoController $agendamento_controller
     ){}
 
   
@@ -34,6 +35,12 @@ class ClienteController extends Controller
 
     //GET /clientes: Lista todos os clientes (com paginação e filtros).
 
+    public function listarClientes()
+    {
+       $lista =  $this->clienteService->listar($this->id_cliente());
+       return response()->json($lista,200);
+    }
+
     
     //GET /clientes/{id}: Obtém detalhes de um cliente específico.
 
@@ -43,5 +50,8 @@ class ClienteController extends Controller
 
     //GET /clientes/{id}/agendamentos: Lista o histórico de agendamentos de um cliente.
     
-    
+    private function id_cliente(): ?int
+    {
+        return auth('api')->user()->id_cliente;
+    }    
 }

@@ -2,6 +2,7 @@
 
 namespace App\Repository\Eloquents;
 
+use App\DTOS\AgendamentosAtributosFiltrosPagincaoDTO;
 use App\Repository\Abstract\BaseRepository;
 use App\DTOS\ClienteDTO;
 use App\Models\Cliente;
@@ -40,6 +41,14 @@ class EloquentClienteRepository extends BaseRepository implements ClienteReposit
        ->with(['user:id,email,id_cliente'])
        ->where('id', $id_cliente)
        ?->first();
+    }
+
+    public function listar(int $id_cliente): iterable
+    {
+        return $this->findAll(new AgendamentosAtributosFiltrosPagincaoDTO(
+           id_cliente: $id_cliente
+           
+        ));
     }
 
 

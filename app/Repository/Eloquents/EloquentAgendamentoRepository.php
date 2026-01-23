@@ -11,7 +11,8 @@ use App\Repository\Contratos\AgendamentosRepositoryInterface;
 
 class EloquentAgendamentoRepository extends BaseRepository implements AgendamentosRepositoryInterface
 {
-    
+    protected $query;
+
     public function __construct(private Agendamento $agendamentoModel)
     {
         parent::__construct($agendamentoModel);
@@ -43,7 +44,7 @@ class EloquentAgendamentoRepository extends BaseRepository implements Agendament
 
         public function listar(AgendamentosAtributosFiltrosPagincaoDTO $agendamentoDTO): iterable
         {
-            return $this->findAll($agendamentoDTO);
+            return $this->findAll($agendamentoDTO);                 
         }
 
         public function detalhes(int $id_agenda): object

@@ -10,5 +10,6 @@ interface ClienteRepositoryInterface
     public function existeCliente(int $id_cliente): bool;     
     public function salvarCliente(ClienteDTO $clienteDto): int;
     public function PerfilCliente(int $id_cliente): object | bool;
+    public function listar(int $id_cliente): iterable;
     
 }

@@ -28,20 +28,17 @@ class AgendamentoServicoController extends Controller
         return response()->json($lista,200);
     }
 
-//POST /agendamentos/{agendamento_id}/servicos - Adiciona um ou mais serviços a um agendamento existente.
-
-public function adicionarServicosAgendamento(int $id_agendamento, int $id_servico)
-{
-    $this->authorize('adicionarServico', $this->agendamento_controller->agendamentoInstancia($id_agendamento));
-    $this->agendamentoService->adicionar($this->id_cliente(),$id_agendamento, $id_servico);
-    return response()->json(['mensagem' => 'Servicos adicionado com sucesso'],201);
-}
-
-
-    private function id_cliente(): ?int 
+    public function adicionarServicosAgendamento(int $id_agendamento, int $id_servico)
     {
-        return auth('api')->user()->id_cliente;
+        $this->authorize('adicionarServico', $this->agendamento_controller->agendamentoInstancia($id_agendamento));
+        $this->agendamentoService->adicionar($this->id_cliente(),$id_agendamento, $id_servico);
+        return response()->json(['mensagem' => 'Servicos adicionado com sucesso'],201);
     }
+
+        private function id_cliente(): ?int 
+        {
+            return auth('api')->user()->id_cliente;
+        }
 
 
 }
