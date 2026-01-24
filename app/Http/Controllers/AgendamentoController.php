@@ -46,9 +46,11 @@ class AgendamentoController extends Controller
             atributos: $request->atributos ?? null,
             atributos_barbeiro: $request->atributos_barbeiro ?? null,
             atributos_cliente: $request->atributos_cliente ?? null,
+            atributos_servico: $request->atributos_servico ?? null,
             filtro: $request->filtro ?? null,
             filtro_barbeiro:$request->filtro_barbeiro ?? null,
             filtro_cliente: $request->filtro_cliente ?? null,
+            filtro_servico: $request->filtro_servico ?? null,
             limit: $request->limit ?? null,
             page: $request->page ?? null
         ));

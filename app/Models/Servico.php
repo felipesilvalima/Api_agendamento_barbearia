@@ -21,8 +21,8 @@ class Servico extends Model
     ];
 
 
-    public function agendamento_servico()
+    public function agendamento()
     {
-        return $this->hasMany(Agendamento_servico::class,'id_servico','id');
+        return $this->belongsToMany(Agendamento::class,'agendamento_servicos','id_agendamento','id_servico');
     }
 }

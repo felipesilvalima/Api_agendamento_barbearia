@@ -7,6 +7,7 @@ class AgendamentosAtributosFiltrosPagincaoDTO
     public ?array $filtro_validado = null;
     public ?array $filtro_barbeiro_validado = null;
     public ?array $filtro_cliente_validado = null;
+    public ?array $filtro_servico_validado = null;
 
     public function __construct(
         public ?int $id_cliente = null,
@@ -14,9 +15,11 @@ class AgendamentosAtributosFiltrosPagincaoDTO
         public ?string $atributos = null,
         public ?string $atributos_barbeiro = null,
         public ?string $atributos_cliente = null,
+        public ?string $atributos_servico = null,
         public ?string $filtro = null,
         public ?string $filtro_barbeiro = null,
         public ?string $filtro_cliente = null,
+        public ?string $filtro_servico = null,
         public ?string $limit = null,
         public ?string $page = null
     ){}

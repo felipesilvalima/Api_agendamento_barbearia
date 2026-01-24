@@ -45,10 +45,8 @@ class EloquentClienteRepository extends BaseRepository implements ClienteReposit
 
     public function listar(int $id_cliente): iterable
     {
-        return $this->findAll(new AgendamentosAtributosFiltrosPagincaoDTO(
-           id_cliente: $id_cliente
-           
-        ));
+        $this->buscarPorUsuario($id_cliente,'id');
+        return $this->getResultado();
     }
 
 

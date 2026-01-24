@@ -14,113 +14,6 @@ Abstract class BaseRepository
         $this->query = $model->query();
     }
 
-    public function findAll(AgendamentosAtributosFiltrosPagincaoDTO $agendamentoDTO): iterable
-    {
-            if(!is_null($agendamentoDTO->id_cliente))
-            {
-                if($agendamentoDTO->atributos != null)
-                {
-                    //atributos
-                    $this->selectAtributos($agendamentoDTO->atributos);
-
-                }
-                    //filtros
-                    if($agendamentoDTO->filtro_validado != null)
-                    {
-                      $this->filtro($agendamentoDTO->filtro_validado);
-                    }
-
-                    if($agendamentoDTO->atributos_barbeiro != null)
-                    {
-                        //atributos de barbeiro
-                        $this->selectAtributosRelacionamentos('barbeiro:id,'.$agendamentoDTO->atributos_barbeiro);
-                    }
-                        else
-                        {
-                            $this->selectAtributosRelacionamentos('barbeiro');
-                        }
-
-                        //filtro de barbeiro
-                        if($agendamentoDTO->filtro_barbeiro_validado != null)
-                        {
-                            $this->filtroRelacionamento($agendamentoDTO->filtro_barbeiro_validado);
-                        }
-
-                        if($agendamentoDTO->atributos_cliente != null)
-                        {
-                            //atributos de cliente
-                            $this->selectAtributosRelacionamentos('cliente:id,'.$agendamentoDTO->atributos_cliente);      
-                        }
-                            else
-                            {
-                                $this->selectAtributosRelacionamentos('cliente');
-                            }
-
-                            if($agendamentoDTO->limit !== null && $agendamentoDTO->page !== null)
-                            {
-                               //paginacao
-                              $this->paginacao($agendamentoDTO->page, $agendamentoDTO->limit);
-                            }
-
-                                $this->listaCompleta(['agendamento_servico.servico'],'id_cliente', $agendamentoDTO->id_cliente);
-
-
-            }
-                else
-                {
-                    if($agendamentoDTO->atributos != null)
-                    {
-                        //atributos
-                        $this->selectAtributos($agendamentoDTO->atributos);
-
-                    }
-                        //filtros
-                        if($agendamentoDTO->filtro_validado != null)
-                        {
-                            $this->filtro($agendamentoDTO->filtro_validado);
-                        }
-
-                            if($agendamentoDTO->atributos_cliente != null)
-                            {
-                                //atributos de cliente
-                                $this->selectAtributosRelacionamentos('cliente:id,'.$agendamentoDTO->atributos_cliente);
-                            }
-                                else
-                                {
-                                    $this->selectAtributosRelacionamentos('cliente');
-                                }
-
-                                    //filtro de barbeiro
-                                    if($agendamentoDTO->filtro_cliente_validado != null)
-                                    {
-                                        $this->filtroRelacionamento($agendamentoDTO->filtro_cliente_validado);
-                                    }
-
-                                        if($agendamentoDTO->atributos_barbeiro != null)
-                                        {
-                                            //atributos de cliente
-                                            $this->selectAtributosRelacionamentos('barbeiro:id,'.$agendamentoDTO->atributos_cliente);      
-                                        }
-                                            else
-                                            {
-                                                $this->selectAtributosRelacionamentos('barbeiro');
-                                            }
-
-                                                if($agendamentoDTO->limit !== null && $agendamentoDTO->page !== null)
-                                                {
-                                                    //paginacao
-                                                    $this->paginacao($agendamentoDTO->page, $agendamentoDTO->limit);
-                                                }
-
-                                                $this->listaCompleta(['agendamento_servico.servico'],'id_barbeiro', $agendamentoDTO->id_barbeiro);
-
-                                                                      
-
-                }
-
-                return $this->getResultado();
-    }
-
 
     public function selectAtributos(string $atributos)
     {
@@ -145,9 +38,9 @@ Abstract class BaseRepository
         return $this;
     }
 
-    public function filtroRelacionamento(array $filtrosRelacionamento)
+    public function filtroRelacionamento(array $filtrosRelacionamento, string $entidadeRelacionada)
     { 
-        $this->query->whereHas('barbeiro', function($b) use($filtrosRelacionamento)
+        $this->query->whereHas($entidadeRelacionada, function($b) use($filtrosRelacionamento)
         {
             foreach($filtrosRelacionamento as $condicao_relacionamento)
             {
@@ -170,11 +63,12 @@ Abstract class BaseRepository
             return $this;
     }
 
-    public function listaCompleta(array $relacionamentos, string $atributoRelacionamento,  int $id)
+    public function buscarPorUsuario(int $id, string $foreKey)
     {
-        return $this->query
-        ->with($relacionamentos)
-        ->where($atributoRelacionamento, $id);
+        $this->query
+        ->where($foreKey, $id);
+
+        return $this;
     }
 
     public function getResultado()
