@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOS\ClienteAtributosFiltrosPaginacaoDTO;
 use App\DTOS\ClienteDTO;
 use App\DTOS\CriarClienteDtos;
 use App\Http\Requests\ClienteRequest;
 use App\Services\AgendamentoService;
 use App\Services\ClienteService;
-
+use Symfony\Component\HttpFoundation\Request;
 
 class ClienteController extends Controller
 {
@@ -35,9 +36,16 @@ class ClienteController extends Controller
 
     //GET /clientes: Lista todos os clientes (com paginação e filtros).
 
-    public function listarClientes()
+    public function listarClientes(Request $request)
     {
-       $lista =  $this->clienteService->listar($this->id_cliente());
+       $lista =  $this->clienteService->listar(new ClienteAtributosFiltrosPaginacaoDTO(
+            id_cliente: $this->id_cliente(),
+            atributos: $request->atributos ?? null,
+            atributos_agendamento: $request->atributos_agendamento ?? null,
+            atributos_barbeiro: $request->atributos_barbeiro ?? null,
+            atributos_servico: $request->atributos_servico ?? null
+       ));
+       
        return response()->json($lista,200);
     }
 

@@ -76,7 +76,7 @@ class AgendamentoService
 
         $atributosPermitido = ['id','data','hora','status','id_barbeiro','id_cliente'];
         $atributosBarbeiroPermitido = ['id','nome','telefone','status','especialidade'];
-        $atributosClientePermitido = ['id','nome','telefone','data_cadastro'];
+        $atributosClientePermitido = ['id','nome','telefone','data_cadastro','status'];
         $atributosServicoPermitido = ['id','nome','descricao','duracao_minutos','preco'];
 
         //atributos condição

@@ -3,6 +3,7 @@
 namespace App\Repository\Eloquents;
 
 use App\DTOS\AgendamentosAtributosFiltrosPagincaoDTO;
+use App\DTOS\ClienteAtributosFiltrosPaginacaoDTO;
 use App\Repository\Abstract\BaseRepository;
 use App\DTOS\ClienteDTO;
 use App\Models\Cliente;
@@ -43,10 +44,41 @@ class EloquentClienteRepository extends BaseRepository implements ClienteReposit
        ?->first();
     }
 
-    public function listar(int $id_cliente): iterable
+    public function listar(ClienteAtributosFiltrosPaginacaoDTO $clienteDTO): iterable
     {
-        $this->buscarPorUsuario($id_cliente,'id');
-        return $this->getResultado();
+        if($clienteDTO->atributos != null)
+        {
+            //atributos
+            $this->selectAtributos('id,'.$clienteDTO->atributos);
+
+        }
+            //atributos do user
+            $this->selectAtributosRelacionamentos('user');
+                //atributos de agendamento
+                $this->selectAtributosRelacionamentos('agendamento');
+                
+                    if($clienteDTO->atributos_barbeiro != null)
+                    {
+                        //atributos de barbeiro
+                        $this->selectAtributosRelacionamentos('agendamento.barbeiro:id,'.$clienteDTO->atributos_barbeiro);
+                    }
+                        else
+                        {
+                            $this->selectAtributosRelacionamentos('agendamento.barbeiro');
+                        }
+
+                            if($clienteDTO->atributos_servico != null)
+                            {
+                                //atributos de servico
+                                $this->selectAtributosRelacionamentos('agendamento.servico:id,'.$clienteDTO->atributos_servico);
+                            }
+                                else
+                                {
+                                    $this->selectAtributosRelacionamentos('agendamento.servico');
+                                }
+                    
+                                    $this->buscarPorUsuario($clienteDTO->id_cliente,'id');
+                                    return $this->getResultado();
     }
 
 

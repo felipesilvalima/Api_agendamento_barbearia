@@ -49,7 +49,7 @@ class EloquentAgendamentoRepository extends BaseRepository implements Agendament
                 if($agendamentoDTO->atributos != null)
                 {
                     //atributos
-                    $this->selectAtributos($agendamentoDTO->atributos);
+                    $this->selectAtributos('id,'.$agendamentoDTO->atributos);
 
                 }
                     //filtros
@@ -113,7 +113,7 @@ class EloquentAgendamentoRepository extends BaseRepository implements Agendament
                     if($agendamentoDTO->atributos != null)
                     {
                         //atributos
-                        $this->selectAtributos($agendamentoDTO->atributos);
+                        $this->selectAtributos('id,'.$agendamentoDTO->atributos);
 
                     }
                         //filtros
