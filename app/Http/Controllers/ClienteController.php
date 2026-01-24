@@ -6,15 +6,16 @@ use App\DTOS\ClienteAtributosFiltrosPaginacaoDTO;
 use App\DTOS\ClienteDTO;
 use App\DTOS\CriarClienteDtos;
 use App\Http\Requests\ClienteRequest;
+use App\Models\Cliente;
 use App\Services\AgendamentoService;
 use App\Services\ClienteService;
+use App\Services\ValidarDomainService;
 use Symfony\Component\HttpFoundation\Request;
 
 class ClienteController extends Controller
 {
     public function __construct(
-        private ClienteService $clienteService,
-        private AgendamentoController $agendamento_controller
+        private ClienteService $clienteService
     ){}
 
   
@@ -52,6 +53,11 @@ class ClienteController extends Controller
     
     //GET /clientes/{id}: Obtém detalhes de um cliente específico.
 
+    public function detalhesClientes(int $id_cliente)
+    {
+       $detalhes =  $this->clienteService->detalhes($id_cliente);
+       return response()->json($detalhes,200);
+    }
 
     //PUT /clientes/{id}: Atualiza dados de um cliente.
     
@@ -61,5 +67,7 @@ class ClienteController extends Controller
     private function id_cliente(): ?int
     {
         return auth('api')->user()->id_cliente;
-    }    
+    }
+
+    
 }

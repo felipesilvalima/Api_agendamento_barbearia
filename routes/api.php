@@ -52,6 +52,7 @@ Route::middleware('auth:api','permissao:Cliente')->group( function () {
 Route::middleware('auth:api','permissao:Barbeiro')->group( function () {
     Route::patch('/agendamentos/{id}/concluir',[AgendamentoController::class, 'finalizarAgendamentos'])->name('finalizar_agendamentos');
     Route::post('/barbeiros',[BarbeiroController::class, 'criarBarbeiros'])->name('criar_barbeiros');
+     Route::get('/clientes/{id_cliente}',[ClienteController::class, 'detalhesClientes'])->name('detalhes_clientes');
 });
 
 //rotas Acessadas por Cliente e Barbeiro

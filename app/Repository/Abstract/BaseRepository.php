@@ -63,7 +63,7 @@ Abstract class BaseRepository
             return $this;
     }
 
-    public function buscarPorUsuario(int $id, string $foreKey)
+    public function buscarPorEntidade(int $id, string $foreKey)
     {
         $this->query
         ->where($foreKey, $id);
@@ -75,6 +75,12 @@ Abstract class BaseRepository
     {
         return $this->query
         ->get();
+    }
+
+    public function firstResultado()
+    {
+        return $this->query
+        ?->first();
     }
 
     public function existe(int $id): bool

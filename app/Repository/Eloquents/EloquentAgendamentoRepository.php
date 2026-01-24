@@ -106,7 +106,7 @@ class EloquentAgendamentoRepository extends BaseRepository implements Agendament
                               $this->paginacao($agendamentoDTO->page, $agendamentoDTO->limit);
                             }
 
-                            $this->buscarPorUsuario($agendamentoDTO->id_cliente, 'id_cliente');
+                            $this->buscarPorEntidade($agendamentoDTO->id_cliente, 'id_cliente');
             }
                 else
                 {
@@ -169,7 +169,7 @@ class EloquentAgendamentoRepository extends BaseRepository implements Agendament
                                                     $this->paginacao($agendamentoDTO->page, $agendamentoDTO->limit);
                                                 }
 
-                                                $this->buscarPorUsuario($agendamentoDTO->id_barbeiro,'id_barbeiro');
+                                                $this->buscarPorEntidade($agendamentoDTO->id_barbeiro,'id_barbeiro');
 
                 }
             
@@ -179,12 +179,12 @@ class EloquentAgendamentoRepository extends BaseRepository implements Agendament
 
         public function detalhes(int $id_agenda): object
         {
-            $listaAgendas = $this->agendamentoModel
-            ->with(['barbeiro','cliente','servico'])
-            ->where('id',$id_agenda)
-            ?->first();
+            $this->selectAtributosRelacionamentos('barbeiro');
+            $this->selectAtributosRelacionamentos('cliente');
+            $this->selectAtributosRelacionamentos('servico');
+            $this->buscarPorEntidade($id_agenda,'id');
 
-            return $listaAgendas;
+            return $this->firstResultado();
         }
         
 }

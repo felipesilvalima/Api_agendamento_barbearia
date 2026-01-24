@@ -6,6 +6,7 @@ use App\DTOS\AgendamentosAtributosFiltrosPagincaoDTO;
 use App\Exceptions\NaoExisteRecursoException;
 use App\Repository\Contratos\AgendamentoServicoRepositoyInterface;
 use App\Repository\Contratos\AgendamentosRepositoryInterface;
+use App\Repository\Contratos\ClienteRepositoryInterface;
 use App\Repository\Contratos\ServicoRepositoryInteface;
 use DomainException;
 
@@ -15,7 +16,7 @@ class ValidarDomainService
     public function __construct(
         private AgendamentosRepositoryInterface $agendamentoRepository,
         private AgendamentoServicoRepositoyInterface $agendamento_ServicoRepository,
-        private ServicoRepositoryInteface $servicoRepository, 
+        private ServicoRepositoryInteface $servicoRepository
     ){}
 
         public function validarExistenciaAgendamento(int $id_agenda): void

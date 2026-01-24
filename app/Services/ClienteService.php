@@ -38,7 +38,7 @@ class ClienteService
 
     public function listar(ClienteAtributosFiltrosPaginacaoDTO $clienteDTO)
     {
-       if(!$this->clienteRepository->existeCliente($clienteDTO->id_cliente))
+        if(!$this->clienteRepository->existeCliente($clienteDTO->id_cliente))
         {
             throw new NaoExisteRecursoException("Não e possivel listar. Esse cliente não existe");
         }
@@ -62,6 +62,18 @@ class ClienteService
             }
 
                 return $lista;
+    }
+
+    public function detalhes(int $id_cliente)
+    {
+        if(!$this->clienteRepository->existeCliente($id_cliente))
+        {
+            throw new NaoExisteRecursoException("Não e possivel listar. Esse cliente não existe");
+        }
+
+         $detalhes = $this->clienteRepository->detalhes($id_cliente);
+
+         return $detalhes;
     }
 
 }

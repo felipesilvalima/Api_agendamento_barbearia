@@ -77,8 +77,18 @@ class EloquentClienteRepository extends BaseRepository implements ClienteReposit
                                     $this->selectAtributosRelacionamentos('agendamento.servico');
                                 }
                     
-                                    $this->buscarPorUsuario($clienteDTO->id_cliente,'id');
+                                    $this->buscarPorEntidade($clienteDTO->id_cliente,'id');
                                     return $this->getResultado();
+    }
+
+    public function detalhes(int $id_cliente): object
+    {
+        $this->selectAtributosRelacionamentos('user');
+        $this->selectAtributosRelacionamentos('agendamento');
+        $this->selectAtributosRelacionamentos('agendamento.barbeiro');
+        $this->selectAtributosRelacionamentos('agendamento.servico');
+        $this->buscarPorEntidade($id_cliente,'id');
+        return $this->firstResultado();
     }
 
 
