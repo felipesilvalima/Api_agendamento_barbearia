@@ -44,7 +44,7 @@ class EloquentClienteRepository extends BaseRepository implements ClienteReposit
        ?->first();
     }
 
-    public function listar(ClienteAtributosFiltrosPaginacaoDTO $clienteDTO): iterable
+    public function listar(ClienteAtributosFiltrosPaginacaoDTO $clienteDTO): object
     {
         if($clienteDTO->atributos != null)
         {
@@ -78,15 +78,12 @@ class EloquentClienteRepository extends BaseRepository implements ClienteReposit
                                 }
                     
                                     $this->buscarPorEntidade($clienteDTO->id_cliente,'id');
-                                    return $this->getResultado();
+                                    return $this->firstResultado();
     }
 
     public function detalhes(int $id_cliente): object
     {
         $this->selectAtributosRelacionamentos('user');
-        $this->selectAtributosRelacionamentos('agendamento');
-        $this->selectAtributosRelacionamentos('agendamento.barbeiro');
-        $this->selectAtributosRelacionamentos('agendamento.servico');
         $this->buscarPorEntidade($id_cliente,'id');
         return $this->firstResultado();
     }

@@ -35,7 +35,7 @@ class ClienteController extends Controller
         ],201); 
     }
 
-    //GET /clientes: Lista todos os clientes (com paginação e filtros).
+    //GET /clientes: Lista todos os cliente.
 
     public function listarClientes(Request $request)
     {
