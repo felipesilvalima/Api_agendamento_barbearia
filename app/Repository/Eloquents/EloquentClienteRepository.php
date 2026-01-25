@@ -54,8 +54,6 @@ class EloquentClienteRepository extends BaseRepository implements ClienteReposit
         }
             //atributos do user
             $this->selectAtributosRelacionamentos('user');
-                //atributos de agendamento
-                $this->selectAtributosRelacionamentos('agendamento');
                 
                     if($clienteDTO->atributos_barbeiro != null)
                     {
@@ -64,7 +62,7 @@ class EloquentClienteRepository extends BaseRepository implements ClienteReposit
                     }
                         else
                         {
-                            $this->selectAtributosRelacionamentos('agendamento.barbeiro');
+                           $this->selectAtributosRelacionamentos('agendamento.barbeiro');
                         }
 
                             if($clienteDTO->atributos_servico != null)
@@ -74,11 +72,22 @@ class EloquentClienteRepository extends BaseRepository implements ClienteReposit
                             }
                                 else
                                 {
-                                    $this->selectAtributosRelacionamentos('agendamento.servico');
+                                   $this->selectAtributosRelacionamentos('agendamento.servico');
                                 }
-                    
-                                    $this->buscarPorEntidade($clienteDTO->id_cliente,'id');
-                                    return $this->firstResultado();
+
+                                //atributos de agendamento
+                                if($clienteDTO->atributos_agendamento != null)
+                                {
+
+                                    $this->selectAtributosRelacionamentos('agendamento:id,id_cliente,id_barbeiro,'.$clienteDTO->atributos_agendamento);
+                                }
+                                    else
+                                    {
+                                        $this->selectAtributosRelacionamentos('agendamento');
+                                    }
+
+                                        $this->buscarPorEntidade($clienteDTO->id_cliente,'clientes.id');
+                                        return $this->firstResultado();
     }
 
     public function detalhes(int $id_cliente): object

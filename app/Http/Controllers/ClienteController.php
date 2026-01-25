@@ -35,9 +35,7 @@ class ClienteController extends Controller
         ],201); 
     }
 
-    //GET /clientes: Lista todos os cliente.
-
-    public function listarClientes(Request $request)
+    public function listarAgendamentosClientes(Request $request)
     {
        $lista =  $this->clienteService->listar(new ClienteAtributosFiltrosPaginacaoDTO(
             id_cliente: $this->id_cliente(),
@@ -50,19 +48,16 @@ class ClienteController extends Controller
        return response()->json($lista,200);
     }
 
-    
-    //GET /clientes/{id}: Obtém detalhes de um cliente específico.
-
     public function detalhesClientes(int $id_cliente)
     {
        $detalhes =  $this->clienteService->detalhes($id_cliente);
        return response()->json($detalhes,200);
     }
 
-    //PUT /clientes/{id}: Atualiza dados de um cliente.
     
+    //PUT /clientes/{id}: Atualiza dados de um cliente.
 
-    //GET /clientes/{id}/agendamentos: Lista o histórico de agendamentos de um cliente.
+    
     
     private function id_cliente(): ?int
     {

@@ -3,13 +3,15 @@
 namespace App\Repository\Abstract;
 
 use App\DTOS\AgendamentosAtributosFiltrosPagincaoDTO;
+use App\Models\Agendamento;
 use Illuminate\Database\Eloquent\Model;
 
 Abstract class BaseRepository
 {
     protected $query;
+    protected $queryRelacional;
 
-    public function __construct(private  Model $model)
+    public function __construct(private  Model $model,)
     {
         $this->query = $model->query();
     }
@@ -33,6 +35,12 @@ Abstract class BaseRepository
     }
 
     public function selectAtributosRelacionamentos(string $atributosRelacionamento)
+    {
+        $this->query->with($atributosRelacionamento);
+        return $this;
+    }
+
+    public function selectAtributosRelacionamentosTeste(array $atributosRelacionamento)
     {
         $this->query->with($atributosRelacionamento);
         return $this;
@@ -82,6 +90,7 @@ Abstract class BaseRepository
         return $this->query
         ?->first();
     }
+
 
     public function existe(int $id): bool
     {

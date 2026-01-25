@@ -41,7 +41,7 @@ Route::middleware('auth:api','permissao:Cliente|Barbeiro')->prefix('auth')->grou
 
 //rotas acessada por Clientes
 Route::middleware('auth:api','permissao:Cliente')->group( function () {
-    Route::get('/clientes',[ClienteController::class, 'listarClientes'])->name('listar_clientes');
+    Route::get('/clientes',[ClienteController::class, 'listarAgendamentosClientes'])->name('listar_agendamentos_clientes');
     Route::post('/agendamentos',[AgendamentoController::class, 'criarAgendamento'])->name('criar_agendamentos');
     Route::patch('/agendamentos/{id}/reagendar',[AgendamentoController::class, 'reagendarAgendamentos'])->name('reagendar_agendamentos');
     Route::delete('/agendamentos/{id_agendamento}/servicos/{id_servico}',[AgendamentoController::class, 'removerServicos'])->name('remover_servicos');
@@ -52,6 +52,7 @@ Route::middleware('auth:api','permissao:Cliente')->group( function () {
 Route::middleware('auth:api','permissao:Barbeiro')->group( function () {
     Route::patch('/agendamentos/{id}/concluir',[AgendamentoController::class, 'finalizarAgendamentos'])->name('finalizar_agendamentos');
     Route::post('/barbeiros',[BarbeiroController::class, 'criarBarbeiros'])->name('criar_barbeiros');
+    Route::get('/clientes/{id_cliente}',[ClienteController::class, 'detalhesClientes'])->name('detalhes_clientes');
     
 });
 
@@ -61,7 +62,6 @@ Route::middleware('auth:api','permissao:Cliente|Barbeiro')->group( function () {
     Route::get('/agendamentos/{id}',[AgendamentoController::class, 'verAgenda'])->name('detalhes_agendamentos');
     Route::get('/agendamentos/{id_agendamento}/servicos',[AgendamentoServicoController::class, 'listaServicosAgendamento'])->name('listar_servicos_por_agendamento');
     Route::patch('/agendamentos/{id}/cancelar',[AgendamentoController::class, 'cancelarAgendamentos'])->name('cancelar_agendamentos');
-    Route::get('/clientes/{id_cliente}',[ClienteController::class, 'detalhesClientes'])->name('detalhes_clientes');
 });
 
 
