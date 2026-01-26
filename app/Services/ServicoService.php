@@ -11,10 +11,21 @@ use App\Repository\ServicoRepository;
 class ServicoService
 {
     public function __construct(
-        
+       private ServicoRepositoryInteface $servicoRepository 
     ){}
     
-    
+    public function listar(): object
+    {
+        $listaServico = $this->servicoRepository->listar();
+
+        if(collect($listaServico)->isEmpty())
+        {
+            throw new NaoExisteRecursoException("Nenhuma listar encontrada");
+        }
+
+        return $listaServico;
+        
+    }
    
 
 

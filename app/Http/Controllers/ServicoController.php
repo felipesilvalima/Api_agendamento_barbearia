@@ -3,13 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Services\ServicoService;
-use Illuminate\Http\Request;
 
 class ServicoController extends Controller
 {
     public function __construct(private ServicoService $servicoService){}
     
     //GET /servicos: Lista todos os serviços ativos.
+
+    public function listarServicos()
+    {
+       $lista =  $this->servicoService->listar();
+       return response()->json($lista,200);
+    }
 
     //GET/ precoTotal por agendamento
 
@@ -19,6 +24,6 @@ class ServicoController extends Controller
 
    //PUT /servicos/{id}: Atualiza preço ou descrição de um serviço.
 
-   //DELETE /servicos/{id}: Desativa um serviço (lógico).GET /agendamentos/{agendamento_id}/servicos
+   //DELETE /servicos/{id}: Desativa um serviço
 
 }

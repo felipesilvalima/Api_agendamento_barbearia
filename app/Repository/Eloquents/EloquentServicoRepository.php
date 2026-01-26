@@ -19,4 +19,9 @@ class EloquentServicoRepository extends BaseRepository implements ServicoReposit
     {
         return $this->existe($id_servico);
     }
+
+    public function listar():object
+    {
+        return $this->getResultado();
+    }
 }

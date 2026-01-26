@@ -5,5 +5,6 @@ namespace App\Repository\Contratos;
 interface ServicoRepositoryInteface
 {
      public function existeServico(int $id_servico): bool;
+     public function listar(): object;
     
 }

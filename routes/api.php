@@ -65,6 +65,7 @@ Route::middleware('auth:api','permissao:Cliente|Barbeiro')->group( function () {
     Route::patch('/agendamentos/{id}/cancelar',[AgendamentoController::class, 'cancelarAgendamentos'])->name('cancelar_agendamentos');
     Route::get('/barbeiros/{id_barbeiro}',[BarbeiroController::class, 'detalhesBarbeiros'])->name('detalhes_barbeiros');
     Route::get('/clientes/{id_cliente}',[ClienteController::class, 'detalhesClientes'])->name('detalhes_clientes');
+    Route::get('/servicos',[ServicoController::class, 'listarServicos'])->name('listar_servicos');
 });
 
 
