@@ -2,9 +2,12 @@
 
 namespace App\Repository\Contratos;
 
+use App\DTOS\ServicosAtributosFiltrosDTO;
+
 interface ServicoRepositoryInteface
 {
      public function existeServico(int $id_servico): bool;
-     public function listar(): object;
+     public function listar(ServicosAtributosFiltrosDTO $servicosDto): object;
+     public function precoTotalPorAgendamento(int $id_agendamento): float;
     
 }

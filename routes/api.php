@@ -66,6 +66,7 @@ Route::middleware('auth:api','permissao:Cliente|Barbeiro')->group( function () {
     Route::get('/barbeiros/{id_barbeiro}',[BarbeiroController::class, 'detalhesBarbeiros'])->name('detalhes_barbeiros');
     Route::get('/clientes/{id_cliente}',[ClienteController::class, 'detalhesClientes'])->name('detalhes_clientes');
     Route::get('/servicos',[ServicoController::class, 'listarServicos'])->name('listar_servicos');
+    Route::get('/servicos/{id_agendamento}/preco_total',[ServicoController::class, 'precoTotalAgendamento'])->name('precoTotal_por_agendamento');
 });
 
 
