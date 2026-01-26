@@ -23,10 +23,16 @@ class BarbeiroRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        return $this->isMethod('patch') ? [
+
+            'nome' => 'sometimes|required|string|max:40',
+            'telefone' => 'sometimes|required|numeric|digits:11|unique:barbeiros,telefone',
+            'especialidade' => 'sometimes|required|string'
+            
+        ] : [
 
             'nome' => 'required|string|max:40',
-            'telefone' => 'required|integer|digits:11',
+            'telefone' => 'required|numeric|digits:11|unique:barbeiros,telefone',
 
             'email' => [
                 'required',
@@ -56,10 +62,10 @@ class BarbeiroRequest extends FormRequest
             'required' => 'O :attribute é obrigatório',
             'regex' => 'O :atrtribute inválido',
             'string' => 'O :attribute precisar ser do tipo texto',
-            'integer' => 'O :attribute precisar ser do tipo inteiro',
+            'numeric' => 'O :attribute precisar ser do tipo númerico',
             'size' => 'O :attribute deve ter :size caracteres',
             'max' => 'O :attribute deve ter bo máximo :max caracteres',
-            'unique' => 'Esse :attribute já existe',
+            'unique' => 'Esse :attribute já foi cadastrado',
             'digits' => 'O :attribute deve ter :digits digitos',
         ];
     }

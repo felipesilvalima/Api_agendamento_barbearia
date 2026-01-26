@@ -74,10 +74,7 @@ class ClienteService
 
     public function atualizar(AtualizarClienteDTO $atualizarClienteDTO)
     {
-        if(!$this->clienteRepository->existeCliente($atualizarClienteDTO->cliente->id))
-        {
-            throw new NaoExisteRecursoException("Não e possivel atualizar. Esse cliente não existe");
-        }
+        
         $this->validarService->validarExistenciaCliente($atualizarClienteDTO->cliente->id, "Não e possivel atualizar. Esse cliente não existe");
 
         if($atualizarClienteDTO->nome === null && $atualizarClienteDTO->telefone === null)

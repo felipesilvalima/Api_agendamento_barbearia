@@ -2,14 +2,17 @@
 
 namespace App\Services;
 
+use App\DTOS\AtualizarBarbeiroDTO;
 use App\DTOS\BarbeiroAtributosFiltrosPaginacaoDTO;
 use App\DTOS\BarbeiroDTO;
+use App\Exceptions\ConflitoExecption;
 use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoExisteRecursoException;
 use App\Exceptions\NaoPermitidoExecption;
 use App\Helpers\ValidarAtributos;
 use App\Repository\Contratos\AuthRepositoryInterface;
 use App\Repository\Contratos\BarbeiroRepositoryInterface;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\DB;
 
 class BarbeiroService
@@ -70,6 +73,48 @@ class BarbeiroService
          return $detalhes;
     }
     
+     public function atualizar(AtualizarBarbeiroDTO $atualizarBarbeiroDTO)
+    {
+        
+        $this->validarService->validarExistenciaBarbeiro($atualizarBarbeiroDTO->barbeiro->id, "Não e possivel atualizar. Esse barbeiro não existe");
+
+        if($atualizarBarbeiroDTO->nome === null && $atualizarBarbeiroDTO->telefone === null && $atualizarBarbeiroDTO->especialidade === null)
+        {
+            throw new HttpResponseException(response()->json([
+                'status' => 'error',
+                'mensagem' => 'Payload de dados vázio'
+            ],422));
+        }
+        
+        if (!
+            (  
+                $atualizarBarbeiroDTO->telefone === (int)$atualizarBarbeiroDTO->barbeiro->telefone ||
+                $atualizarBarbeiroDTO->nome === (string)$atualizarBarbeiroDTO->barbeiro->nome ||
+                $atualizarBarbeiroDTO->especialidade === (string)$atualizarBarbeiroDTO->barbeiro->especialidade 
+            )
+        ) 
+        {
+            
+           $barbeiro = $atualizarBarbeiroDTO->barbeiro->fill([
+                'nome' => $atualizarBarbeiroDTO->nome ?? $atualizarBarbeiroDTO->barbeiro->nome,
+                'telefone' => $atualizarBarbeiroDTO->telefone ?? $atualizarBarbeiroDTO->barbeiro->telefone,
+                'especialidade' => $atualizarBarbeiroDTO->especialidade ?? $atualizarBarbeiroDTO->barbeiro->especialidade
+            ]);
+
+            $barbeiro->save();
+
+            if(!$barbeiro)
+            {
+                throw new ErrorInternoException("Error ao atualizar dados de barbeiro");
+            }
+        }
+            else
+            {
+                throw new ConflitoExecption("Digite dados novos");
+            }
+
+    
+    }
 
     
 }

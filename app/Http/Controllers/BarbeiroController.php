@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOS\AtualizarBarbeiroDTO;
 use App\DTOS\BarbeiroAtributosFiltrosPaginacaoDTO;
 use App\DTOS\BarbeiroDTO;
 use App\Http\Requests\BarbeiroRequest;
@@ -55,7 +56,23 @@ class BarbeiroController extends Controller
        return response()->json($detalhes,200);
     }
 
-    //PUT /barbeiros/{id}: Atualiza dados (como jornada de trabalho).
+    public function atualizarBarbeiros(BarbeiroRequest $request)
+    {
+        //validar dados de entrada
+        $request->validated();
+
+        //chamar service
+        $this->barbeiroService->atualizar(new AtualizarBarbeiroDTO(
+            barbeiro: auth('api')->user()->barbeiro,
+            nome: $request['nome'],
+            telefone: $request['telefone'],
+            especialidade: $request['especialidade']
+        ));
+
+        //retornar resposta
+        return response()->json(['mensagem' => 'Atuliazado com sucesso'],200);
+    }
+
     private function id_barbeiro (): ?int
     {
         return auth('api')->user()->id_barbeiro;

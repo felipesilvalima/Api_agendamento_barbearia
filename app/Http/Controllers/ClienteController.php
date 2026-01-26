@@ -60,7 +60,6 @@ class ClienteController extends Controller
     {
         //validar dados de entrada
         $request->validated();
-       // dd($request->telefone);
 
         //chamar service
         $this->clienteService->atualizar(new AtualizarClienteDTO(
