@@ -74,7 +74,7 @@ class ClienteService
 
     public function atualizar(AtualizarClienteDTO $atualizarClienteDTO)
     {
-        
+
         $this->validarService->validarExistenciaCliente($atualizarClienteDTO->cliente->id, "Não e possivel atualizar. Esse cliente não existe");
 
         if($atualizarClienteDTO->nome === null && $atualizarClienteDTO->telefone === null)
@@ -85,29 +85,23 @@ class ClienteService
             ],422));
         }
 
-        if (!
-            ($atualizarClienteDTO->telefone === (int)$atualizarClienteDTO->cliente->telefone ||
-            $atualizarClienteDTO->nome === (string)$atualizarClienteDTO->cliente->nome)
-        ) 
-        {
-
            $cliente = $atualizarClienteDTO->cliente->fill([
                 'nome' => $atualizarClienteDTO->nome ?? $atualizarClienteDTO->cliente->nome,
-                'telefone' => (int)$atualizarClienteDTO->telefone ?? $atualizarClienteDTO->cliente->telefone
+                'telefone' => $atualizarClienteDTO->telefone ?? $atualizarClienteDTO->cliente->telefone
             ]);
 
-            $cliente->save();
+                if($cliente->isDirty(['nome','telefone']))
+                {
+                    throw new ConflitoExecption("Nenhum dado foi alterado. Digite novos dados");
+                }
 
-            if(!$cliente)
-            {
-                throw new ErrorInternoException("Error ao atualizar dados de cliente");
-            }
-        }
-            else
-            {
-                throw new ConflitoExecption("Digite dados novos");
-            }
+                $cliente->save();
 
+                    if(!$cliente)
+                    {
+                        throw new ErrorInternoException("Error ao atualizar dados de cliente");
+                    }
+        
     
     }
 

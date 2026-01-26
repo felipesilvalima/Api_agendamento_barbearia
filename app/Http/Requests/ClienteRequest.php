@@ -26,12 +26,12 @@ class ClienteRequest extends FormRequest
         return $this->isMethod('patch') ? [
 
             'nome' => ['sometimes','required','string','max:40'],
-            'telefone' => ['sometimes','required','integer','digits:11','unique:clientes,telefone'],   
+            'telefone' => ['sometimes','required','numeric','digits:11','unique:clientes,telefone'],   
             
         ] :
         [
             'nome' => 'required|string|max:40',
-            'telefone' => 'required|integer|digits:11|unique:clientes,telefone',
+            'telefone' => 'required|numeric|digits:11|unique:clientes,telefone',
 
             'email' => [
                 'required',
@@ -61,7 +61,7 @@ class ClienteRequest extends FormRequest
             'required' => 'O :attribute é obrigatório',
             'regex' => 'O :atrtribute inválido',
             'string' => 'O :attribute precisar ser do tipo texto',
-            'integer' => 'O :attribute precisar ser do tipo inteiro',
+            'numeric' => 'O :attribute precisar ser do tipo númerico',
             'size' => 'O :attribute deve ter :size caracteres',
             'max' => 'O :attribute deve ter bo máximo :max caracteres',
             'unique' => 'Esse :attribute já foi cadastrado',

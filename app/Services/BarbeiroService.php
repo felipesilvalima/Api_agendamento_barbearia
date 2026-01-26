@@ -85,15 +85,6 @@ class BarbeiroService
                 'mensagem' => 'Payload de dados vázio'
             ],422));
         }
-        
-        if (!
-            (  
-                $atualizarBarbeiroDTO->telefone === (int)$atualizarBarbeiroDTO->barbeiro->telefone ||
-                $atualizarBarbeiroDTO->nome === (string)$atualizarBarbeiroDTO->barbeiro->nome ||
-                $atualizarBarbeiroDTO->especialidade === (string)$atualizarBarbeiroDTO->barbeiro->especialidade 
-            )
-        ) 
-        {
             
            $barbeiro = $atualizarBarbeiroDTO->barbeiro->fill([
                 'nome' => $atualizarBarbeiroDTO->nome ?? $atualizarBarbeiroDTO->barbeiro->nome,
@@ -101,18 +92,17 @@ class BarbeiroService
                 'especialidade' => $atualizarBarbeiroDTO->especialidade ?? $atualizarBarbeiroDTO->barbeiro->especialidade
             ]);
 
-            $barbeiro->save();
+                if($barbeiro->isDirty(['nome','telefone','especialidade']))
+                {
+                    throw new ConflitoExecption("Nenhum dado foi alterado. Digite novos dados");
+                }
 
-            if(!$barbeiro)
-            {
-                throw new ErrorInternoException("Error ao atualizar dados de barbeiro");
-            }
-        }
-            else
-            {
-                throw new ConflitoExecption("Digite dados novos");
-            }
+                $barbeiro->save();
 
+                    if(!$barbeiro)
+                    {
+                        throw new ErrorInternoException("Error ao atualizar dados de barbeiro");
+                    }
     
     }
 
