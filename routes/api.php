@@ -53,7 +53,7 @@ Route::middleware('auth:api','permissao:Cliente')->group( function () {
 Route::middleware('auth:api','permissao:Barbeiro')->group( function () {
     Route::patch('/agendamentos/{id}/concluir',[AgendamentoController::class, 'finalizarAgendamentos'])->name('finalizar_agendamentos');
     Route::post('/barbeiros',[BarbeiroController::class, 'criarBarbeiros'])->name('criar_barbeiros');
-    Route::get('/clientes/{id_cliente}',[ClienteController::class, 'detalhesClientes'])->name('detalhes_clientes');
+    Route::get('/barbeiros',[BarbeiroController::class, 'listarAgendamentosBarbeiros'])->name('listar_agendamentos_barbeiros');
     
 });
 
@@ -63,6 +63,8 @@ Route::middleware('auth:api','permissao:Cliente|Barbeiro')->group( function () {
     Route::get('/agendamentos/{id}',[AgendamentoController::class, 'verAgenda'])->name('detalhes_agendamentos');
     Route::get('/agendamentos/{id_agendamento}/servicos',[AgendamentoServicoController::class, 'listaServicosAgendamento'])->name('listar_servicos_por_agendamento');
     Route::patch('/agendamentos/{id}/cancelar',[AgendamentoController::class, 'cancelarAgendamentos'])->name('cancelar_agendamentos');
+    Route::get('/barbeiros/{id_barbeiro}',[BarbeiroController::class, 'detalhesBarbeiros'])->name('detalhes_barbeiros');
+    Route::get('/clientes/{id_cliente}',[ClienteController::class, 'detalhesClientes'])->name('detalhes_clientes');
 });
 
 

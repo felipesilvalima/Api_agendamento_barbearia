@@ -7,13 +7,16 @@ use App\DTOS\ClienteAtributosFiltrosPaginacaoDTO;
 use App\DTOS\ClienteDTO;
 use App\Http\Requests\AtualizarClienteRequest;
 use App\Http\Requests\ClienteRequest;
+use App\Models\Cliente;
 use App\Services\ClienteService;
+use App\Services\ValidarDomainService;
 use Symfony\Component\HttpFoundation\Request;
 
 class ClienteController extends Controller
 {
     public function __construct(
-        private ClienteService $clienteService
+        private ClienteService $clienteService,
+        private ValidarDomainService $validarService
     ){}
 
   
@@ -48,10 +51,10 @@ class ClienteController extends Controller
 
     public function detalhesClientes(int $id_cliente)
     {
-       $detalhes =  $this->clienteService->detalhes($id_cliente);
-       return response()->json($detalhes,200);
+        $this->authorize('detalhes',$this->clienteIstancia($id_cliente));
+        $detalhes =  $this->clienteService->detalhes($id_cliente);
+        return response()->json($detalhes,200);
     }
-
 
     public function atualizarClientes(ClienteRequest $request)
     {
@@ -70,14 +73,17 @@ class ClienteController extends Controller
         return response()->json(['mensagem' => 'Atuliazado com sucesso'],200);
     }
     
-
-    
     
     private function id_cliente(): ?int
     {
         return auth('api')->user()->id_cliente;
     }
     
+    public function clienteIstancia(int $id_cliente): ?Cliente
+    {   
+        $this->validarService->validarExistenciaCliente($id_cliente,"Não e possivel ver detalhes. Esse Cliente não existe");
+        return Cliente::findOrFail($id_cliente);
+    }
 
     
 }

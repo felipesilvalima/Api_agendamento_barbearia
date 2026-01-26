@@ -9,20 +9,18 @@ use App\Exceptions\ConflitoExecption;
 use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoExisteRecursoException;
 use App\Helpers\ValidarAtributos;
-use App\Http\Requests\AtualizarClienteRequest;
 use App\Repository\Contratos\AuthRepositoryInterface;
 use App\Repository\Contratos\ClienteRepositoryInterface;
-use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Symfony\Component\HttpFoundation\Request;
+
 
 class ClienteService
 {
     public function __construct(
         private ClienteRepositoryInterface $clienteRepository,
-        private AuthRepositoryInterface $authRepository, 
+        private AuthRepositoryInterface $authRepository,
+        private ValidarDomainService $validarService, 
     ){}
 
     public function CadastrarCliente(ClienteDTO $clienteDto): void
@@ -45,10 +43,7 @@ class ClienteService
 
     public function listar(ClienteAtributosFiltrosPaginacaoDTO $clienteDTO)
     {
-        if(!$this->clienteRepository->existeCliente($clienteDTO->id_cliente))
-        {
-            throw new NaoExisteRecursoException("Não e possivel listar. Esse cliente não existe");
-        }
+        $this->validarService->validarExistenciaCliente($clienteDTO->id_cliente, "Não e possivel listar. Esse cliente não existe");
 
         $atributosClientePermitidos = ['id','nome','telefone','data_cadastro','status'];
         $atributosAgendamentoPermitidos = ['id','data','hora','status','id_barbeiro','id_cliente'];
@@ -73,13 +68,7 @@ class ClienteService
 
     public function detalhes(int $id_cliente)
     {
-        if(!$this->clienteRepository->existeCliente($id_cliente))
-        {
-            throw new NaoExisteRecursoException("Não e possivel listar. Esse cliente não existe");
-        }
-
          $detalhes = $this->clienteRepository->detalhes($id_cliente);
-
          return $detalhes;
     }
 
@@ -89,6 +78,7 @@ class ClienteService
         {
             throw new NaoExisteRecursoException("Não e possivel atualizar. Esse cliente não existe");
         }
+        $this->validarService->validarExistenciaCliente($atualizarClienteDTO->cliente->id, "Não e possivel atualizar. Esse cliente não existe");
 
         if($atualizarClienteDTO->nome === null && $atualizarClienteDTO->telefone === null)
         {

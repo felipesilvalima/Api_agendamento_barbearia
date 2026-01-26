@@ -6,6 +6,8 @@ use App\DTOS\AgendamentosAtributosFiltrosPagincaoDTO;
 use App\Exceptions\NaoExisteRecursoException;
 use App\Repository\Contratos\AgendamentoServicoRepositoyInterface;
 use App\Repository\Contratos\AgendamentosRepositoryInterface;
+use App\Repository\Contratos\AuthRepositoryInterface;
+use App\Repository\Contratos\BarbeiroRepositoryInterface;
 use App\Repository\Contratos\ClienteRepositoryInterface;
 use App\Repository\Contratos\ServicoRepositoryInteface;
 use DomainException;
@@ -16,7 +18,10 @@ class ValidarDomainService
     public function __construct(
         private AgendamentosRepositoryInterface $agendamentoRepository,
         private AgendamentoServicoRepositoyInterface $agendamento_ServicoRepository,
-        private ServicoRepositoryInteface $servicoRepository
+        private ServicoRepositoryInteface $servicoRepository,
+        private BarbeiroRepositoryInterface $barbeiroRepository,
+        private ClienteRepositoryInterface $clienteRepository,
+        private AuthRepositoryInterface $authRepository
     ){}
 
         public function validarExistenciaAgendamento(int $id_agenda): void
@@ -55,6 +60,30 @@ class ValidarDomainService
             if(!$this->agendamento_ServicoRepository->existeServicoAgendamento($id_agendamento, $id_servico))
             {
                 throw new NaoExisteRecursoException("Esse serviço não está relacionado com esse agendamento");
+            }
+        }
+
+        public function validarExistenciaBarbeiro(int $id_barbeiro, string $mensagem)
+        {
+            if(!$this->barbeiroRepository->existeBarbeiro($id_barbeiro))
+            {
+                throw new NaoExisteRecursoException($mensagem);
+            }
+        }
+
+        public function validarExistenciaCliente(int $id_cliente, string $mensagem)
+        {
+            if(!$this->clienteRepository->existeCliente($id_cliente))
+            {
+                throw new NaoExisteRecursoException($mensagem);
+            }
+        }
+
+        public function validarExistenciaUsuario(int $id_user, string $mensagem)
+        {
+            if(!$this->authRepository->existeUsuario($id_user))
+            {
+                throw new NaoExisteRecursoException($mensagem);
             }
         }
 }

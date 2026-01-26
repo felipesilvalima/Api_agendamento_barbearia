@@ -13,16 +13,12 @@ class AgendamentoServicoService
     public function __construct(
         private AgendamentoServicoRepositoyInterface $agendamento_ServicoRepository,
         private ValidarDomainService $validarService,
-        private ClienteRepositoryInterface $clienteRepository
     ){}
     
     public function removerDeAgendamentos(?int $cliente_id, int $id_agendamento, int $id_servico): void
     {
-       //validação de segurança e permissoes
-        if(!$this->clienteRepository->existeCliente($cliente_id))
-        {
-            throw new NaoExisteRecursoException("Não e possivel remover servico. esse Cliente não existe");
-        }
+        //validação de segurança e permissoes
+        $this->validarService->validarExistenciaCliente($cliente_id,"Não e possivel remover servico. esse Cliente não existe");
 
         $this->validarService->validarExistenciaServico($id_servico);
         $this->validarService->validarServicoExisteAgendamento($id_agendamento, $id_servico);
@@ -53,10 +49,7 @@ class AgendamentoServicoService
     public function adicionar(?int $cliente_id ,int $id_agendamento, int $id_servico)
     {
         //validação de segurança e permissoes
-        if(!$this->clienteRepository->existeCliente($cliente_id))
-        {
-            throw new NaoExisteRecursoException("Não e possivel remover servico. esse Cliente não existe");
-        }
+        $this->validarService->validarExistenciaCliente($cliente_id,"Não e possivel adicionar servico. esse Cliente não existe");
         
             $this->validarService->validarExistenciaServico($id_servico);
 

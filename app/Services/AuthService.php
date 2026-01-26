@@ -19,6 +19,7 @@ class AuthService
         private AuthRepositoryInterface $authRepository,
         private ClienteRepositoryInterface $clienteRepository,
         private BarbeiroRepositoryInterface $barbeiroRepository,
+        private ValidarDomainService $validarService,
     
     ){}
 
@@ -73,10 +74,7 @@ class AuthService
     public function update(array $password, User $user)
     {
         
-        if(!$this->authRepository->existeUsuario($user->id))
-        {
-            throw new NaoExisteRecursoException("Não foi possivel atualizar a senha. Usuário não existe");
-        }
+        $this->validarService->validarExistenciaUsuario($user->id, "Não foi possivel atualizar a senha. Usuário não existe");
         
         if (!Hash::check($password['password'], $user->password)) 
         {
@@ -92,27 +90,18 @@ class AuthService
 
     public function delete(User $user)
     {
-        if(!$this->authRepository->existeUsuario($user->id))
-        {
-            throw new NaoExisteRecursoException("Não e possivel deleta. Esse Usuário não existe");
-        }
+        $this->validarService->validarExistenciaUsuario($user->id, "Não e possivel deleta. Esse Usuário não existe");
 
         if(!is_null($user->id_cliente))
-        {
-            if(!$this->clienteRepository->existeCliente($user->id_cliente))
-            {
-                throw new NaoExisteRecursoException("Não e possivel deleta. Esse Cliente não existe");
-            } 
+        { 
+            $this->validarService->validarExistenciaCliente($user->id_cliente,"Não e possivel deleta. Esse Cliente não existe");
 
             $user->cliente->status = 'INATIVO';
             $user->cliente->save();
         }
             else
             {
-                if(!$this->barbeiroRepository->existeBarbeiro($user->id_barbeiro))
-                {
-                    throw new NaoExisteRecursoException("Não e possivel deleta. Esse Barbeiro não existe");
-                }
+                $this->validarService->validarExistenciaBarbeiro($user->id_barbeiro,"Não e possivel deleta. Esse Barbeiro não existe");
                 
                 $user->barbeiro->status = 'INATIVO';
                 $user->barbeiro->save();

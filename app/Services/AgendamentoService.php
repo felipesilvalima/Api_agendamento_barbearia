@@ -29,15 +29,8 @@ class AgendamentoService
     public function agendar(AgendamentoDTO $agendamentoDto): int
     {
         //validação de segurança
-        if(!$this->clienteRepository->existeCliente($agendamentoDto->id_cliente))
-        {
-            throw new NaoExisteRecursoException("Não e possivel fazer agendamento. Esse cliente não existe");
-        }
-
-        if(!$this->barbeiroRepository->existeBarbeiro($agendamentoDto->id_barbeiro))
-        {
-            throw new NaoExisteRecursoException("Não e possivel fazer agendamento. Esse barbeiro não existe");
-        }
+        $this->validarService->validarExistenciaCliente($agendamentoDto->id_cliente,"Não e possivel fazer agendamento. Esse cliente não existe");
+        $this->validarService->validarExistenciaBarbeiro($agendamentoDto->id_barbeiro,"Não e possivel fazer agendamento. Esse barbeiro não existe");
 
         //Regras de négocio
         $this->validarService->validarLimiteAgendamentoPorCliente($agendamentoDto->id_cliente);
@@ -114,10 +107,7 @@ class AgendamentoService
     public function reagendar(ReagendamentoDTO $reagendamentoDto): object
     {
         //validação de segurança e permissoes
-        if(!$this->clienteRepository->existeCliente($reagendamentoDto->id_cliente))
-        {
-            throw new NaoExisteRecursoException("Não e possivel reagendar. esse Cliente não existe");
-        }
+        $this->validarService->validarExistenciaCliente($reagendamentoDto->id_cliente,"Não e possivel reagendar. esse Cliente não existe");
 
         //regras de négocio
         $agenda = $this->agendamentoRepository->detalhes($reagendamentoDto->id_agendamento);
@@ -147,11 +137,7 @@ class AgendamentoService
     public function finalizar(int $id_agenda, ?int $id_barbeiro): object
     {
         //validação de segurança e permissoes
-        if(!$this->barbeiroRepository->existeBarbeiro($id_barbeiro))
-        {
-            throw new NaoExisteRecursoException("Não e possivel finalizar. esse Barbeiro não existe");
-        }
-
+        $this->validarService->validarExistenciaBarbeiro($id_barbeiro,"Não e possivel finalizar. esse Barbeiro não existe");
         $this->validarService->validarExistenciaAgendamento($id_agenda);
         
         //buscar registro do agendamento de cliente
@@ -182,21 +168,14 @@ class AgendamentoService
         if(!is_null($cliente_id))
         {
             //validação de segurança
-            if(!$this->clienteRepository->existeCliente($cliente_id))
-            {
-                throw new NaoExisteRecursoException("Não e possivel cancelar. esse Cliente não existe");
-            }
-
+            $this->validarService->validarExistenciaCliente($cliente_id,"Não e possivel cancelar. esse Cliente não existe");
             $this->horarioService->horarioCancelarAgendamento($agendaCliente->hora);
 
         }
             else
             {
                 //validação de segurança
-                if(!$this->barbeiroRepository->existeBarbeiro($barbeiro_id))
-                {
-                    throw new NaoExisteRecursoException("Não e possivel cancelar. esse Barbeiro não existe");
-                }
+                $this->validarService->validarExistenciaBarbeiro($barbeiro_id,"Não e possivel cancelar. esse Barbeiro não existe");
             }
          
                 if($agendaCliente->status === 'CONCLUIDO')

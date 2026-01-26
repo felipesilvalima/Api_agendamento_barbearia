@@ -2,6 +2,7 @@
 
 namespace App\Repository\Eloquents;
 
+use App\DTOS\BarbeiroAtributosFiltrosPaginacaoDTO;
 use App\Repository\Abstract\BaseRepository;
 use App\DTOS\BarbeiroDTO;
 use App\Models\Barbeiro;
@@ -39,6 +40,57 @@ class EloquentBarbeiroRepository extends BaseRepository implements BarbeiroRepos
                 ->with(['user:id,email,id_barbeiro'])
                 ->where('id', $id_barbeiro)
                 ?->first();
+            }
+
+            public function listar(BarbeiroAtributosFiltrosPaginacaoDTO $barbeiroDTO): object
+            {
+                if($barbeiroDTO->atributos != null)
+                {
+                    //atributos
+                    $this->selectAtributos('id,'.$barbeiroDTO->atributos);
+                }
+                    //atributos do user
+                    $this->selectAtributosRelacionamentos('user');
+                
+                    if($barbeiroDTO->atributos_cliente != null)
+                    {
+                        //atributos de barbeiro
+                        $this->selectAtributosRelacionamentos('agendamento.cliente:id,'.$barbeiroDTO->atributos_cliente);
+                    }
+                        else
+                        {
+                           $this->selectAtributosRelacionamentos('agendamento.cliente');
+                        }
+
+                            if($barbeiroDTO->atributos_servico != null)
+                            {
+                                //atributos de servico
+                                $this->selectAtributosRelacionamentos('agendamento.servico:id,'.$barbeiroDTO->atributos_servico);
+                            }
+                                else
+                                {
+                                   $this->selectAtributosRelacionamentos('agendamento.servico');
+                                }
+
+                                //atributos de agendamento
+                                if($barbeiroDTO->atributos_agendamento != null)
+                                {
+
+                                    $this->selectAtributosRelacionamentos('agendamento:id,id_cliente,id_barbeiro,'.$barbeiroDTO->atributos_agendamento);
+                                }
+                                    else
+                                    {
+                                        $this->selectAtributosRelacionamentos('agendamento');
+                                    }
+                                        
+                                        $this->buscarPorEntidade($barbeiroDTO->id_barbeiro,'id');
+                                        return $this->firstResultado();
+            }
+
+            public function detalhes(int $id_barbeiro): object
+            {
+                $this->buscarPorEntidade($id_barbeiro,'id');
+                return $this->firstResultado();
             }
 
 }

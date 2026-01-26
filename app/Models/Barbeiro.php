@@ -22,7 +22,7 @@ class Barbeiro extends Model
 
     public function agendamento()
     {
-        return $this->hasMany(Agendamento::class,'id_cliente', 'id');
+        return $this->hasMany(Agendamento::class,'id_barbeiro', 'id');
     }
 
     public function user()
