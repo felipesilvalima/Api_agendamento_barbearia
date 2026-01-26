@@ -33,7 +33,7 @@ Route::post('/clientes',[ClienteController::class, 'criarClientes'])->name('cria
 Route::middleware('auth:api','permissao:Cliente|Barbeiro')->prefix('auth')->group( function () {
     Route::post('/refresh',[AuthController::class, 'refresh'])->name('refresh');
     Route::get('/me',[AuthController::class, 'me'])->name('me');
-    Route::put('/update/me',[AuthController::class, 'uptdateMe'])->name('atualizar_password');
+    Route::patch('/update/me',[AuthController::class, 'uptdateMe'])->name('atualizar_password');
     Route::delete('/desativar/me',[AuthController::class, 'desativarMe'])->name('desativar_conta');
     Route::post('/logout',[AuthController::class, 'logout'])->name('logout');
 });
@@ -46,6 +46,7 @@ Route::middleware('auth:api','permissao:Cliente')->group( function () {
     Route::patch('/agendamentos/{id}/reagendar',[AgendamentoController::class, 'reagendarAgendamentos'])->name('reagendar_agendamentos');
     Route::delete('/agendamentos/{id_agendamento}/servicos/{id_servico}',[AgendamentoController::class, 'removerServicos'])->name('remover_servicos');
     Route::post('/agendamentos/{id_agendamento}/servicos/{id_servico}',[AgendamentoServicoController::class, 'adicionarServicosAgendamento'])->name('adiconar_servicos_no_agendamento');
+    Route::patch('/clientes/atualizar',[ClienteController::class, 'atualizarClientes'])->name('atualizar_clientes');
 });
 
 //rotas Acessada por Barbeiros

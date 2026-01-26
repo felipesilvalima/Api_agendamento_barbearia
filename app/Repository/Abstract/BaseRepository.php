@@ -40,12 +40,6 @@ Abstract class BaseRepository
         return $this;
     }
 
-    public function selectAtributosRelacionamentosTeste(array $atributosRelacionamento)
-    {
-        $this->query->with($atributosRelacionamento);
-        return $this;
-    }
-
     public function filtroRelacionamento(array $filtrosRelacionamento, string $entidadeRelacionada)
     { 
         $this->query->whereHas($entidadeRelacionada, function($b) use($filtrosRelacionamento)

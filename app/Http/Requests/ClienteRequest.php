@@ -23,8 +23,13 @@ class ClienteRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        return $this->isMethod('patch') ? [
+
+            'nome' => ['sometimes','required','string','max:40'],
+            'telefone' => ['sometimes','required','integer','digits:11'],   
             
+        ] :
+        [
             'nome' => 'required|string|max:40',
             'telefone' => 'required|integer|digits:11',
 
@@ -37,7 +42,6 @@ class ClienteRequest extends FormRequest
             ],
 
             'password' => 'required|size:10|string',
-            
         ];
     }
 
@@ -45,8 +49,8 @@ class ClienteRequest extends FormRequest
     {
         throw new HttpResponseException(
             response()->json([
-                'message' => 'Dados inválidos',
-                'fields' => $validator->errors()
+                'mensagem' => 'Dados inválidos',
+                'campos' => $validator->errors()
             ], 422)
         );
     }
@@ -56,7 +60,7 @@ class ClienteRequest extends FormRequest
         return [
             'required' => 'O :attribute é obrigatório',
             'regex' => 'O :atrtribute inválido',
-            'string' => 'O :attribute precisar ser do tipo caracteres',
+            'string' => 'O :attribute precisar ser do tipo texto',
             'integer' => 'O :attribute precisar ser do tipo inteiro',
             'size' => 'O :attribute deve ter :size caracteres',
             'max' => 'O :attribute deve ter bo máximo :max caracteres',

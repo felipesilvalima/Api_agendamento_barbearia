@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOS\AtualizarClienteDTO;
 use App\DTOS\ClienteAtributosFiltrosPaginacaoDTO;
 use App\DTOS\ClienteDTO;
-use App\DTOS\CriarClienteDtos;
+use App\Http\Requests\AtualizarClienteRequest;
 use App\Http\Requests\ClienteRequest;
-use App\Models\Cliente;
-use App\Services\AgendamentoService;
 use App\Services\ClienteService;
-use App\Services\ValidarDomainService;
 use Symfony\Component\HttpFoundation\Request;
 
 class ClienteController extends Controller
@@ -54,8 +52,24 @@ class ClienteController extends Controller
        return response()->json($detalhes,200);
     }
 
+
+    public function atualizarClientes(ClienteRequest $request)
+    {
+        //validar dados de entrada
+        $request->validated();
+       // dd($request->telefone);
+
+        //chamar service
+        $this->clienteService->atualizar(new AtualizarClienteDTO(
+            cliente: auth('api')->user()->cliente,
+            nome: $request['nome'],
+            telefone: $request['telefone']
+        ));
+
+        //retornar resposta
+        return response()->json(['mensagem' => 'Atuliazado com sucesso'],200);
+    }
     
-    //PUT /clientes/{id}: Atualiza dados de um cliente.
 
     
     
@@ -63,6 +77,7 @@ class ClienteController extends Controller
     {
         return auth('api')->user()->id_cliente;
     }
+    
 
     
 }

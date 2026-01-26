@@ -65,7 +65,7 @@ class AgendamentoController extends Controller
         return response()->json($agenda,200);
     }
 
-    public function reagendarAgendamentos(ReagendamentoRequest $request, int $id_agenda)
+    public function reagendarAgendamentos(AgendamentoRequest $request, int $id_agenda)
     {
        
         $data = $request->validated();

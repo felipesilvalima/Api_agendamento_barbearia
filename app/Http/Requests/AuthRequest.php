@@ -23,9 +23,12 @@ class AuthRequest extends FormRequest
      */
    public function rules(): array
     {
-        return [
+        return $this->isMethod('patch') ? [
 
-            'email' => [
+            'password' => ['required','size:10','string','confirmed']
+           
+        ] :[
+             'email' => [
                 'required',
                 'string',
                 'regex:/^[^\s@]+@[^\s@]+\.[^\s@]+$/'
@@ -39,8 +42,8 @@ class AuthRequest extends FormRequest
     {
         throw new HttpResponseException(
             response()->json([
-                'message' => 'Dados inválidos',
-                'fields' => $validator->errors()
+                'mensagem' => 'Dados inválidos',
+                'campos' => $validator->errors()
             ], 422)
         );
     }
@@ -50,7 +53,9 @@ class AuthRequest extends FormRequest
         return [
             'required' => 'O :attribute é obrigatório',
             'regex' => 'O :atrtribute inválido',
-            'string' => 'O :attribute precisar ser do tipo caracteres',
+            'string' => 'O :attribute precisar ser do tipo texto',
+            'confirmed' => 'A senha de confirmação está incorreta',
+            'size' => 'A senha dever conter :size caracteres'
         ];
     }
 }

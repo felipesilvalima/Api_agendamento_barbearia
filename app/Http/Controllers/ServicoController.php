@@ -11,6 +11,8 @@ class ServicoController extends Controller
     
     //GET /servicos: Lista todos os serviços ativos.
 
+    //GET/ precoTotal por agendamento
+
     //POST /servicos: Cria um novo serviço (apenas admin).
 
    //GET /servicos/{id}: Obtém detalhes de um serviço.

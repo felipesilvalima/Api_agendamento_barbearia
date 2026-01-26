@@ -12,7 +12,7 @@ class ClienteDTO
         public string $nome,
         public string $email,
         public string $password,
-        public int $telefone,  
+        public int $telefone, 
     ){}
 
    

@@ -27,7 +27,7 @@ class Handler extends ExceptionHandler
         {
             return response()->json([
                 'status' => 'error',
-                'message' => $exception->getMessage()
+                'mensagem' => $exception->getMessage()
             ], $exception->statusCode);
         }
 
@@ -43,14 +43,15 @@ class Handler extends ExceptionHandler
         $this->renderable(function (DomainException $exception) {
             return response()->json([
                 'status' => 'error',
-                'message' => $exception->getMessage(),
+                'mensagem' => $exception->getMessage(),
             ], $exception->getCode());
         });
         
         //tratando erros de abort
          $this->renderable(function (HttpExceptionInterface $exception) {
                 return response()->json([
-                    'message' => $exception->getMessage() ?: 'Erro na requisição',
+                    'status' => 'error',
+                    'mensagem' => $exception->getMessage() ?: 'Erro na requisição',
                 ], $exception->getStatusCode());
             });
     }

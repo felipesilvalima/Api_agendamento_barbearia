@@ -44,8 +44,8 @@ class BarbeiroRequest extends FormRequest
     {
         throw new HttpResponseException(
             response()->json([
-                'message' => 'Dados inválidos',
-                'fields' => $validator->errors()
+                'mensagem' => 'Dados inválidos',
+                'campos' => $validator->errors()
             ], 422)
         );
     }
@@ -55,7 +55,7 @@ class BarbeiroRequest extends FormRequest
         return [
             'required' => 'O :attribute é obrigatório',
             'regex' => 'O :atrtribute inválido',
-            'string' => 'O :attribute precisar ser do tipo caracteres',
+            'string' => 'O :attribute precisar ser do tipo texto',
             'integer' => 'O :attribute precisar ser do tipo inteiro',
             'size' => 'O :attribute deve ter :size caracteres',
             'max' => 'O :attribute deve ter bo máximo :max caracteres',

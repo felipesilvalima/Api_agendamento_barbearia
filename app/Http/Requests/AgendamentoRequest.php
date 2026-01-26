@@ -23,7 +23,12 @@ class AgendamentoRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        return $this->isMethod('patch') ? [
+
+            'data' => 'required|date|date_format:Y-m-d|after_or_equal:today',
+            'hora' => 'required|date_format:H:i:s',
+            
+        ] : [
             'id_barbeiro' => 'required|integer',
             'data' => 'required|date|date_format:Y-m-d|after_or_equal:today',
             'hora' => 'required|date_format:H:i:s',
@@ -35,8 +40,8 @@ class AgendamentoRequest extends FormRequest
     {
         throw new HttpResponseException(
             response()->json([
-                'message' => 'Dados inválidos',
-                'fields' => $validator->errors()
+                'mensagem' => 'Dados inválidos',
+                'campos' => $validator->errors()
             ], 422)
         );
     }

@@ -11,9 +11,7 @@ use App\Services\ValidarDomainService;
 class AuthController extends Controller
 {
    public function __construct(
-    private AuthService $authService,
-    private ValidarDomainService $validarService
-    
+    private AuthService $authService
   ){}
 
   public function login(AuthRequest $request)
@@ -51,7 +49,7 @@ class AuthController extends Controller
       return response()->json($perfil,200);
   }
 
-  public function uptdateMe(UpdatePasswordRequest $request)
+  public function uptdateMe(AuthRequest $request)
   {
     
     if($request->filled('password')) {
