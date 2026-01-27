@@ -109,7 +109,7 @@ class ServicoService
 
        $desativado = $this->servicoRepository->desativarServico($id_servico);
 
-        if(!$desativado)
+        if($desativado != true)
         {
             throw new ErrorInternoException("Error interno ao desativar servico");
         }

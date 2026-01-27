@@ -57,6 +57,7 @@ Route::middleware('auth:api','permissao:Barbeiro')->group( function () {
     Route::patch('/barbeiros',[BarbeiroController::class, 'atualizarBarbeiros'])->name('atualizar_barbeiros');
     Route::post('/servicos',[ServicoController::class, 'criarServicos'])->name('cadastrar_servicos');
     Route::patch('/servicos/{id_servico}',[ServicoController::class, 'atualizarServicos'])->name('atualizar_servicos');
+    Route::delete('/servicos/{id_servico}',[ServicoController::class, 'DesativarServicos'])->name('desativar_servicos');
 });
 
 //rotas Acessadas por Cliente e Barbeiro

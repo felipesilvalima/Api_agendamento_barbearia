@@ -16,14 +16,14 @@ class ServicoController extends Controller
     public function __construct(
         private ServicoService $servicoService,
         private AgendamentoController $agendamento_controller,
-        private ValidarDomainService $validarServico,
 
     ){}
     
     public function listarServicos(Request $request)
     {
-
+        
        $lista =  $this->servicoService->listar(new ServicosAtributosFiltrosDTO(
+            id_barbeiro: $this->id_barbeiro(),
             atributos: $request->atributos ?? null,
             filtros: $request->filtros ?? null
        ));
@@ -79,7 +79,7 @@ class ServicoController extends Controller
             
     }
 
-    public function DesativarServico(int $id_servico)
+    public function DesativarServicos(int $id_servico)
     {
         $this->servicoService->desativar($this->id_barbeiro(), $id_servico); 
         return response()->json(['mensagem' => 'Serviço desativado com sucesso'],200);

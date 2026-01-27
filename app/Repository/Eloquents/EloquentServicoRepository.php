@@ -35,6 +35,11 @@ class EloquentServicoRepository extends BaseRepository implements ServicoReposit
                 $this->filtro($servicosDto->filtros_validos);
             }
 
+            if($servicosDto->id_barbeiro != null)
+            {
+                $this->selectAtributosRelacionamentos('agendamento');
+            }
+
             return $this->getResultado();
     }
 
@@ -61,14 +66,22 @@ class EloquentServicoRepository extends BaseRepository implements ServicoReposit
     public function detalhes(int $id_servico): object
     {
         $this->buscarPorEntidade($id_servico,'id');
+
+        if(auth('api')->user()->id_barbeiro != null)
+        {
+            $this->selectAtributosRelacionamentos('agendamento');
+        }
+        
         return $this->firstResultado();
     }
 
     public function desativarServico(int $id_servico): bool
     {
-        return $this->servicoModel
+        $this->servicoModel
         ->where('id',$id_servico)
         ->delete();
+
+        return true;
 
     }
 
