@@ -92,7 +92,7 @@ class BarbeiroService
                 'especialidade' => $atualizarBarbeiroDTO->especialidade ?? $atualizarBarbeiroDTO->barbeiro->especialidade
             ]);
 
-                if($barbeiro->isDirty(['nome','telefone','especialidade']))
+                if(!$barbeiro->isDirty(['nome','telefone','especialidade']))
                 {
                     throw new ConflitoExecption("Nenhum dado foi alterado. Digite novos dados");
                 }

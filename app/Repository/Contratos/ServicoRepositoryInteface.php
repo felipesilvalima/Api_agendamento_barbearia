@@ -11,5 +11,6 @@ interface ServicoRepositoryInteface
      public function listar(ServicosAtributosFiltrosDTO $servicosDto): object;
      public function precoTotalPorAgendamento(int $id_agendamento): float;
      public function salvarServicos(ServicoDTO $servicoDto): bool;
+     public function detalhes(int $id_servico): object;
     
 }

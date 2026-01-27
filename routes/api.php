@@ -56,6 +56,7 @@ Route::middleware('auth:api','permissao:Barbeiro')->group( function () {
     Route::get('/barbeiros',[BarbeiroController::class, 'listarAgendamentosBarbeiros'])->name('listar_agendamentos_barbeiros');
     Route::patch('/barbeiros',[BarbeiroController::class, 'atualizarBarbeiros'])->name('atualizar_barbeiros');
     Route::post('/servicos',[ServicoController::class, 'criarServicos'])->name('cadastrar_servicos');
+    Route::patch('/servicos/{id_servico}',[ServicoController::class, 'atualizarServicos'])->name('atualizar_servicos');
 });
 
 //rotas Acessadas por Cliente e Barbeiro
@@ -68,6 +69,7 @@ Route::middleware('auth:api','permissao:Cliente|Barbeiro')->group( function () {
     Route::get('/clientes/{id_cliente}',[ClienteController::class, 'detalhesClientes'])->name('detalhes_clientes');
     Route::get('/servicos',[ServicoController::class, 'listarServicos'])->name('listar_servicos');
     Route::get('/servicos/{id_agendamento}/preco_total',[ServicoController::class, 'precoTotalAgendamento'])->name('precoTotal_por_agendamento');
+    Route::get('/servicos/{id_servico}',[ServicoController::class, 'detalhesServicos'])->name('detalhes_servico');
 });
 
 

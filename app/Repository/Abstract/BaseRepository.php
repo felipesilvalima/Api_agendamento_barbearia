@@ -65,10 +65,10 @@ Abstract class BaseRepository
             return $this;
     }
 
-    public function buscarPorEntidade(int $id, string $foreKey)
+    public function buscarPorEntidade(int $id, string $colum)
     {
         $this->query
-        ->where($foreKey, $id);
+        ->where($colum, $id);
 
         return $this;
     }

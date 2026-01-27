@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOS\AtualizarServicoDTO;
 use App\DTOS\ServicoDTO;
 use App\DTOS\ServicosAtributosFiltrosDTO;
 use App\Http\Requests\ServicosRequest;
+use App\Models\Servico;
 use App\Services\ServicoService;
+use App\Services\ValidarDomainService;
 use Symfony\Component\HttpFoundation\Request;
 
 class ServicoController extends Controller
@@ -13,6 +16,7 @@ class ServicoController extends Controller
     public function __construct(
         private ServicoService $servicoService,
         private AgendamentoController $agendamento_controller,
+        private ValidarDomainService $validarServico,
 
     ){}
     
@@ -51,18 +55,37 @@ class ServicoController extends Controller
         ],201); 
     }
 
-    private function id_barbeiro (): ?int
+    public function detalhesServicos(int $id_servico)
     {
-        return auth('api')->user()->id_barbeiro;
+        $detalhes =  $this->servicoService->detalhes($id_servico);
+        return response()->json($detalhes,200);
     }
 
+    public function atualizarServicos(ServicosRequest $request, int $id_servico)
+    {
+         //validar dados de entrada
+        $request->validated();
 
-    //POST /servicos: Cria um novo serviço (apenas admin).
+        //chamar service
+        $this->servicoService->atualizar(new AtualizarServicoDTO(
+            id_barbeiro: $this->id_barbeiro(),
+            id_servico: $id_servico,
+            descricao: $request['descricao'] ?? null,
+            preco: $request['preco'] ?? 0
+        ));
 
-   //GET /servicos/{id}: Obtém detalhes de um serviço.
+           //retornar resposta
+           return response()->json(['mensagem' => 'Atuliazado com sucesso'],200);
+            
+    }
 
    //PUT /servicos/{id}: Atualiza preço ou descrição de um serviço.
 
    //DELETE /servicos/{id}: Desativa um serviço
+
+    private function id_barbeiro (): ?int
+    {
+        return auth('api')->user()->id_barbeiro;
+    }
 
 }

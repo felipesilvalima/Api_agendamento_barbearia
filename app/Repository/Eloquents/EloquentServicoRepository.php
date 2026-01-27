@@ -58,4 +58,10 @@ class EloquentServicoRepository extends BaseRepository implements ServicoReposit
         return true;
     }
 
+    public function detalhes(int $id_servico): object
+    {
+        $this->buscarPorEntidade($id_servico,'id');
+        return $this->firstResultado();
+    }
+
 }

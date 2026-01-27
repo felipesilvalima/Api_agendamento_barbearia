@@ -23,7 +23,11 @@ class ServicosRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        return $this->isMethod('patch') ?  [
+            'descricao' => 'string|max:100',
+            'preco' => 'sometimes|required|numeric',
+        ]:
+        [
             'nome' => 'required|string|max:40|unique:servicos,nome',
             'descricao' => 'string|max:100',
             'duracao_minutos' => 'sometimes|integer',

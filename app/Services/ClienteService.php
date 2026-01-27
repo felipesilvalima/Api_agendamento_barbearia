@@ -90,7 +90,7 @@ class ClienteService
                 'telefone' => $atualizarClienteDTO->telefone ?? $atualizarClienteDTO->cliente->telefone
             ]);
 
-                if($cliente->isDirty(['nome','telefone']))
+                if(!$cliente->isDirty(['nome','telefone']))
                 {
                     throw new ConflitoExecption("Nenhum dado foi alterado. Digite novos dados");
                 }
