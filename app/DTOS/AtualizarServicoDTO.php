@@ -10,7 +10,7 @@ class AtualizarServicoDTO
         public int $id_barbeiro,
         public int $id_servico,
         public ?string $descricao = null,
-        public string $preco
+        public ?string $preco = null
     )
     {
     }

@@ -101,6 +101,20 @@ class ServicoService
                         throw new ErrorInternoException("Error ao atualizar dados de cliente");
                     }    
     }
+
+    public function desativar(int $id_barbeiro , int $id_servico)
+    {
+        $this->validarService->validarExistenciaBarbeiro($id_barbeiro,"Não e possivel remover servico. Barbeiro não existe");
+        $this->validarService->validarExistenciaServico($id_servico);
+
+       $desativado = $this->servicoRepository->desativarServico($id_servico);
+
+        if(!$desativado)
+        {
+            throw new ErrorInternoException("Error interno ao desativar servico");
+        }
+
+    }
    
 
 

@@ -71,7 +71,7 @@ class ServicoController extends Controller
             id_barbeiro: $this->id_barbeiro(),
             id_servico: $id_servico,
             descricao: $request['descricao'] ?? null,
-            preco: $request['preco'] ?? 0
+            preco: $request['preco'] ?? null
         ));
 
            //retornar resposta
@@ -79,7 +79,12 @@ class ServicoController extends Controller
             
     }
 
-   //PUT /servicos/{id}: Atualiza preço ou descrição de um serviço.
+    public function DesativarServico(int $id_servico)
+    {
+        $this->servicoService->desativar($this->id_barbeiro(), $id_servico); 
+        return response()->json(['mensagem' => 'Serviço desativado com sucesso'],200);
+    }
+
 
    //DELETE /servicos/{id}: Desativa um serviço
 

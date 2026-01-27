@@ -64,8 +64,8 @@ class ClienteController extends Controller
         //chamar service
         $this->clienteService->atualizar(new AtualizarClienteDTO(
             cliente: auth('api')->user()->cliente,
-            nome: $request['nome'],
-            telefone: $request['telefone']
+            nome: $request['nome'] ?? null,
+            telefone: $request['telefone'] ?? null
         ));
 
         //retornar resposta

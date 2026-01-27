@@ -64,9 +64,9 @@ class BarbeiroController extends Controller
         //chamar service
         $this->barbeiroService->atualizar(new AtualizarBarbeiroDTO(
             barbeiro: auth('api')->user()->barbeiro,
-            nome: $request['nome'],
-            telefone: $request['telefone'],
-            especialidade: $request['especialidade']
+            nome: $request['nome'] ?? null,
+            telefone: $request['telefone'] ?? null,
+            especialidade: $request['especialidade'] ?? null
         ));
 
         //retornar resposta
