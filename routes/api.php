@@ -55,6 +55,7 @@ Route::middleware('auth:api','permissao:Barbeiro')->group( function () {
     Route::post('/barbeiros',[BarbeiroController::class, 'criarBarbeiros'])->name('criar_barbeiros');
     Route::get('/barbeiros',[BarbeiroController::class, 'listarAgendamentosBarbeiros'])->name('listar_agendamentos_barbeiros');
     Route::patch('/barbeiros',[BarbeiroController::class, 'atualizarBarbeiros'])->name('atualizar_barbeiros');
+    Route::post('/servicos',[ServicoController::class, 'criarServicos'])->name('cadastrar_servicos');
 });
 
 //rotas Acessadas por Cliente e Barbeiro

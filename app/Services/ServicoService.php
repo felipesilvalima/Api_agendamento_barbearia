@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\DTOS\ServicoDTO;
 use App\DTOS\ServicosAtributosFiltrosDTO;
+use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoExisteRecursoException;
 use App\Helpers\ValidarAtributos;
 use App\Repository\AgendamentoServicoRepository;
@@ -21,7 +23,6 @@ class ServicoService
     {
 
         $atributosServicoPermitido = ['id','nome','descricao','duracao_minutos','preco'];
-        $atributosAgendamentoPermitidos = ['agendamentos.id','data','hora','status','id_barbeiro','id_cliente'];
 
        //atributos
         $servicoDto->atributos = ValidarAtributos::validarAtributos($servicoDto->atributos,$atributosServicoPermitido);
@@ -45,6 +46,18 @@ class ServicoService
         $this->validarService->validarExistenciaAgendamento($id_agendamento);
         $precoTotal = $this->servicoRepository->precoTotalPorAgendamento($id_agendamento); 
         return $precoTotal;
+    }
+
+    public function CadastrarServicos(ServicoDTO $criarServicoDto)
+    {
+        $this->validarService->validarExistenciaBarbeiro($criarServicoDto->id_barbeiro,"Não foi possivel criar o servico. Barbeiro não existe");
+        $servico = $this->servicoRepository->salvarServicos($criarServicoDto);
+
+        if($servico != true)
+        {
+            throw new ErrorInternoException("Error interno ao cadastrar servico");
+        }
+
     }
    
 

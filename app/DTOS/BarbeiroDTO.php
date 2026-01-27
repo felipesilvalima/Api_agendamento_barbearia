@@ -19,4 +19,12 @@ class BarbeiroDTO
 
 
   
+
+        /**
+         * Get the value of nome
+         */ 
+        public function getNome()
+        {
+                return mb_convert_case($this->nome, MB_CASE_TITLE,'UTF-8');
+        }
 }

@@ -27,7 +27,7 @@ class EloquentClienteRepository extends BaseRepository implements ClienteReposit
     {
 
         $cadastro = $this->clienteModel->create([
-            "nome" => $clienteDto->nome,
+            "nome" => $clienteDto->getNome(),
             "telefone" => $clienteDto->telefone,
             "data_cadastro" => Carbon::now()
         ]);

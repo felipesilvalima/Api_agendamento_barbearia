@@ -20,8 +20,6 @@ class AgendamentoService
     public function __construct(
         private AgendamentosRepositoryInterface $agendamentoRepository,
         private AgendamentoServicoRepositoyInterface $agendamento_ServicoRepository,
-        private ClienteRepositoryInterface $clienteRepository,
-        private BarbeiroRepositoryInterface $barbeiroRepository,
         private ValidarDomainService $validarService,
         private HorarioDomainService $horarioService,
     ){}

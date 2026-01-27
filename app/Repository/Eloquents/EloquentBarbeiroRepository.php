@@ -24,7 +24,7 @@ class EloquentBarbeiroRepository extends BaseRepository implements BarbeiroRepos
             public function salvarBarbeiro(BarbeiroDTO $barbeiroDto): int
             {
                 $cadastro = $this->barbeiroModel->create([
-                    "nome" => $barbeiroDto->nome,
+                    "nome" => $barbeiroDto->getNome(),
                     "telefone" => $barbeiroDto->telefone,
                     "especialidade" => $barbeiroDto->especialidade,
                     "status" => $barbeiroDto->status,

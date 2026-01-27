@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOS\ServicoDTO;
 use App\DTOS\ServicosAtributosFiltrosDTO;
+use App\Http\Requests\ServicosRequest;
 use App\Services\ServicoService;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -30,6 +32,28 @@ class ServicoController extends Controller
         $this->authorize('agenda',$this->agendamento_controller->agendamentoInstancia($id_agendamento));
         $precoTotal =  $this->servicoService->precoTotal($id_agendamento);
         return response()->json($precoTotal,200);
+    }
+
+    public function criarServicos(ServicosRequest $request)
+    {
+        $data = $request->validated();
+
+        $this->servicoService->CadastrarServicos(new ServicoDTO(
+            id_barbeiro: $this->id_barbeiro(),
+            nome: $data['nome'],
+            descricao: $data['descricao'] ?? null,
+            duracao_minutos: $data['duracao_minutos'] ?? 0,
+            preco: $data['preco']
+        ));
+        
+        return response()->json([
+            "mensagem" => "Servico cadastrado com sucesso",
+        ],201); 
+    }
+
+    private function id_barbeiro (): ?int
+    {
+        return auth('api')->user()->id_barbeiro;
     }
 
 

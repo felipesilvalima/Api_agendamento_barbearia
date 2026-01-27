@@ -2,6 +2,7 @@
 
 namespace App\Repository\Eloquents;
 
+use App\DTOS\ServicoDTO;
 use App\DTOS\ServicosAtributosFiltrosDTO;
 use App\Repository\Abstract\BaseRepository;
 use App\Models\Servico;
@@ -42,6 +43,19 @@ class EloquentServicoRepository extends BaseRepository implements ServicoReposit
         $this->filtroRelacionamento(["agendamentos.id:=:{$id_agendamento}"],'agendamento');
         $precoTotal = $this->getResultado();
         return collect($precoTotal)->sum('preco');
+    }
+
+    public function salvarServicos(ServicoDTO $servicoDto): bool
+    {
+        $this->servicoModel
+        ->create([
+            'nome' => $servicoDto->getNome(),
+            'descricao' => $servicoDto->descricao,
+            'duracao_minutos' => $servicoDto->duracao_minutos,
+            'preco' => $servicoDto->preco
+        ]);
+
+        return true;
     }
 
 }

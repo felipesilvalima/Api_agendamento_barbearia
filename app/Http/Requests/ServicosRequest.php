@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class ClienteRequest extends FormRequest
+class ServicosRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,25 +23,11 @@ class ClienteRequest extends FormRequest
      */
     public function rules(): array
     {
-        return $this->isMethod('patch') ? [
-
-            'nome' => ['sometimes','required','string','max:40'],
-            'telefone' => ['sometimes','required','numeric','digits:11','unique:clientes,telefone'],   
-            
-        ] :
-        [
-            'nome' => 'required|string|max:40',
-            'telefone' => 'required|numeric|digits:11|unique:clientes,telefone',
-
-            'email' => [
-                'required',
-                'string',
-                'max:40',
-                'unique:users,email',
-                'regex:/^[^\s@]+@[^\s@]+\.[^\s@]+$/'
-            ],
-
-            'password' => 'required|size:10|string',
+        return [
+            'nome' => 'required|string|max:40|unique:servicos,nome',
+            'descricao' => 'string|max:100',
+            'duracao_minutos' => 'sometimes|integer',
+            'preco' => 'required|numeric',
         ];
     }
 
@@ -59,13 +45,13 @@ class ClienteRequest extends FormRequest
     {
         return [
             'required' => 'O :attribute é obrigatório',
-            'regex' => 'O :atrtribute inválido',
             'string' => 'O :attribute precisar ser do tipo texto',
             'numeric' => 'O :attribute precisar ser do tipo númerico',
-            'size' => 'O :attribute deve ter :size caracteres',
             'max' => 'O :attribute deve ter no máximo :max caracteres',
-            'unique' => 'Esse :attribute já foi cadastrado',
-            'digits' => 'O :attribute deve ter :digits digitos',
+            'integer' => 'O :attribute precisar ser do tipo númerico inteiro',
+            'unique' => 'Esse Servico já foi cadastrado',
+
+            
         ];
     }
 }

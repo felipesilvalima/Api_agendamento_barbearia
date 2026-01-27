@@ -64,7 +64,7 @@ class BarbeiroRequest extends FormRequest
             'string' => 'O :attribute precisar ser do tipo texto',
             'numeric' => 'O :attribute precisar ser do tipo númerico',
             'size' => 'O :attribute deve ter :size caracteres',
-            'max' => 'O :attribute deve ter bo máximo :max caracteres',
+            'max' => 'O :attribute deve ter no máximo :max caracteres',
             'unique' => 'Esse :attribute já foi cadastrado',
             'digits' => 'O :attribute deve ter :digits digitos',
         ];
