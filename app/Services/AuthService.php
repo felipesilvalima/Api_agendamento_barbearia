@@ -6,6 +6,7 @@ use App\DTOS\LoginDTO;
 use App\Exceptions\AutenticacaoException;
 use App\Exceptions\ConflitoExecption;
 use App\Exceptions\NaoExisteRecursoException;
+use App\Jobs\EnviarEmailTrocarDeSenhaJobs;
 use App\Models\User;
 use App\Repository\Contratos\AuthRepositoryInterface;
 use App\Repository\Contratos\BarbeiroRepositoryInterface;
@@ -79,6 +80,9 @@ class AuthService
         if (!Hash::check($password['password'], $user->password)) 
         {
             $user->password = Hash::make($password['password']);
+
+            EnviarEmailTrocarDeSenhaJobs::dispatch($user);
+            
             $user->save();
         }
             else

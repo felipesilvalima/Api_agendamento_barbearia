@@ -6,7 +6,7 @@ class NotificacaoController extends Controller
 {
     public function listarNotificacoes()
     {
-
+        
     }
 
     public function deletarNotificao(int $id_notificao)
