@@ -88,7 +88,7 @@ class AgendamentoController extends Controller
     {
         $this->authorize('finalizar',$this->agendamentoInstancia($id_agenda));
         $agenda = $this->agendamentoService->finalizar($id_agenda, $this->id_barbeiro());
-
+        
         return response()->json([
             "mensagem" => "Agendamento Concluido com sucesso. ID do agendamento {$agenda->id}"
         ],200);  

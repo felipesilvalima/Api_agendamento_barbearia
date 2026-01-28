@@ -6,9 +6,7 @@ use App\DTOS\AtualizarServicoDTO;
 use App\DTOS\ServicoDTO;
 use App\DTOS\ServicosAtributosFiltrosDTO;
 use App\Http\Requests\ServicosRequest;
-use App\Models\Servico;
 use App\Services\ServicoService;
-use App\Services\ValidarDomainService;
 use Symfony\Component\HttpFoundation\Request;
 
 class ServicoController extends Controller
@@ -84,9 +82,6 @@ class ServicoController extends Controller
         $this->servicoService->desativar($this->id_barbeiro(), $id_servico); 
         return response()->json(['mensagem' => 'Serviço desativado com sucesso'],200);
     }
-
-
-   //DELETE /servicos/{id}: Desativa um serviço
 
     private function id_barbeiro (): ?int
     {

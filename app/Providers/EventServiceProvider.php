@@ -1,7 +1,9 @@
-<?php
+<?php declare(strict_types=1); 
 
 namespace App\Providers;
 
+use App\Events\StatusAlterado;
+use App\Listeners\EnviarNotificacaoStatus;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -18,6 +20,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+    StatusAlterado::class => [
+        EnviarNotificacaoStatus::class,
+    ],
     ];
 
     /**

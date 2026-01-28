@@ -5,6 +5,7 @@ namespace App\Services;
 use App\DTOS\AgendamentoDTO;
 use App\DTOS\AgendamentosAtributosFiltrosPagincaoDTO;
 use App\DTOS\ReagendamentoDTO;
+use App\Events\StatusAlterado;
 use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoExisteRecursoException;
 use App\Helpers\ValidarAtributos;
@@ -38,28 +39,31 @@ class AgendamentoService
         $this->horarioService->validarAgendamentoAntecedente($agendamentoDto->data);
         
         //percistencia
-       $id_agendamento = DB::transaction(function () use($agendamentoDto){
+       $agendamento = DB::transaction(function () use($agendamentoDto){
 
             //salvar agendamento no banco
-            $id_agendamento = $this->agendamentoRepository->salvar($agendamentoDto);
+            $agendamento = $this->agendamentoRepository->salvar($agendamentoDto);
 
-            if(collect($id_agendamento)->isEmpty() || collect($id_agendamento->id)->isEmpty())
+            if(collect($agendamento)->isEmpty() || collect($agendamento->id)->isEmpty())
             {
                 throw new ErrorInternoException("Error ao criar agendamento");
             }
             
             //salvar o registro de agendamento e servico
-            $agendamentoServico = $this->agendamento_ServicoRepository->vincular($id_agendamento->id, $agendamentoDto->servicos);
+            $agendamentoServico = $this->agendamento_ServicoRepository->vincular($agendamento->id, $agendamentoDto->servicos);
 
             if(!$agendamentoServico)
             {
                 throw new ErrorInternoException("Error ao vincular serviços ao agendamento");
             }
 
-            return $id_agendamento->id;
+            return $agendamento;
         });
 
-        return $id_agendamento;
+            //event
+            event(new StatusAlterado($agendamento));
+
+            return $agendamento->id;
     }
 
     public function agendamentos(AgendamentosAtributosFiltrosPagincaoDTO $agendamentosDTO): object
@@ -92,6 +96,7 @@ class AgendamentoService
         }
 
             return $agendamentos;
+
     }
 
 
@@ -128,19 +133,22 @@ class AgendamentoService
 
         $agenda->save();
 
-        return $agenda;
-       
+            //event
+            event(new StatusAlterado($agenda,'REAGENDADO'));
+
+            return $agenda;
     }
 
     public function finalizar(int $id_agenda, ?int $id_barbeiro): object
     {
+        
         //validação de segurança e permissoes
         $this->validarService->validarExistenciaBarbeiro($id_barbeiro,"Não e possivel finalizar. esse Barbeiro não existe");
         $this->validarService->validarExistenciaAgendamento($id_agenda);
         
         //buscar registro do agendamento de cliente
         $agendaCliente = $this->agendamentoRepository->detalhes($id_agenda);
-
+       
             //regras
             if($agendaCliente->status === 'CANCELADO')
             {
@@ -154,6 +162,9 @@ class AgendamentoService
                     //percistencia
                     $agendaCliente->status = 'CONCLUIDO';
                     $agendaCliente->save();
+
+                    //event
+                    event(new StatusAlterado($agendaCliente));
 
                     return $agendaCliente;
     }
@@ -188,6 +199,9 @@ class AgendamentoService
                         //percistencia
                         $agendaCliente->status = 'CANCELADO';
                         $agendaCliente->save();
+
+                        //event
+                        event(new StatusAlterado($agendaCliente));
 
                         return $agendaCliente;
          
