@@ -2,25 +2,26 @@
 
 namespace App\Jobs;
 
-use App\Models\User;
-use App\Notifications\TrocaSenhaNotification;
+use App\Models\Agendamento;
+use App\Notifications\Alertas;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class EnviarEmailTrocarDeSenhaJobs implements ShouldQueue
+class AlertaHorarioJobs implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    //rodar o comando 
-    //php artisan queue:work
-    
     /**
      * Create a new job instance.
      */
-    public function __construct(public User $user)
+
+    //rodar o comando 
+    //php artisan queue:work
+
+    public function __construct()
     {
         //
     }
@@ -30,8 +31,13 @@ class EnviarEmailTrocarDeSenhaJobs implements ShouldQueue
      */
     public function handle(): void
     {
-         $this->user->notify(
-            new TrocaSenhaNotification()
-        );
+        Agendamento::whereBetween('hora', [
+            now()->addMinutes(10),
+            now()->addMinutes(11),
+        ])->each(function ($agendamento) {
+            $agendamento->cliente->user->notify(
+                new Alertas($agendamento)
+            );
+        });
     }
 }

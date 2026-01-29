@@ -35,9 +35,9 @@ class Alertas extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+                    ->subject('Lembrete de agendamento')
+                    ->action('Ver agendamento', url('/agendamentos'))
+                    ->line('Seu agendamento será em 10 minutos.');
     }
 
     /**
@@ -48,7 +48,7 @@ class Alertas extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            //
+            "mensagem" => "Seu agendamento será em 10 minutos"
         ];
     }
 }
