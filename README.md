@@ -7,4 +7,3 @@ A documentação detalhada da API está organizada na pasta `Docs/`:
 - [Endpoints da API](Docs/endpoints.md)
 - [Fluxos de Negócio](Docs/fluxos.md)
 - [Notificações, Jobs e Scheduler](Docs/notificacoes.md)
-- [Postman e Testes](Docs/postman.md)
