@@ -34,6 +34,7 @@ class AgendamentoServicoController extends Controller
         $this->agendamentoService->adicionar($this->id_cliente(),$id_agendamento, $id_servico);
         return response()->json(['mensagem' => 'Servicos adicionado com sucesso'],201);
     }
+    
 
         private function id_cliente(): ?int 
         {

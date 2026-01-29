@@ -26,8 +26,10 @@ class AuthController extends Controller
         $token = $this->authService->logarUsuario($dtos);
   
       return response()->json([
-        "token" => $token
-        ],200);
+        "token" => $token,
+        "token_type" => "Bearer",
+        "expires_in" => 120
+      ],200);
 
   }
 

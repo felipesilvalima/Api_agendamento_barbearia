@@ -67,4 +67,6 @@ class AgendamentoServicoService
                     throw new ErrorInternoException("Error interno ao vincular servico ao agendamneto");
                 }
     }
+
+    
 }

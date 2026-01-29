@@ -35,5 +35,6 @@ class Agendamento extends Model
     {
         return $this->belongsToMany(Servico::class,'agendamento_servicos','id_servico','id_agendamento');
     }
+    
 
 }
