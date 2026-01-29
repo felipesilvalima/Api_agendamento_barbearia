@@ -43,7 +43,7 @@ class StatusAlteradoNotificacao extends Notification implements ShouldQueue
                 "AGENDADO" => $this->agendado(),
                 "CONCLUIDO" => $this->concluido(),
                 "CANCELADO" => $this->cancelado(),
-                "REAGENDADO" => $this->reagendamento(),
+                "REAGENDADO" => $this->reagendado(),
             };
     }
 
@@ -104,7 +104,7 @@ class StatusAlteradoNotificacao extends Notification implements ShouldQueue
                     ->line('Obrigado por usar nosso sistema!');
     }
 
-    public function reagendamento()
+    public function reagendado()
     {
        return (new MailMessage)
                     ->line('Agendamento Reagendado.')

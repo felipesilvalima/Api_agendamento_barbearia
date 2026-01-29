@@ -5,6 +5,7 @@ use App\Http\Controllers\AgendamentoServicoController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarbeiroController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\NotificacaoController;
 use App\Http\Controllers\ServicoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -71,6 +72,8 @@ Route::middleware('auth:api','permissao:Cliente|Barbeiro')->group( function () {
     Route::get('/servicos',[ServicoController::class, 'listarServicos'])->name('listar_servicos');
     Route::get('/servicos/{id_agendamento}/preco_total',[ServicoController::class, 'precoTotalAgendamento'])->name('precoTotal_por_agendamento');
     Route::get('/servicos/{id_servico}',[ServicoController::class, 'detalhesServicos'])->name('detalhes_servico');
+    Route::get('/notificacoes',[NotificacaoController::class, 'listarNotificacoes'])->name('lista_notificacoes');
+    Route::delete('/notificacoes/{id_notificao}',[NotificacaoController::class, 'deletarNotificaos'])->name('deleta_notificacoes');
 });
 
 

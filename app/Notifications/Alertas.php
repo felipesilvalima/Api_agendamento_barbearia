@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1); 
 
 namespace App\Notifications;
 
@@ -26,7 +26,7 @@ class Alertas extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail','database'];
     }
 
     /**

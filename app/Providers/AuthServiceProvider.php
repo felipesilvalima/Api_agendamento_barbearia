@@ -8,10 +8,12 @@ use App\Models\Agendamento;
 use App\Models\Agendamento_servico;
 use App\Models\Barbeiro;
 use App\Models\Cliente;
+use App\Models\Notificacao;
 use App\Policy\AgendamentoPolicy;
 use App\Policy\AgendamentoServicoPolicy;
 use App\Policy\BarbeiroPolicy;
 use App\Policy\ClientePolicy;
+use App\Policy\NotificacaoPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -25,6 +27,7 @@ class AuthServiceProvider extends ServiceProvider
         Agendamento::class => AgendamentoPolicy::class,
         Barbeiro::class => BarbeiroPolicy::class,
         Cliente::class => ClientePolicy::class,
+        Notificacao::class => NotificacaoPolicy::class
     ];
 
     /**

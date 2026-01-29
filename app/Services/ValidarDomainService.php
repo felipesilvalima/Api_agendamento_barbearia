@@ -9,6 +9,7 @@ use App\Repository\Contratos\AgendamentosRepositoryInterface;
 use App\Repository\Contratos\AuthRepositoryInterface;
 use App\Repository\Contratos\BarbeiroRepositoryInterface;
 use App\Repository\Contratos\ClienteRepositoryInterface;
+use App\Repository\Contratos\NotificacaoRepositoryInterface;
 use App\Repository\Contratos\ServicoRepositoryInteface;
 use DomainException;
 
@@ -21,7 +22,8 @@ class ValidarDomainService
         private ServicoRepositoryInteface $servicoRepository,
         private BarbeiroRepositoryInterface $barbeiroRepository,
         private ClienteRepositoryInterface $clienteRepository,
-        private AuthRepositoryInterface $authRepository
+        private AuthRepositoryInterface $authRepository,
+        private NotificacaoRepositoryInterface $notificaoRepository
     ){}
 
         public function validarExistenciaAgendamento(int $id_agenda): void
@@ -82,6 +84,14 @@ class ValidarDomainService
         public function validarExistenciaUsuario(int $id_user, string $mensagem)
         {
             if(!$this->authRepository->existeUsuario($id_user))
+            {
+                throw new NaoExisteRecursoException($mensagem);
+            }
+        }
+
+        public function validarExistenciaNoticacao(int $id_notificao, string $mensagem)
+        {
+            if(!$this->notificaoRepository->existeNotificao($id_notificao))
             {
                 throw new NaoExisteRecursoException($mensagem);
             }

@@ -7,6 +7,7 @@ use App\Repository\Contratos\AgendamentosRepositoryInterface;
 use App\Repository\Contratos\AuthRepositoryInterface;
 use App\Repository\Contratos\BarbeiroRepositoryInterface;
 use App\Repository\Contratos\ClienteRepositoryInterface;
+use App\Repository\Contratos\NotificacaoRepositoryInterface;
 use App\Repository\Contratos\ServicoRepositoryInteface;
 use App\Repository\Eloquents\EloquentAgendamentoRepository;
 use App\Repository\Eloquents\EloquentAgendamentoServicoRepository;
@@ -14,6 +15,7 @@ use App\Repository\Eloquents\EloquentAuthRepository;
 use App\Repository\Eloquents\EloquentBarbeiroRepository;
 use App\Repository\Eloquents\EloquentClienteRepository;
 use App\Repository\Eloquents\EloquentServicoRepository;
+use App\Repository\Eloquents\EloquentNotificaoRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -51,6 +53,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             AuthRepositoryInterface::class,
             EloquentAuthRepository::class
+        );
+
+        $this->app->bind(
+            NotificacaoRepositoryInterface::class,
+            EloquentNotificaoRepository::class
         );
     }
 
