@@ -1,66 +1,410 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🪒 API de Agendamentos para Barbearia
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Esta API foi desenvolvida em **Laravel** seguindo uma **arquitetura em camadas**, com foco em **boas práticas**, **SOLID**, **Design Patterns**, **testabilidade**, **escalabilidade** e **baixo acoplamento**.
 
-## About Laravel
+Ela gerencia **agendamentos**, **clientes**, **barbeiros**, **serviços**, **usuários autenticados**, **notificações** e **alertas automáticos**.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📐 Arquitetura em Camadas
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+A aplicação é organizada em camadas bem definidas:
 
-## Learning Laravel
+```
+Controller
+   ↓
+Service
+   ↓
+Repository (Interface → Implementação)
+   ↓
+Model (Eloquent)
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 🎯 Objetivo da arquitetura
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+* Separar responsabilidades
+* Facilitar manutenção e testes
+* Permitir evolução sem quebrar regras
+* Evitar lógica no Controller
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## 🧩 Camadas da Aplicação
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 1️⃣ Controller
 
-### Premium Partners
+📌 **Responsável por:**
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+* Receber requisições HTTP
+* Validar entrada via Requests
+* Chamar Services
+* Retornar respostas padronizadas
 
-## Contributing
+❌ Não contém regra de negócio
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```php
+class AgendamentoController
+{
+    public function store(StoreAgendamentoRequest $request)
+    {
+        return $this->service->criar($request->dto());
+    }
+}
+```
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 2️⃣ Service
 
-## Security Vulnerabilities
+📌 **Responsável por:**
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+* Regras de negócio
+* Orquestração de processos
+* Disparo de Events, Jobs e Notifications
 
-## License
+```php
+class AgendamentoService
+{
+    public function concluir(Agendamento $agendamento)
+    {
+        $agendamento->concluir();
+        event(new StatusAlterado($agendamento));
+    }
+}
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+### 3️⃣ Repository (Abstração)
+
+📌 **Responsável por:**
+
+* Acesso a dados
+* Isolar o Eloquent
+* Facilitar troca de persistência
+
+```php
+interface AgendamentoRepositoryInterface
+{
+    public function criar(array $dados);
+}
+```
+
+```php
+class AgendamentoRepository implements AgendamentoRepositoryInterface
+{
+    public function criar(array $dados)
+    {
+        return Agendamento::create($dados);
+    }
+}
+```
+
+🔹 Aplicando **Dependency Inversion Principle**
+
+---
+
+### 4️⃣ Model
+
+📌 **Responsável por:**
+
+* Representar entidades
+* Relacionamentos
+* Mutators / Casts
+
+```php
+class Agendamento extends Model
+{
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+}
+```
+
+---
+
+## 🔐 Autenticação e Autorização
+
+### JWT (JSON Web Token)
+
+* Autenticação stateless
+* Token enviado via header:
+
+```
+Authorization: Bearer {token}
+```
+
+### Middleware
+
+* `auth:api`
+* `jwt.auth`
+* `permission`
+
+```php
+Route::middleware(['auth:api'])->group(function () {
+    Route::post('/agendamentos', ...);
+});
+```
+
+---
+
+## 🛂 Policies (Autorização)
+
+📌 Usadas para garantir acesso correto aos recursos
+
+```php
+public function view(User $user, Agendamento $agendamento)
+{
+    return $user->id === $agendamento->user_id;
+}
+```
+
+---
+
+## 🗂️ Recursos da API
+
+A API expõe endpoints organizados por **domínio**, respeitando responsabilidades e permissões.
+
+---
+
+## 🔐 Users (Auth / Conta)
+
+Responsável por autenticação, sessão e gestão da conta do usuário.
+
+**Recursos:**
+
+* `POST /login` → Login
+* `POST /logout` → Logout
+* `GET /me` → Dados do usuário autenticado
+* `POST /refresh` → Renovar token JWT
+* `PUT /users/password` → Atualizar senha
+* `PATCH /users/deactivate` → Desativar conta
+
+---
+
+## 👤 Clientes
+
+Representa o cliente final da barbearia.
+
+**Recursos:**
+
+* `POST /clientes` → Criar cliente
+* `GET /clientes/{id}` → Detalhes do cliente
+* `PUT /clientes/{id}` → Atualizar dados do cliente
+* `GET /clientes/{id}/agendamentos` → Histórico de agendamentos
+
+---
+
+## 💈 Barbeiros
+
+Representa os profissionais que realizam os serviços.
+
+**Recursos:**
+
+* `POST /barbeiros` → Criar barbeiro
+* `GET /barbeiros/{id}` → Detalhes do barbeiro
+* `PUT /barbeiros/{id}` → Atualizar dados do barbeiro
+* `GET /barbeiros/{id}/agendamentos` → Histórico de agendamentos
+
+---
+
+## 📅 Agendamentos
+
+Domínio central do sistema.
+
+**Recursos:**
+
+* `POST /agendamentos` → Criar agendamento
+* `GET /agendamentos` → Listar agendamentos
+* `GET /agendamentos/{id}` → Buscar agendamento
+* `PATCH /agendamentos/{id}/reagendar` → Reagendar
+* `PATCH /agendamentos/{id}/cancelar` → Cancelar
+* `PATCH /agendamentos/{id}/finalizar` → Finalizar
+
+---
+
+## ✂️ Serviços
+
+Serviços oferecidos pela barbearia.
+
+**Recursos:**
+
+* `GET /servicos` → Listar serviços
+* `GET /servicos/{id}` → Detalhes do serviço
+* `POST /servicos` → Cadastrar serviço
+* `PUT /servicos/{id}` → Alterar serviço
+* `PATCH /servicos/{id}/desativar` → Desativar serviço
+
+---
+
+## 🔗 Serviços do Agendamento
+
+Relacionamento entre **Agendamento** e **Serviços**.
+
+**Recursos:**
+
+* `GET /agendamentos/{id}/servicos` → Listar serviços do agendamento
+* `POST /agendamentos/{id}/servicos` → Adicionar serviço ao agendamento
+* `DELETE /agendamentos/{id}/servicos/{servicoId}` → Remover serviço
+* `GET /agendamentos/{id}/total` → Preço total do agendamento
+
+---
+
+## 🔔 Notificações
+
+Gerenciamento de notificações do usuário.
+
+**Recursos:**
+
+* `GET /notificacoes` → Listar notificações
+* `DELETE /notificacoes/{id}` → Deletar notificação
+
+---
+
+## 🔔 Sistema de Notificações
+
+### Event → Listener → Notification
+
+```
+Service
+  ↓
+Event (StatusAlterado)
+  ↓
+Listener (EnviarNotificacaoStatus)
+  ↓
+Notification
+```
+
+📌 Exemplo:
+
+> "Sempre que o status do agendamento mudar, avise o usuário"
+
+---
+
+### Channels
+
+```php
+public function via($notifiable)
+{
+    return ['mail', 'database'];
+}
+```
+
+* `mail`: envio de email
+* `database`: persistência
+* `broadcast`: tempo real
+
+---
+
+## ⏱️ Scheduler (Alertas Automáticos)
+
+📌 Responsável por tarefas baseadas em tempo
+
+```php
+$schedule->job(new AlertaAgendamentoJob)->everyMinute();
+```
+
+🔹 Executado via **cron**, não por requisição
+
+---
+
+## ⚙️ Jobs (Fila)
+
+📌 Usados para:
+
+* Emails
+* Notificações
+* Processos pesados
+
+```php
+class EnviarEmailJob implements ShouldQueue
+```
+
+✔ Executados por:
+
+```bash
+php artisan queue:work
+```
+
+---
+
+## 📦 DTOs (Data Transfer Objects)
+
+📌 Padronizam entrada e saída de dados
+
+```php
+class CriarAgendamentoDTO
+{
+    public function __construct(
+        public int $userId,
+        public string $data
+    ) {}
+}
+```
+
+✔ Facilita testes
+✔ Evita arrays soltos
+
+---
+
+## ✅ Validação
+
+### Form Requests
+
+```php
+class StoreAgendamentoRequest extends FormRequest
+```
+
+* Entrada validada
+* Mensagens customizadas
+
+---
+
+## ❗ Exceptions Personalizadas
+
+📌 Tratamento de regras inválidas
+
+```php
+throw new AgendamentoIndisponivelException();
+```
+
+Centralizadas no `Handler`
+
+---
+
+## 🧪 Testabilidade
+
+* Services testáveis
+* Repositories mockáveis
+* DTOs previsíveis
+* Baixo acoplamento
+
+---
+
+## 🧠 Princípios Aplicados
+
+### SOLID
+
+* ✅ Single Responsibility
+* ✅ Dependency Inversion
+
+### Design Patterns
+
+* Repository
+* Service Layer
+* DTO
+* Observer (Events)
+
+---
+
+## 🚀 Conclusão
+
+Esta API foi projetada para:
+
+* Crescer sem dor
+* Suportar alto volume
+* Ser fácil de manter
+* Seguir padrões profissionais
+
+💈 **Uma base sólida para sistemas de agendamento modernos**
