@@ -107,9 +107,12 @@ class ServicoService
                 {
                     throw new ConflitoExecption("Nenhum dado foi alterado. Digite novos dados");
                 }
-
+                
                 //deleta a imagem antiga
-                Storage::disk('public')->delete($servico->image);
+                if($servico->imagem != null)
+                {
+                    Storage::disk('public')->delete($servico->imagem);
+                }
 
                 $servico->save();
 
@@ -126,17 +129,20 @@ class ServicoService
         $this->validarService->validarExistenciaServico($id_servico);
         
         $servico = $this->servicoRepository->detalhes($id_servico);
-
+       
         //deleta a imagem antiga
-        Storage::disk('public')->delete($servico->image);
+        if($servico->imagem != null)
+        {
+            Storage::disk('public')->delete($servico->imagem);
+        }
 
         //desativar
-        $desativado = $this->servicoRepository->desativarServico($id_servico);
+        $servico->delete();
 
-        if($desativado != true)
+        if(!$servico)
         {
-            throw new ErrorInternoException("Error interno ao desativar servico");
-        }
+            throw new ErrorInternoException("Error ao desativar servico");
+        } 
 
     }
    

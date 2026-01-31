@@ -77,14 +77,4 @@ class EloquentServicoRepository extends BaseRepository implements ServicoReposit
         return $this->firstResultado();
     }
 
-    public function desativarServico(int $id_servico): bool
-    {
-        $this->servicoModel
-        ->where('id',$id_servico)
-        ->delete();
-
-        return true;
-
-    }
-
 }
