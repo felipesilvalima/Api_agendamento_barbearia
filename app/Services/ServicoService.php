@@ -108,7 +108,7 @@ class ServicoService
                     throw new ConflitoExecption("Nenhum dado foi alterado. Digite novos dados");
                 }
 
-                //deleta a imagem do servidor
+                //deleta a imagem antiga
                 Storage::disk('public')->delete($servico->image);
 
                 $servico->save();
@@ -124,14 +124,14 @@ class ServicoService
         //validação de segurança
         $this->validarService->validarExistenciaBarbeiro($id_barbeiro,"Não e possivel remover servico. Barbeiro não existe");
         $this->validarService->validarExistenciaServico($id_servico);
+        
+        $servico = $this->servicoRepository->detalhes($id_servico);
+
+        //deleta a imagem antiga
+        Storage::disk('public')->delete($servico->image);
 
         //desativar
         $desativado = $this->servicoRepository->desativarServico($id_servico);
-
-        $servico = $this->servicoRepository->detalhes($id_servico);
-
-        //deleta a imagem do servidor
-        Storage::disk('public')->delete($servico->image);
 
         if($desativado != true)
         {
