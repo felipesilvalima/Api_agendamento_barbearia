@@ -26,12 +26,14 @@ class ServicosRequest extends FormRequest
         return $this->isMethod('patch') ?  [
             'descricao' => 'string|max:100',
             'preco' => 'sometimes|required|numeric',
+            'imagem' => 'sometimes|required|file|mimes:png,jpeg|max:2048'
         ]:
         [
             'nome' => 'required|string|max:40|unique:servicos,nome',
             'descricao' => 'string|max:100',
             'duracao_minutos' => 'sometimes|integer',
             'preco' => 'required|numeric',
+            'imagem' => 'required|file|mimes:png,jpeg|max:2048'
         ];
     }
 
@@ -54,6 +56,9 @@ class ServicosRequest extends FormRequest
             'max' => 'O :attribute deve ter no máximo :max caracteres',
             'integer' => 'O :attribute precisar ser do tipo númerico inteiro',
             'unique' => 'Esse Servico já foi cadastrado',
+            'file' => 'O :attribute precisar ser um arquivo',
+            'mimes' => 'O :attribute permite apenas extensões (png,jpeg)',
+            'imagem.max' => 'O :attribute ter no máximo :maxmb',
 
             
         ];

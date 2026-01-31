@@ -52,12 +52,14 @@ class EloquentServicoRepository extends BaseRepository implements ServicoReposit
 
     public function salvarServicos(ServicoDTO $servicoDto): bool
     {
+        
         $this->servicoModel
         ->create([
             'nome' => $servicoDto->getNome(),
             'descricao' => $servicoDto->descricao,
             'duracao_minutos' => $servicoDto->duracao_minutos,
-            'preco' => $servicoDto->preco
+            'preco' => (float)$servicoDto->preco,
+            'imagem' => $servicoDto->path
         ]);
 
         return true;

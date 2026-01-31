@@ -29,6 +29,12 @@ class ServicoController extends Controller
        return response()->json($lista,200);
     }
 
+    public function detalhesServicos(int $id_servico)
+    {
+        $detalhes =  $this->servicoService->detalhes($id_servico);
+        return response()->json($detalhes,200);
+    }
+
     public function precoTotalAgendamento(int $id_agendamento)
     {
         $this->authorize('agenda',$this->agendamento_controller->agendamentoInstancia($id_agendamento));
@@ -39,13 +45,14 @@ class ServicoController extends Controller
     public function criarServicos(ServicosRequest $request)
     {
         $data = $request->validated();
-
+       
         $this->servicoService->CadastrarServicos(new ServicoDTO(
             id_barbeiro: $this->id_barbeiro(),
             nome: $data['nome'],
             descricao: $data['descricao'] ?? null,
             duracao_minutos: $data['duracao_minutos'] ?? 0,
-            preco: $data['preco']
+            preco: $data['preco'],
+            imagem: $data['imagem']
         ));
         
         return response()->json([
@@ -53,15 +60,10 @@ class ServicoController extends Controller
         ],201); 
     }
 
-    public function detalhesServicos(int $id_servico)
-    {
-        $detalhes =  $this->servicoService->detalhes($id_servico);
-        return response()->json($detalhes,200);
-    }
-
     public function atualizarServicos(ServicosRequest $request, int $id_servico)
     {
-         //validar dados de entrada
+        
+        //validar dados de entrada
         $request->validated();
 
         //chamar service
@@ -69,7 +71,8 @@ class ServicoController extends Controller
             id_barbeiro: $this->id_barbeiro(),
             id_servico: $id_servico,
             descricao: $request['descricao'] ?? null,
-            preco: $request['preco'] ?? null
+            preco: $request['preco'] ?? null,
+            imagem: $request['imagem'] ?? null
         ));
 
            //retornar resposta

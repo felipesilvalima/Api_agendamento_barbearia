@@ -12,7 +12,7 @@ class Servico extends Model
     use SoftDeletes;
 
     protected $table = "servicos";
-    protected $fillable = ["nome","descricao","duracao_minutos","preco"];
+    protected $fillable = ["nome","descricao","duracao_minutos","preco","imagem"];
 
      protected $hidden = [
         'created_at',

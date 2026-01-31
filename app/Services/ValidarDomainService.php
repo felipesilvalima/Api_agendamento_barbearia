@@ -54,6 +54,7 @@ class ValidarDomainService
             {
               throw new NaoExisteRecursoException("Serviço inválido. Esse serviço não existe");
             }
+            
         }
 
         public function validarServicoExisteAgendamento(int $id_agendamento, int $id_servico): void

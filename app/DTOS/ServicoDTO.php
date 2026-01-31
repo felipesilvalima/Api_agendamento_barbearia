@@ -2,15 +2,19 @@
 
 namespace App\DTOS;
 
+use Illuminate\Http\UploadedFile;
+
 class ServicoDTO
 {
+    public string $path;
 
 public function __construct(
         public int $id_barbeiro,
         public string $nome,
         public ?string $descricao = null,
         public int $duracao_minutos = 30,
-        public float $preco
+        public string $preco,
+        public ?UploadedFile $imagem = null 
         
     ){}
 
