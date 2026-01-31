@@ -96,7 +96,7 @@ class ServicoService
             {
                 $atualizarServicoDto->path = $atualizarServicoDto->imagem->store('imagens/servicos');
             }
-          //dd($servico->imagem);
+          
            $servico->fill([
                 'descricao' => $atualizarServicoDto->descricao ?? $servico->descricao,
                 'preco' => $atualizarServicoDto->preco ?? $servico->preco,
@@ -108,6 +108,9 @@ class ServicoService
                     throw new ConflitoExecption("Nenhum dado foi alterado. Digite novos dados");
                 }
 
+                //deleta a imagem do servidor
+                Storage::disk('public')->delete($servico->image);
+
                 $servico->save();
 
                     if(!$servico)
@@ -118,10 +121,17 @@ class ServicoService
 
     public function desativar(int $id_barbeiro , int $id_servico)
     {
+        //validação de segurança
         $this->validarService->validarExistenciaBarbeiro($id_barbeiro,"Não e possivel remover servico. Barbeiro não existe");
         $this->validarService->validarExistenciaServico($id_servico);
 
-       $desativado = $this->servicoRepository->desativarServico($id_servico);
+        //desativar
+        $desativado = $this->servicoRepository->desativarServico($id_servico);
+
+        $servico = $this->servicoRepository->detalhes($id_servico);
+
+        //deleta a imagem do servidor
+        Storage::disk('public')->delete($servico->image);
 
         if($desativado != true)
         {
