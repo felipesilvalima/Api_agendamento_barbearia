@@ -17,6 +17,8 @@ return new class extends Migration
             $table->text('descricao')->nullable();
             $table->unsignedInteger('duracao_minutos')->default(30);
             $table->decimal('preco',10,2);
+            $table->string('imagem', 255);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

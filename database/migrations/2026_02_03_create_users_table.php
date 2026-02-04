@@ -15,14 +15,15 @@ return new class extends Migration
             $table->id();
             $table->string('email',50)->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password',80);
+            $table->string('password',255);
             $table->rememberToken();
 
-            $table->foreign('id_cliente')->references('id')->on('clientes')->onDelete('restrict')->default(0);
-            $table->foreign('id_barbeiro')->references('id')->on('barbeiros')->onDelete('restrict')->default(0);
-
+            $table->foreignId('id_cliente')->nullable()->constrained('clientes')->restrictOnDelete();
+            $table->foreignId('id_barbeiro')->nullable()->constrained('barbeiros')->restrictOnDelete();
+            $table->softDeletes();
             $table->timestamps();
         });
+        
     }
 
     /**

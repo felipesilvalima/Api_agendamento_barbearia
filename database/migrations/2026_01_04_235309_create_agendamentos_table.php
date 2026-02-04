@@ -20,7 +20,7 @@ return new class extends Migration
             //Relacionamentos
             $table->foreignId('id_cliente')->constrained('agendamentos');
             $table->foreignId('id_barbeiro')->constrained('barbeiros');
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }

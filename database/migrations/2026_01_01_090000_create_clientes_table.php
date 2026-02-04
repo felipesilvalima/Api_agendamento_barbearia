@@ -9,11 +9,16 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-     public function up(): void
+    public function up(): void
     {
-         Schema::table('clientes', function (Blueprint $table) {
+        Schema::create('clientes', function (Blueprint $table) {
+            $table->id();
+            $table->string('nome',50);
+            $table->string('telefone',20);
+            $table->date('data_cadastro');
             $table->enum('status',['ATIVO','INATIVO'])->default('ATIVO');
-            
+            $table->softDeletes();
+            $table->timestamps();
         });
     }
 
@@ -22,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropColumns('clientes','status');
+        Schema::dropIfExists('clientes');
     }
 };

@@ -9,7 +9,7 @@ class AlertaHorario
 {
     //rodar o comando
     // 1 crontab -e
-    //2 php artisan schedule:run
+    //2 php artisan schedule:work
 
     protected function schedule(Schedule $schedule)
     {
