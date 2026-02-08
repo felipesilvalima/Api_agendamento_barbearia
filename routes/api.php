@@ -79,6 +79,14 @@ Route::prefix('v1')->group(function (){
     });
 });
 
+Route::fallback(
+    function () {
+        return response()->json([
+            'message' => 'Endpoint não encontrado. Verifique a URL e tente novamente.'
+        ], 404);
+    }
+);
+
 
 
 
