@@ -7,6 +7,7 @@ use App\DTOS\BarbeiroAtributosFiltrosPaginacaoDTO;
 use App\DTOS\BarbeiroDTO;
 use App\Http\Requests\BarbeiroRequest;
 use App\Models\Barbeiro;
+use App\Models\User;
 use App\Services\BarbeiroService;
 use App\Services\ValidarDomainService;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +29,8 @@ class BarbeiroController extends Controller
             email: $data['email'],
             password: $data['password'],
             telefone: $data['telefone'],
-            especialidade: $data['especialidade']
+            especialidade: $data['especialidade'],
+            barbearia_id: $this->user()->barbearia_id
         ));
         
         return response()->json([
@@ -39,7 +41,7 @@ class BarbeiroController extends Controller
     public function listarAgendamentosBarbeiros(Request $request)
     {
        $lista =  $this->barbeiroService->listar(new BarbeiroAtributosFiltrosPaginacaoDTO(
-            id_barbeiro: $this->id_barbeiro(),
+            id_barbeiro: $this->user()->barbeiro->id,
             atributos: $request->atributos ?? null,
             atributos_agendamento: $request->atributos_agendamento ?? null,
             atributos_cliente: $request->atributos_cliente ?? null,
@@ -63,7 +65,7 @@ class BarbeiroController extends Controller
 
         //chamar service
         $this->barbeiroService->atualizar(new AtualizarBarbeiroDTO(
-            barbeiro: auth('api')->user()->barbeiro,
+            barbeiro: $this->user()->barbeiro,
             nome: $request['nome'] ?? null,
             telefone: $request['telefone'] ?? null,
             especialidade: $request['especialidade'] ?? null
@@ -73,9 +75,9 @@ class BarbeiroController extends Controller
         return response()->json(['mensagem' => 'Atuliazado com sucesso'],200);
     }
 
-    private function id_barbeiro (): ?int
+    private function user (): ?User
     {
-        return auth('api')->user()->id_barbeiro;
+        return auth('api')->user();
     }
 
     public function barbeiroIstancia(int $id_barbeiro): ?Barbeiro

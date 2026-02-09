@@ -46,10 +46,10 @@ class BarbeiroService
     {
         $this->validarService->validarExistenciaBarbeiro($barbeiroDTO->id_barbeiro, "Não e possivel listar. Esse barbeiro não existe");
 
-        $atributosClientePermitidos = ['id','nome','telefone','data_cadastro','status'];
-        $atributosAgendamentoPermitidos = ['id','data','hora','status','id_barbeiro','id_cliente'];
-        $atributosBarbeiroPermitido = ['id','nome','telefone','status','especialidade'];
-        $atributosServicoPermitido = ['id','nome','descricao','duracao_minutos','preco'];
+        $atributosClientePermitidos = ['id','nome','telefone','data_cadastro','status','barbearia_id'];
+        $atributosAgendamentoPermitidos = ['id','data','hora','status','id_barbeiro','id_cliente','barbearia_id'];
+        $atributosBarbeiroPermitido = ['id','nome','telefone','status','especialidade','barbearia_id'];
+        $atributosServicoPermitido = ['id','nome','descricao','duracao_minutos','preco','barbearia_id'];
     
         //atributos 
         $barbeiroDTO->atributos =  ValidarAtributos::validarAtributos($barbeiroDTO->atributos, $atributosBarbeiroPermitido);

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use app\Helpers\TenantScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,9 +11,10 @@ class Cliente extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use TenantScope;
 
     protected $table = "clientes";
-    protected $fillable = ["nome","telefone","email","data_cadastro"];
+    protected $fillable = ["nome","telefone","email","data_cadastro","user_id","barbearia_id"];
 
      protected $hidden = [
         'created_at',
@@ -27,6 +29,6 @@ class Cliente extends Model
 
     public function user()
     {
-        return $this->hasOne(User::class,'id_cliente','id');
+        return $this->belongsTo(User::class,'user_id','id');
     }
 }

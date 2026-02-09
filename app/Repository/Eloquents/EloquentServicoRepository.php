@@ -59,7 +59,8 @@ class EloquentServicoRepository extends BaseRepository implements ServicoReposit
             'descricao' => $servicoDto->descricao,
             'duracao_minutos' => $servicoDto->duracao_minutos,
             'preco' => (float)$servicoDto->preco,
-            'imagem' => $servicoDto->path
+            'imagem' => $servicoDto->path,
+            'barbearia_id' => $servicoDto->barbearia_id
         ]);
 
         return true;

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use app\Helpers\TenantScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,9 +11,10 @@ class Servico extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use TenantScope;
 
     protected $table = "servicos";
-    protected $fillable = ["nome","descricao","duracao_minutos","preco","imagem"];
+    protected $fillable = ["nome","descricao","duracao_minutos","preco","imagem","barbearia_id"];
 
      protected $hidden = [
         'created_at',

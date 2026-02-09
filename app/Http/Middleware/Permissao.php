@@ -17,27 +17,27 @@ class Permissao
     {
         switch($perfil)
         {
-            case'Cliente':
-
-                if(auth('api')->user()->id_cliente === null)
+            case 'Cliente':
+                if(auth('api')->user()->role !== 'cliente')
                 {
                     abort(403,"Você não tem permissão para acessar essa rota");
                 }
                     return $next($request);
 
-                break;
-            case'Barbeiro':
-
-                if(auth('api')->user()->id_barbeiro === null)
+            case 'Barbeiro':
+                if(auth('api')->user()->role !== 'barbeiro')
                 {
                     abort(403,"Você não tem permissão para acessar essa rota");
                 }
                     return $next($request);
 
-                break;
-            case'Cliente|Barbeiro':
-                    return $next($request);
-                break;
+            case 'Cliente|Barbeiro':
+            if(!in_array(auth('api')->user()->role, ['cliente','barbeiro']))
+            {
+                abort(403,"Você não tem permissão para acessar essa rota");
+            }
+                return $next($request);
+
             default:
                 abort(404,"Não existe esse tipo de perfil");
         }

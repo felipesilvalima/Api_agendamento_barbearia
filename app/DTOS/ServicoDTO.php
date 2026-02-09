@@ -11,9 +11,10 @@ class ServicoDTO
 public function __construct(
         public int $id_barbeiro,
         public string $nome,
+        public string $preco,
+        public int $barbearia_id,
         public ?string $descricao = null,
         public int $duracao_minutos = 30,
-        public string $preco,
         public ?UploadedFile $imagem = null 
         
     ){}

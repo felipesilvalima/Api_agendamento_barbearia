@@ -13,8 +13,10 @@ class BarbeiroDTO
         public string $email,
         public string $password,
         public int $telefone,
+        public int $barbearia_id,
         public string $especialidade = "Barbeiro Completo",
-        public string $status = "ATIVO"   
+        public string $status = "ATIVO",
+        public string $role = "barbeiro" 
     ){}
 
 

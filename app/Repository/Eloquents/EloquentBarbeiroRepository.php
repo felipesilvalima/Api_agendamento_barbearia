@@ -28,6 +28,7 @@ class EloquentBarbeiroRepository extends BaseRepository implements BarbeiroRepos
                     "telefone" => $barbeiroDto->telefone,
                     "especialidade" => $barbeiroDto->especialidade,
                     "status" => $barbeiroDto->status,
+                    "barbearia_id" => $barbeiroDto->barbearia_id
                 ]);
         
                 return $cadastro->id;

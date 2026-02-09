@@ -26,7 +26,7 @@ class ServicoService
     public function listar(ServicosAtributosFiltrosDTO $servicoDto): object
     {
 
-        $atributosServicoPermitido = ['id','nome','descricao','duracao_minutos','preco'];
+        $atributosServicoPermitido = ['id','nome','descricao','duracao_minutos','preco','barbearia_id'];
 
        //atributos
         $servicoDto->atributos = ValidarAtributos::validarAtributos($servicoDto->atributos,$atributosServicoPermitido);

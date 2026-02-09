@@ -6,6 +6,7 @@ use App\DTOS\AtualizarServicoDTO;
 use App\DTOS\ServicoDTO;
 use App\DTOS\ServicosAtributosFiltrosDTO;
 use App\Http\Requests\ServicosRequest;
+use App\Models\User;
 use App\Services\ServicoService;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -21,7 +22,7 @@ class ServicoController extends Controller
     {
         
        $lista =  $this->servicoService->listar(new ServicosAtributosFiltrosDTO(
-            id_barbeiro: $this->id_barbeiro(),
+            id_barbeiro: $this->user()->barbeiro->id,
             atributos: $request->atributos ?? null,
             filtros: $request->filtros ?? null
        ));
@@ -52,7 +53,8 @@ class ServicoController extends Controller
             descricao: $data['descricao'] ?? null,
             duracao_minutos: $data['duracao_minutos'] ?? 0,
             preco: $data['preco'],
-            imagem: $data['imagem']
+            imagem: $data['imagem'],
+            barbearia_id: $this->user()->barbearia_id
         ));
         
         return response()->json([
@@ -68,7 +70,7 @@ class ServicoController extends Controller
 
         //chamar service
         $this->servicoService->atualizar(new AtualizarServicoDTO(
-            id_barbeiro: $this->id_barbeiro(),
+            id_barbeiro: $this->user()->barbeiro->id,
             id_servico: $id_servico,
             descricao: $request['descricao'] ?? null,
             preco: $request['preco'] ?? null,
@@ -82,13 +84,13 @@ class ServicoController extends Controller
 
     public function DesativarServicos(int $id_servico)
     {
-        $this->servicoService->desativar($this->id_barbeiro(), $id_servico); 
+        $this->servicoService->desativar($this->user()->barbeiro->id, $id_servico); 
         return response()->json(['mensagem' => 'Serviço desativado com sucesso'],200);
     }
 
-    private function id_barbeiro (): ?int
+    private function user (): ?User
     {
-        return auth('api')->user()->id_barbeiro;
+        return auth('api')->user();
     }
 
 }

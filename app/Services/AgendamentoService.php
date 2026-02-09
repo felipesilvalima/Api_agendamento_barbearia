@@ -14,6 +14,7 @@ use App\Repository\Contratos\AgendamentosRepositoryInterface;
 use App\Repository\Contratos\BarbeiroRepositoryInterface;
 use App\Repository\Contratos\ClienteRepositoryInterface;
 use DomainException;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\DB;
 
 class AgendamentoService
@@ -50,7 +51,11 @@ class AgendamentoService
             }
             
             //salvar o registro de agendamento e servico
-            $agendamentoServico = $this->agendamento_ServicoRepository->vincular($agendamento->id, $agendamentoDto->servicos);
+            $agendamentoServico = $this->agendamento_ServicoRepository->vincular(
+                $agendamento->id,
+                $agendamentoDto->servicos,
+                $agendamentoDto->barbearia_id
+            );
 
             if(!$agendamentoServico)
             {
@@ -69,10 +74,10 @@ class AgendamentoService
     public function agendamentos(AgendamentosAtributosFiltrosPagincaoDTO $agendamentosDTO): object
     {
 
-        $atributosPermitido = ['id','data','hora','status','id_barbeiro','id_cliente'];
-        $atributosBarbeiroPermitido = ['id','nome','telefone','status','especialidade'];
-        $atributosClientePermitido = ['id','nome','telefone','data_cadastro','status'];
-        $atributosServicoPermitido = ['id','nome','descricao','duracao_minutos','preco'];
+        $atributosPermitido = ['id','data','hora','status','id_barbeiro','id_cliente','barbearia_id'];
+        $atributosBarbeiroPermitido = ['id','nome','telefone','status','especialidade','barbearia_id'];
+        $atributosClientePermitido = ['id','nome','telefone','data_cadastro','status','barbearia_id'];
+        $atributosServicoPermitido = ['id','nome','descricao','duracao_minutos','preco','barbearia_id'];
 
         //atributos condição
         $agendamentosDTO->filtro_validado = ValidarAtributos::validarAtributosCondicao($agendamentosDTO->filtro,$atributosPermitido);
@@ -169,22 +174,22 @@ class AgendamentoService
                     return $agendaCliente;
     }
 
-    public function cancelar(int $id_agenda, ?int $cliente_id,  ?int $barbeiro_id): object
+    public function cancelar(int $id_agenda, User $user): object
     {
 
         $agendaCliente = $this->agendamentoRepository->detalhes($id_agenda);
 
-        if(!is_null($cliente_id))
+        if(!is_null($user->cliente->id))
         {
             //validação de segurança
-            $this->validarService->validarExistenciaCliente($cliente_id,"Não e possivel cancelar. esse Cliente não existe");
+            $this->validarService->validarExistenciaCliente($user->cliente->id,"Não e possivel cancelar. esse Cliente não existe");
             $this->horarioService->horarioCancelarAgendamento($agendaCliente->hora);
 
         }
             else
             {
                 //validação de segurança
-                $this->validarService->validarExistenciaBarbeiro($barbeiro_id,"Não e possivel cancelar. esse Barbeiro não existe");
+                $this->validarService->validarExistenciaBarbeiro($user->barbeiro->id,"Não e possivel cancelar. esse Barbeiro não existe");
             }
          
                 if($agendaCliente->status === 'CONCLUIDO')

@@ -33,7 +33,8 @@ class EloquentAgendamentoRepository extends BaseRepository implements Agendament
                 'hora' => $agendamentoDTO->hora,
                 'id_cliente' => $agendamentoDTO->id_cliente,
                 'id_barbeiro' => $agendamentoDTO->id_barbeiro,
-                'status' => $agendamentoDTO->status
+                'status' => $agendamentoDTO->status,
+                'barbearia_id' => $agendamentoDTO->barbearia_id
             ]);
         }
 

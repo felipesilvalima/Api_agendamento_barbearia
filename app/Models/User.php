@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use app\Helpers\TenantScope;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -14,7 +16,7 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
     use SoftDeletes;
-    use Notifiable;
+    use TenantScope;
 
     // Rest omitted for brevity
 
@@ -46,8 +48,8 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
-        'id_cliente',
-        'id_barbeiro'
+        'role',
+        'barbearia_id'
     ];
 
     /**
@@ -78,12 +80,12 @@ class User extends Authenticatable implements JWTSubject
 
     public function cliente()
     {
-        return $this->belongsTo(Cliente::class,'id_cliente','id');
+        return $this->hasOne(Cliente::class,'user_id','id');
     }
 
     public function barbeiro()
     {
-        return $this->belongsTo(Barbeiro::class,'id_barbeiro','id');
+        return $this->hasOne(Barbeiro::class,'user_id','id');
     }
 
 }

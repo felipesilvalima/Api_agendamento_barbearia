@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\DTOS\LoginDTO;
 use App\Http\Requests\AuthRequest;
 use App\Http\Requests\UpdatePasswordRequest;
+use App\Models\User;
 use App\Services\AuthService;
 use App\Services\ValidarDomainService;
 
@@ -47,7 +48,7 @@ class AuthController extends Controller
   
   public function me()
   { 
-      $perfil = $this->authService->perfilUser(auth('api')->user());
+      $perfil = $this->authService->perfilUser($this->user());
       return response()->json($perfil,200);
   }
 
@@ -58,7 +59,7 @@ class AuthController extends Controller
     
       $senhaNova =  $request->validated();
   
-      $this->authService->update($senhaNova, auth('api')->user());
+      $this->authService->update($senhaNova, $this->user());
   
       return response()->json(['mensagem' => 'Senha atualizada com sucesso'],200);
     }
@@ -66,10 +67,15 @@ class AuthController extends Controller
 
   public function desativarMe()
   {
-    $this->authService->delete(auth('api')->user());
+    $this->authService->delete($this->user());
 
     return response()->json(["mensagem" => 'Conta Desativada'],200);
   }
+
+        private function user(): ?User
+        {
+            return auth('api')->user();
+        }
 
  
 

@@ -8,6 +8,7 @@ use App\DTOS\ReagendamentoDTO;
 use App\Http\Requests\AgendamentoRequest;
 use App\Http\Requests\ReagendamentoRequest;
 use App\Models\Agendamento;
+use App\Models\User;
 use App\Services\AgendamentoService;
 use App\Services\ValidarDomainService;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +30,8 @@ class AgendamentoController extends Controller
             id_cliente: $this->id_cliente(),
             data: $data['data'],
             hora: $data['hora'],
-            servicos: $data['servicos']
+            servicos: $data['servicos'],
+            barbearia_id: $this->user()->barbearia_id
         ));
 
         return response()->json([
@@ -41,8 +43,8 @@ class AgendamentoController extends Controller
     public function listarAgendamentos(Request $request)
     {
         $agendamentos = $this->agendamentoService->agendamentos(new AgendamentosAtributosFiltrosPagincaoDTO(
-            id_cliente: $this->id_cliente(),
-            id_barbeiro: $this->id_barbeiro(),
+            id_cliente: $this->user()->cliente->id ?? null,
+            id_barbeiro: $this->user()->barbeiro->id ?? null,
             atributos: $request->atributos ?? null,
             atributos_barbeiro: $request->atributos_barbeiro ?? null,
             atributos_cliente: $request->atributos_cliente ?? null,
@@ -75,7 +77,7 @@ class AgendamentoController extends Controller
         $this->agendamentoService->reagendar(new ReagendamentoDTO(
             data: $data['data'],
             hora: $data['hora'],
-            id_cliente: $this->id_cliente(),
+            id_cliente: $this->user()->cliente->id,
             id_agendamento: $id_agenda
         ));
 
@@ -87,7 +89,7 @@ class AgendamentoController extends Controller
     public function finalizarAgendamentos(int $id_agenda)
     {
         $this->authorize('finalizar',$this->agendamentoInstancia($id_agenda));
-        $agenda = $this->agendamentoService->finalizar($id_agenda, $this->id_barbeiro());
+        $agenda = $this->agendamentoService->finalizar($id_agenda, $this->user()->barbeiro->id);
         
         return response()->json([
             "mensagem" => "Agendamento Concluido com sucesso. ID do agendamento {$agenda->id}"
@@ -98,7 +100,7 @@ class AgendamentoController extends Controller
     {
 
         $this->authorize('cancelar',$this->agendamentoInstancia($id_agenda));
-        $agenda = $this->agendamentoService->cancelar($id_agenda, $this->id_cliente(), $this->id_barbeiro());
+        $agenda = $this->agendamentoService->cancelar($id_agenda, $this->user());
 
             return response()->json([
                 "mensagem" => "Agendamento Cancelado com sucesso. ID do agendamento {$agenda->id}"
@@ -106,16 +108,10 @@ class AgendamentoController extends Controller
     }
 
    
-
-        private function id_cliente(): ?int 
+        private function user(): ?User
         {
-            return auth('api')->user()->id_cliente;
-        }
-
-        private function id_barbeiro(): ?int
-        {
-            return auth('api')->user()->id_barbeiro;
-        }
+            return auth('api')->user();
+        }   
 
         public function agendamentoInstancia(int $id_agenda): ?Agendamento
         {

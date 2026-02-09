@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Exceptions\NaoPermitidoExecption;
+use app\Helpers\TenantScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,9 +12,10 @@ class Agendamento extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use TenantScope;
 
     protected $table = "agendamentos";
-    protected $fillable = ["data","hora","status","id_cliente","id_barbeiro"];
+    protected $fillable = ["data","hora","status","id_cliente","id_barbeiro","barbearia_id"];
 
      protected $hidden = [
         'created_at',

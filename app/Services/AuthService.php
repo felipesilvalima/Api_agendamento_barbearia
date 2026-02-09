@@ -53,15 +53,15 @@ class AuthService
 
     }
 
-    public function perfilUser(object $id_user): object
+    public function perfilUser(User $id_user): object
     {
-        if(!is_null($id_user->id_cliente))
+        if(!is_null($clienteId = $id_user->cliente->id))
         {
-            $perfil = $this->clienteRepository->PerfilCliente($id_user->id_cliente);
+            $perfil = $this->clienteRepository->PerfilCliente($clienteId);
         }
             else
             {
-                $perfil = $this->barbeiroRepository->PerfilBarbeiro($id_user->id_barbeiro);   
+                $perfil = $this->barbeiroRepository->PerfilBarbeiro($id_user->barbeiro->id);   
             }
 
                 if(collect($perfil)->isEmpty())
@@ -96,16 +96,16 @@ class AuthService
     {
         $this->validarService->validarExistenciaUsuario($user->id, "Não e possivel deleta. Esse Usuário não existe");
 
-        if(!is_null($user->id_cliente))
+        if(!is_null($clienteID = $user->cliente->id))
         { 
-            $this->validarService->validarExistenciaCliente($user->id_cliente,"Não e possivel deleta. Esse Cliente não existe");
+            $this->validarService->validarExistenciaCliente($clienteID,"Não e possivel deleta. Esse Cliente não existe");
 
             $user->cliente->status = 'INATIVO';
             $user->cliente->save();
         }
             else
             {
-                $this->validarService->validarExistenciaBarbeiro($user->id_barbeiro,"Não e possivel deleta. Esse Barbeiro não existe");
+                $this->validarService->validarExistenciaBarbeiro($user->barbeiro->id,"Não e possivel deleta. Esse Barbeiro não existe");
                 
                 $user->barbeiro->status = 'INATIVO';
                 $user->barbeiro->save();

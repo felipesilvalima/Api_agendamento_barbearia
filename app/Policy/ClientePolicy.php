@@ -10,7 +10,7 @@ class ClientePolicy
 {
     public function detalhes(User $user, Cliente $cliente)
     {
-        return ($user->id_cliente === $cliente->id || $user->id_barbeiro != null)
+        return ($user->role === 'cliente' && $user->cliente->id === $cliente->id || $user->role === 'barbeiro' && $user->barbeiro->id === $cliente->id_barbeiro)
         ? Response::allow() 
         : Response::deny('Você não tem permissão para acessar esse recurso',403);
     }

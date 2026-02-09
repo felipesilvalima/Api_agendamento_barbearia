@@ -1,0 +1,35 @@
+services:
+
+  mysql-barbearia:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: 26102002
+      MYSQL_DATABASE: barb_shop
+    ports:
+      - "3306:3306"
+    volumes:
+      - vol-barbearia:/var/lib/mysql
+    networks:
+      - net-barbearia
+    restart: always
+
+  app:
+    container_name: api-barbearia
+    ports:
+      - "8000:80"
+    build: ./Dockerfile
+    restart: always
+    networks:
+      - net-barbearia
+    depends_on:
+      - mysql-barbearia
+    env_file:
+      - .env
+
+
+networks:
+  net-barbearia:
+    driver: bridge
+      
+volumes:
+  vol-barbearia:

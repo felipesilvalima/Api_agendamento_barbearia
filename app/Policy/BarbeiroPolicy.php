@@ -10,7 +10,7 @@ class BarbeiroPolicy
 {
     public function detalhes(User $user, Barbeiro $barbeiro)
     {
-        return ($user->id_barbeiro === $barbeiro->id || $user->id_cliente != null)
+        return ($user->role === 'barbeiro' && $user->barbeiro->id === $barbeiro->id || $user->role === 'cliente' && $user->cliente->id === $barbeiro->id_cliente)
         ? Response::allow() 
         : Response::deny('Você não tem permissão para acessar esse recurso',403);
     }

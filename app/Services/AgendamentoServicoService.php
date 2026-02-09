@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoExisteRecursoException;
+use App\Models\Cliente;
 use App\Repository\Contratos\AgendamentoServicoRepositoyInterface;
 use App\Repository\Contratos\ClienteRepositoryInterface;
 use DomainException;
@@ -46,10 +47,10 @@ class AgendamentoServicoService
         
     }
 
-    public function adicionar(?int $cliente_id ,int $id_agendamento, int $id_servico)
+    public function adicionar(Cliente $cliente ,int $id_agendamento, int $id_servico)
     {
         //validação de segurança e permissoes
-        $this->validarService->validarExistenciaCliente($cliente_id,"Não e possivel adicionar servico. esse Cliente não existe");
+        $this->validarService->validarExistenciaCliente($cliente->id,"Não e possivel adicionar servico. esse Cliente não existe");
         
             $this->validarService->validarExistenciaServico($id_servico);
 
@@ -60,7 +61,7 @@ class AgendamentoServicoService
 
                 $servicos[] = $id_servico;
 
-                $vincular = $this->agendamento_ServicoRepository->vincular($id_agendamento, $servicos);
+                $vincular = $this->agendamento_ServicoRepository->vincular($id_agendamento, $servicos, $cliente->barbearia_id);
 
                 if(!$vincular)
                 {

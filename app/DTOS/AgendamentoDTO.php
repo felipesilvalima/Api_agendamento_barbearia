@@ -12,7 +12,8 @@ class AgendamentoDTO
         public string $data,
         public string $hora,
         public array $servicos,
-        public string $status = "AGENDADO"
+        public int $barbearia_id,
+        public string $status = "AGENDADO",
     ){}
 
 }

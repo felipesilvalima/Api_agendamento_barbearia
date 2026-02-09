@@ -9,7 +9,7 @@ class EloquentAgendamentoServicoRepository implements AgendamentoServicoReposito
 {
     public function __construct(private Agendamento_servico $agendamentoServicoModel){}
 
-    public function vincular(int $id_agendamento, array $servicos): bool
+    public function vincular(int $id_agendamento, array $servicos, int $barbearia_id): bool
     {   
         $servicos = collect($servicos)->unique()->values();// remover valores iguais
         
@@ -17,7 +17,8 @@ class EloquentAgendamentoServicoRepository implements AgendamentoServicoReposito
         {
             $this->agendamentoServicoModel->create([
                 "id_agendamento" => $id_agendamento,
-                "id_servico" => $servico
+                "id_servico" => $servico,
+                "barbearia_id" => $barbearia_id
             ]);
         }
 

@@ -8,6 +8,7 @@ use App\DTOS\ClienteDTO;
 use App\Http\Requests\AtualizarClienteRequest;
 use App\Http\Requests\ClienteRequest;
 use App\Models\Cliente;
+use App\Models\User;
 use App\Services\ClienteService;
 use App\Services\ValidarDomainService;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +29,8 @@ class ClienteController extends Controller
             nome: $data['nome'],
             email: $data['email'],
             password: $data['password'],
-            telefone: $data['telefone']
+            telefone: $data['telefone'],
+            barbearia_id: $this->user()->barbeiro_id
         ));
         
         return response()->json([
@@ -39,7 +41,7 @@ class ClienteController extends Controller
     public function listarAgendamentosClientes(Request $request)
     {
        $lista =  $this->clienteService->listar(new ClienteAtributosFiltrosPaginacaoDTO(
-            id_cliente: $this->id_cliente(),
+            id_cliente: $this->user()->cliente->id,
             atributos: $request->atributos ?? null,
             atributos_agendamento: $request->atributos_agendamento ?? null,
             atributos_barbeiro: $request->atributos_barbeiro ?? null,
@@ -63,7 +65,7 @@ class ClienteController extends Controller
 
         //chamar service
         $this->clienteService->atualizar(new AtualizarClienteDTO(
-            cliente: auth('api')->user()->cliente,
+            cliente: $this->user()->cliente,
             nome: $request['nome'] ?? null,
             telefone: $request['telefone'] ?? null
         ));
@@ -73,9 +75,9 @@ class ClienteController extends Controller
     }
     
     
-    private function id_cliente(): ?int
+    private function user(): ?User
     {
-        return auth('api')->user()->id_cliente;
+        return auth('api')->user();
     }
     
     public function clienteIstancia(int $id_cliente): ?Cliente
