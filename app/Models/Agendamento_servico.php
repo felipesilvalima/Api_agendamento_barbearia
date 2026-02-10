@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-use app\Helpers\TenantScope;
+use App\Helpers\TenantScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Agendamento_servico extends Model
 {
     use HasFactory;
-    use TenantScope;
 
     protected $table = "agendamento_servicos";
     protected $fillable = ["id_agendamento","id_servico","barbearia_id"];

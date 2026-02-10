@@ -53,15 +53,15 @@ class AuthService
 
     }
 
-    public function perfilUser(User $id_user): object
+    public function perfilUser(User $user): object
     {
-        if(!is_null($clienteId = $id_user->cliente->id))
+        if($user->role === 'cliente')
         {
-            $perfil = $this->clienteRepository->PerfilCliente($clienteId);
+            $perfil = $this->clienteRepository->PerfilCliente($user->cliente->id);
         }
-            else
+            elseif($user->role === 'barbeiro')
             {
-                $perfil = $this->barbeiroRepository->PerfilBarbeiro($id_user->barbeiro->id);   
+                $perfil = $this->barbeiroRepository->PerfilBarbeiro($user->barbeiro->id);   
             }
 
                 if(collect($perfil)->isEmpty())
@@ -96,14 +96,14 @@ class AuthService
     {
         $this->validarService->validarExistenciaUsuario($user->id, "Não e possivel deleta. Esse Usuário não existe");
 
-        if(!is_null($clienteID = $user->cliente->id))
+        if($user->role === 'cliente')
         { 
-            $this->validarService->validarExistenciaCliente($clienteID,"Não e possivel deleta. Esse Cliente não existe");
+            $this->validarService->validarExistenciaCliente($user->cliente->id,"Não e possivel deleta. Esse Cliente não existe");
 
             $user->cliente->status = 'INATIVO';
             $user->cliente->save();
         }
-            else
+            elseif($user->role === 'barbeiro')
             {
                 $this->validarService->validarExistenciaBarbeiro($user->barbeiro->id,"Não e possivel deleta. Esse Barbeiro não existe");
                 

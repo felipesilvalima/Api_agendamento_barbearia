@@ -31,7 +31,7 @@ class NotificacaoService
 
     public function deletar(int $id_notificao)
     {
-        $deletado = $this->notificaoRepository->delete($id_notificao);
+        $deletado = $this->notificaoRepository->deleteNotificao($id_notificao);
 
         if($deletado != true)
         {

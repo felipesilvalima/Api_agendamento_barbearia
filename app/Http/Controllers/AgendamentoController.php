@@ -27,7 +27,7 @@ class AgendamentoController extends Controller
 
         $agendamento_id = $this->agendamentoService->agendar(new AgendamentoDTO(
             id_barbeiro: $data['id_barbeiro'],
-            id_cliente: $this->id_cliente(),
+            clienteUser: $this->user(),
             data: $data['data'],
             hora: $data['hora'],
             servicos: $data['servicos'],
@@ -43,8 +43,7 @@ class AgendamentoController extends Controller
     public function listarAgendamentos(Request $request)
     {
         $agendamentos = $this->agendamentoService->agendamentos(new AgendamentosAtributosFiltrosPagincaoDTO(
-            id_cliente: $this->user()->cliente->id ?? null,
-            id_barbeiro: $this->user()->barbeiro->id ?? null,
+            user: $this->user(),
             atributos: $request->atributos ?? null,
             atributos_barbeiro: $request->atributos_barbeiro ?? null,
             atributos_cliente: $request->atributos_cliente ?? null,

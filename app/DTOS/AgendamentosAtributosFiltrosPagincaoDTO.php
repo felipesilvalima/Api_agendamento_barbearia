@@ -2,6 +2,8 @@
 
 namespace App\DTOS;
 
+use App\Models\User;
+
 class AgendamentosAtributosFiltrosPagincaoDTO
 {
     public ?array $filtro_validado = null;
@@ -10,8 +12,7 @@ class AgendamentosAtributosFiltrosPagincaoDTO
     public ?array $filtro_servico_validado = null;
 
     public function __construct(
-        public ?int $id_cliente = null,
-        public ?int $id_barbeiro = null,
+        public User $user,
         public ?string $atributos = null,
         public ?string $atributos_barbeiro = null,
         public ?string $atributos_cliente = null,

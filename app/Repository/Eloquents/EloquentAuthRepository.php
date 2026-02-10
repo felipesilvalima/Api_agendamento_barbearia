@@ -19,15 +19,17 @@ class EloquentAuthRepository extends BaseRepository implements AuthRepositoryInt
     }
 
 
-    public function salvarUsuario(BarbeiroDTO | ClienteDTO $user): void
+    public function salvarUsuario(BarbeiroDTO | ClienteDTO $user): int
     {
 
-       $this->userModel->create([
+      $user = $this->userModel->create([
             "email" => $user->email,
             "password" =>  Hash::make($user->password),
             "barbearia_id" => $user->barbearia_id,
             "role" => $user->role ?? null
         ]);
+
+        return $user->id;
 
     }
 

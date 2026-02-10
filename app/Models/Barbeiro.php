@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use app\Helpers\TenantScope;
+use App\Helpers\TenantScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,7 +11,6 @@ class Barbeiro extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    use TenantScope;
 
     protected $table = "barbeiros";
     protected $fillable = ["nome","telefone","especialidade","status","user_id","barbearia_id"];

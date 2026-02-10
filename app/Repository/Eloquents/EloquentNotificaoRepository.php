@@ -18,20 +18,20 @@ class EloquentNotificaoRepository extends BaseRepository implements NotificacaoR
     public function notificacoes(int $id_user): object
     {
         $this->buscarPorEntidade($id_user,'notifiable_id');
-        return $this->getResultado();  
+        return $this->getResultado('data->barbearia_id');  
     }
 
-    public function delete(int $id_notificao): bool
+    public function deleteNotificao(int $id_notificao): bool
     {
-        $this->notificacao
-        ->find($id_notificao)
-        ->delete();
+        $this->buscarPorEntidade($id_notificao,'id');
+        $this->delete('data->barbearia_id');
         
         return true;
     }
 
     public function existeNotificao(int $id_notificao): bool
     {
-        return $this->existe($id_notificao);
+        return $this->existe($id_notificao,'data->barbearia_id');
     }
+    
 }

@@ -52,7 +52,7 @@ class StatusAlteradoNotificacao extends Notification implements ShouldQueue
      *
      * @return array<string, mixed>
      */
-    public function toArray(object $notifiable): array
+    public function toDatabase(object $notifiable): array
     {
         $status = $this->reagendado === null ? $this->agendamento->status : $this->reagendado;
 
@@ -60,22 +60,29 @@ class StatusAlteradoNotificacao extends Notification implements ShouldQueue
 
             "AGENDADO" => [
                 "mensagem" => "Novo Agendamento",
-                "cliente" => $this->agendamento->cliente->nome
+                "cliente" => $this->agendamento->cliente->nome,
+                'barbearia_id' => $notifiable->barbearia_id
+
             ],
 
             "CONCLUIDO" => [
                 "mensagem" => "seu agendamento foi Concluido com sucesso",
-                "numero_agendamento" => $this->agendamento->id
+                "numero_agendamento" => $this->agendamento->id,
+                'barbearia_id' => $notifiable->barbearia_id
+
             ],
 
             "CANCELADO" => [
                 "mensagem" => "seu agendamento foi Cancelado",
-                "numero_agendamento" => $this->agendamento->id
+                "numero_agendamento" => $this->agendamento->id,
+                'barbearia_id' => $notifiable->barbearia_id
+
             ],
 
             "REAGENDADO" => [
                 "mensagem" => "seu agendamento foi Reagendado",
-                "numero_agendamento" => $this->agendamento->id
+                "numero_agendamento" => $this->agendamento->id,
+                'barbearia_id' => $notifiable->barbearia_id
             ],
         };
     }

@@ -27,16 +27,15 @@ class BarbeiroService
     { 
        
         DB::transaction(function () use($BarbeiroDto) { 
- 
-            $BarbeiroDto->id_barbeiro = $this->barbeiroRepository->salvarBarbeiro($BarbeiroDto);
 
-                if(!$BarbeiroDto->id_barbeiro)
-                {
-                    throw new ErrorInternoException("error criar barbeiro");
-                }
+           $BarbeiroDto->id_barbeiro = $this->authRepository->salvarUsuario($BarbeiroDto);
             
-
-                $this->authRepository->salvarUsuario($BarbeiroDto);
+           if(!$BarbeiroDto->id_barbeiro)
+           {
+               throw new ErrorInternoException("error criar usuário de barbeiro");
+           }
+           
+            $this->barbeiroRepository->salvarBarbeiro($BarbeiroDto);
 
         });
     }

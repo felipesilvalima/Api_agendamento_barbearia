@@ -29,11 +29,11 @@ class AgendamentoService
     public function agendar(AgendamentoDTO $agendamentoDto): int
     {
         //validação de segurança
-        $this->validarService->validarExistenciaCliente($agendamentoDto->id_cliente,"Não e possivel fazer agendamento. Esse cliente não existe");
+        $this->validarService->validarExistenciaCliente($agendamentoDto->clienteUser->id,"Não e possivel fazer agendamento. Esse cliente não existe");
         $this->validarService->validarExistenciaBarbeiro($agendamentoDto->id_barbeiro,"Não e possivel fazer agendamento. Esse barbeiro não existe");
 
         //Regras de négocio
-        $this->validarService->validarLimiteAgendamentoPorCliente($agendamentoDto->id_cliente);
+        $this->validarService->validarLimiteAgendamentoPorCliente($agendamentoDto->clienteUser);
         $this->horarioService->validarDisponibilidade($agendamentoDto);
         $this->horarioService->validarExpedienteHorario();
         $this->horarioService->validarHorarioFuturo($agendamentoDto);
@@ -179,7 +179,7 @@ class AgendamentoService
 
         $agendaCliente = $this->agendamentoRepository->detalhes($id_agenda);
 
-        if(!is_null($user->cliente->id))
+        if($user->role === 'cliente')
         {
             //validação de segurança
             $this->validarService->validarExistenciaCliente($user->cliente->id,"Não e possivel cancelar. esse Cliente não existe");

@@ -22,7 +22,7 @@ class EloquentAgendamentoRepository extends BaseRepository implements Agendament
         {
             $result = $this->agendamentoModel->
             where('id_barbeiro',$id_barbeiro)->
-            where('status', 'AGENDADO')->whereTime('hora', $hora)->whereDate('data', $data)->exists();
+            where('status', 'AGENDADO')->whereTime('hora', $hora)->whereDate('data', $data)->where('barbearia_id',$this->tenant())->exists();
             return $result;
         }
 
@@ -31,7 +31,7 @@ class EloquentAgendamentoRepository extends BaseRepository implements Agendament
             return $this->agendamentoModel->create([
                 'data' => $agendamentoDTO->data,
                 'hora' => $agendamentoDTO->hora,
-                'id_cliente' => $agendamentoDTO->id_cliente,
+                'id_cliente' => $agendamentoDTO->clienteUser->cliente->id,
                 'id_barbeiro' => $agendamentoDTO->id_barbeiro,
                 'status' => $agendamentoDTO->status,
                 'barbearia_id' => $agendamentoDTO->barbearia_id
@@ -45,7 +45,7 @@ class EloquentAgendamentoRepository extends BaseRepository implements Agendament
 
         public function listar(AgendamentosAtributosFiltrosPagincaoDTO $agendamentoDTO): iterable
         {
-            if(!is_null($agendamentoDTO->id_cliente))
+            if($agendamentoDTO->user->role  === 'cliente')
             {
                 if($agendamentoDTO->atributos != null)
                 {
@@ -107,9 +107,9 @@ class EloquentAgendamentoRepository extends BaseRepository implements Agendament
                               $this->paginacao($agendamentoDTO->page, $agendamentoDTO->limit);
                             }
 
-                            $this->buscarPorEntidade($agendamentoDTO->id_cliente, 'id_cliente');
+                            $this->buscarPorEntidade($agendamentoDTO->user->cliente->id, 'id_cliente');
             }
-                else
+                elseif($agendamentoDTO->user->role === 'barbeiro')
                 {
                     if($agendamentoDTO->atributos != null)
                     {
@@ -170,7 +170,7 @@ class EloquentAgendamentoRepository extends BaseRepository implements Agendament
                                                     $this->paginacao($agendamentoDTO->page, $agendamentoDTO->limit);
                                                 }
 
-                                                $this->buscarPorEntidade($agendamentoDTO->id_barbeiro,'id_barbeiro');
+                                                $this->buscarPorEntidade($agendamentoDTO->user->barbeiro->id,'id_barbeiro');
 
                 }
             

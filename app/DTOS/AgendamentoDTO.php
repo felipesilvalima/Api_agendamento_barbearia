@@ -2,13 +2,14 @@
 
 namespace App\DTOS;
 
-
+use App\Models\Cliente;
+use App\Models\User;
 
 class AgendamentoDTO
 {
     public function __construct(
         public int $id_barbeiro,
-        public int $id_cliente,
+        public User $clienteUser,
         public string $data,
         public string $hora,
         public array $servicos,

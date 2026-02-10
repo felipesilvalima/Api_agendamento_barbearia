@@ -10,7 +10,7 @@ class Notificacao extends Model
     use HasFactory;
     protected $table = 'notifications'; 
 
-    protected $fillable = ['type','notifiable_type','notifiable_id','data'];
+    protected $fillable = ['type','notifiable_type','notifiable_id','data','barbearia_id'];
     protected $hidden = ['read_at','created_at','updated_at'];
 
     

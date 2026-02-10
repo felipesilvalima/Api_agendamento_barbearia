@@ -17,7 +17,6 @@ class AuthController extends Controller
 
   public function login(AuthRequest $request)
   {
-   
         $credencias = $request->validated();
 
         $dtos = new LoginDTO(

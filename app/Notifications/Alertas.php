@@ -45,10 +45,12 @@ class Alertas extends Notification
      *
      * @return array<string, mixed>
      */
-    public function toArray(object $notifiable): array
+    public function toDatabase(object $notifiable): array
     {
         return [
-            "mensagem" => "Seu agendamento será em 10 minutos"
+            "mensagem" => "Seu agendamento será em 10 minutos",
+            'barbearia_id' => $notifiable->barbearia_id
+            
         ];
     }
 }

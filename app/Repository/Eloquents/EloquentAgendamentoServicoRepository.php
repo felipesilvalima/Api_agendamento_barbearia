@@ -3,11 +3,15 @@
 namespace App\Repository\Eloquents;
 
 use App\Models\Agendamento_servico;
+use App\Repository\Abstract\BaseRepository;
 use App\Repository\Contratos\AgendamentoServicoRepositoyInterface;
 
-class EloquentAgendamentoServicoRepository implements AgendamentoServicoRepositoyInterface
+class EloquentAgendamentoServicoRepository extends BaseRepository implements AgendamentoServicoRepositoyInterface
 {
-    public function __construct(private Agendamento_servico $agendamentoServicoModel){}
+    public function __construct(private Agendamento_servico $agendamentoServicoModel)
+    {
+        parent::__construct($agendamentoServicoModel);
+    }
 
     public function vincular(int $id_agendamento, array $servicos, int $barbearia_id): bool
     {   
@@ -35,17 +39,16 @@ class EloquentAgendamentoServicoRepository implements AgendamentoServicoReposito
 
     public function remover(int $id_agendamento, int $id_servico): int
     {
-       return $this->agendamentoServicoModel
-        ->where('id_agendamento',$id_agendamento)
-        ->where('id_servico',$id_servico)
-        ->delete();
+        $this->filtro(["id_agendamento:=:$id_agendamento"]);
+        $this->filtro(["id_servico:=:$id_servico"]);
+        return $this->delete();
     }
 
     public function listarPorAgendamento(int $id_agendamento): iterable
     {
-       return $this->agendamentoServicoModel
-       ->with('servico')
-       ->where('id_agendamento', $id_agendamento)
-       ->get();
+       $this->selectAtributosRelacionamentos('servico');
+       $this->filtro(["id_agendamento:=:$id_agendamento"]);
+
+       return $this->getResultado();
     }
 }

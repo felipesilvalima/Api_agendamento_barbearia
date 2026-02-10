@@ -28,6 +28,7 @@ class EloquentBarbeiroRepository extends BaseRepository implements BarbeiroRepos
                     "telefone" => $barbeiroDto->telefone,
                     "especialidade" => $barbeiroDto->especialidade,
                     "status" => $barbeiroDto->status,
+                    "user_id" => $barbeiroDto->id_barbeiro,
                     "barbearia_id" => $barbeiroDto->barbearia_id
                 ]);
         
@@ -36,11 +37,10 @@ class EloquentBarbeiroRepository extends BaseRepository implements BarbeiroRepos
 
             public function PerfilBarbeiro(int $id_barbeiro): object | bool
             {
-                return $this->barbeiroModel
-                ->select('id','nome','telefone','especialidade','status')
-                ->with(['user:id,email,id_barbeiro'])
-                ->where('id', $id_barbeiro)
-                ?->first();
+                $this->selectAtributos('id,nome,telefone,especialidade,status,user_id');
+                $this->selectAtributosRelacionamentos('user');
+                $this->filtro(["id:=:$id_barbeiro"]);
+                return $this->firstResultado();
             }
 
             public function listar(BarbeiroAtributosFiltrosPaginacaoDTO $barbeiroDTO): object

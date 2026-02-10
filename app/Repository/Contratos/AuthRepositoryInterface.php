@@ -5,11 +5,11 @@ namespace App\Repository\Contratos;
 use App\DTOS\BarbeiroDTO;
 use App\DTOS\ClienteDTO;
 use App\DTOS\LoginDTO;
-
+use App\Models\User;
 
 interface AuthRepositoryInterface
 {
-    public function salvarUsuario(BarbeiroDTO | ClienteDTO $user): void;
+    public function salvarUsuario(BarbeiroDTO | ClienteDTO $user): int;
     public function verificarCredenciasUser(LoginDTO $credencias): bool | string;
     public function existeUsuario(int $id_user): bool;
         

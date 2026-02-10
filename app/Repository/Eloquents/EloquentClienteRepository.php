@@ -30,6 +30,7 @@ class EloquentClienteRepository extends BaseRepository implements ClienteReposit
             "nome" => $clienteDto->getNome(),
             "telefone" => $clienteDto->telefone,
             "data_cadastro" => Carbon::now(),
+            "user_id" => $clienteDto->id_cliente,
             "barbearia_id" => $clienteDto->barbearia_id
         ]);
         
@@ -38,11 +39,10 @@ class EloquentClienteRepository extends BaseRepository implements ClienteReposit
 
     public function PerfilCliente(int $id_cliente): object | bool
     {
-       return $this->clienteModel
-       ->select('id','nome','telefone','data_cadastro')
-       ->with(['user:id,email,id_cliente'])
-       ->where('id', $id_cliente)
-       ?->first();
+        $this->selectAtributos('id,nome,telefone,data_cadastro,user_id');
+        $this->selectAtributosRelacionamentos('user');
+        $this->filtro(["id:=:$id_cliente"]);
+        return $this->firstResultado();
     }
 
     public function listar(ClienteAtributosFiltrosPaginacaoDTO $clienteDTO): object

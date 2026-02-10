@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTOS\AgendamentosAtributosFiltrosPagincaoDTO;
 use App\Exceptions\NaoExisteRecursoException;
+use App\Models\User;
 use App\Repository\Contratos\AgendamentoServicoRepositoyInterface;
 use App\Repository\Contratos\AgendamentosRepositoryInterface;
 use App\Repository\Contratos\AuthRepositoryInterface;
@@ -34,10 +35,10 @@ class ValidarDomainService
             }
         }
 
-        public function validarLimiteAgendamentoPorCliente(int $id_cliente): void
+        public function validarLimiteAgendamentoPorCliente(User $clienteUser): void
         {
             if($this->agendamentoRepository->listar(new AgendamentosAtributosFiltrosPagincaoDTO(
-                id_cliente: $id_cliente,
+                user: $clienteUser,
                 atributos: "id,agendamento",
                 filtro: "status:=:AGENDADO"
 

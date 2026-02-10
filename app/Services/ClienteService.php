@@ -28,15 +28,15 @@ class ClienteService
        
         DB::transaction(function () use($clienteDto) { 
  
-            $clienteDto->id_cliente = $this->clienteRepository->salvarCliente($clienteDto);
+            $clienteDto->id_cliente = $this->authRepository->salvarUsuario($clienteDto);
+            
+            if(!$clienteDto->id_cliente)
+            {
+                throw new ErrorInternoException("error ao criar usuário de cliente");
+            }
+                    
+            $this->clienteRepository->salvarCliente($clienteDto);
 
-                if(!$clienteDto->id_cliente)
-                {
-                    throw new ErrorInternoException("error ao criar cliente");
-                }
-                 
-
-                $this->authRepository->salvarUsuario($clienteDto);
 
         });
     }
