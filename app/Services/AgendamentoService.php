@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\DB;
 
 class AgendamentoService
 {
+    use ValidarAtributos;
+
     public function __construct(
         private AgendamentosRepositoryInterface $agendamentoRepository,
         private AgendamentoServicoRepositoyInterface $agendamento_ServicoRepository,
@@ -74,23 +76,34 @@ class AgendamentoService
     public function agendamentos(AgendamentosAtributosFiltrosPagincaoDTO $agendamentosDTO): object
     {
 
-        $atributosPermitido = ['id','data','hora','status','id_barbeiro','id_cliente','barbearia_id'];
-        $atributosBarbeiroPermitido = ['id','nome','telefone','status','especialidade','barbearia_id'];
-        $atributosClientePermitido = ['id','nome','telefone','data_cadastro','status','barbearia_id'];
-        $atributosServicoPermitido = ['id','nome','descricao','duracao_minutos','preco','barbearia_id'];
+        $regras = [
+            'atributos' => ['id','data','hora','status','id_barbeiro','id_cliente','barbearia_id'],
+            'atributos_cliente' => ['id','nome','telefone','data_cadastro','status','barbearia_id'],
+            'atributos_barbeiro' => ['id','nome','telefone','status','especialidade','barbearia_id'],
+            'atributos_servico' => ['id','nome','descricao','duracao_minutos','preco','barbearia_id']
+        ];
 
-        //atributos condição
-        $agendamentosDTO->filtro_validado = ValidarAtributos::validarAtributosCondicao($agendamentosDTO->filtro,$atributosPermitido);
-        $agendamentosDTO->filtro_barbeiro_validado = ValidarAtributos::validarAtributosCondicao($agendamentosDTO->filtro_barbeiro,$atributosBarbeiroPermitido);
-        $agendamentosDTO->filtro_cliente_validado = ValidarAtributos::validarAtributosCondicao($agendamentosDTO->filtro_cliente,$atributosClientePermitido);
-        $agendamentosDTO->filtro_servico_validado = ValidarAtributos::validarAtributosCondicao($agendamentosDTO->filtro_servico,$atributosServicoPermitido);
+        $filtros = [
+            'filtro' => 'filtro_validado',
+            'filtro_barbeiro' => 'filtro_barbeiro_validado',
+            'filtro_cliente' => 'filtro_cliente_validado',
+            'filtro_servico' => 'filtro_servico_validado'
+        ];
+    
+        //atributos 
+        foreach($regras as $campoDto => $atributosPermitidos)
+        {
+            $agendamentosDTO->$campoDto =  $this->validarAtributos($agendamentosDTO->$campoDto, $atributosPermitidos);
+            
+            //atributos condição
+            foreach($filtros as $filtro => $filtrosValidado)
+            {
 
-        //atributos
-        $agendamentosDTO->atributos = ValidarAtributos::validarAtributos($agendamentosDTO->atributos,$atributosPermitido);
-        $agendamentosDTO->atributos_barbeiro = ValidarAtributos::validarAtributos($agendamentosDTO->atributos_barbeiro,$atributosBarbeiroPermitido);
-        $agendamentosDTO->atributos_cliente = ValidarAtributos::validarAtributos($agendamentosDTO->atributos_cliente,$atributosClientePermitido);
-        $agendamentosDTO->atributos_servico = ValidarAtributos::validarAtributos($agendamentosDTO->atributos_servico,$atributosServicoPermitido);
+                $agendamentosDTO->$filtrosValidado = $this->validarAtributosCondicao($agendamentosDTO->$filtro ,$atributosPermitidos);
+            }
+        }
         
+
         //listar coleção de agendamentos
         $agendamentos = $this->agendamentoRepository->listar($agendamentosDTO);
         

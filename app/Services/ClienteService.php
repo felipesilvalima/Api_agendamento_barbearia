@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\DB;
 
 class ClienteService
 {
+    use ValidarAtributos;
+
     public function __construct(
         private ClienteRepositoryInterface $clienteRepository,
         private AuthRepositoryInterface $authRepository,
@@ -45,16 +47,18 @@ class ClienteService
     {
         $this->validarService->validarExistenciaCliente($clienteDTO->id_cliente, "Não e possivel listar. Esse cliente não existe");
 
-        $atributosClientePermitidos = ['id','nome','telefone','data_cadastro','status','barbearia_id'];
-        $atributosAgendamentoPermitidos = ['id','data','hora','status','id_barbeiro','id_cliente','barbearia_id'];
-        $atributosBarbeiroPermitido = ['id','nome','telefone','status','especialidade','barbearia_id'];
-        $atributosServicoPermitido = ['id','nome','descricao','duracao_minutos','preco','barbearia_id'];
+        $regras = [
+            'atributos' => ['id','nome','telefone','data_cadastro','status','barbearia_id'],
+            'atributos_barbeiro' => ['id','nome','telefone','status','especialidade','barbearia_id'],
+            'atributos_agendamento' => ['id','data','hora','status','id_barbeiro','id_cliente','barbearia_id'],
+            'atributos_servico' => ['id','nome','descricao','duracao_minutos','preco','barbearia_id']
+        ];
     
         //atributos 
-        $clienteDTO->atributos =  ValidarAtributos::validarAtributos($clienteDTO->atributos, $atributosClientePermitidos);
-        $clienteDTO->atributos_agendamento =  ValidarAtributos::validarAtributos($clienteDTO->atributos_agendamento, $atributosAgendamentoPermitidos);
-        $clienteDTO->atributos_barbeiro =  ValidarAtributos::validarAtributos($clienteDTO->atributos_barbeiro, $atributosBarbeiroPermitido);
-        $clienteDTO->atributos_servico =  ValidarAtributos::validarAtributos($clienteDTO->atributos_servico, $atributosServicoPermitido);
+        foreach($regras as $campoDto => $atributosPermitidos)
+        {
+            $clienteDTO->$campoDto =  $this->validarAtributos($clienteDTO->$campoDto, $atributosPermitidos);
+        }
 
         $lista = $this->clienteRepository->listar($clienteDTO);
 

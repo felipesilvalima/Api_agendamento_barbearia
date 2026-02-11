@@ -47,15 +47,12 @@ class EloquentClienteRepository extends BaseRepository implements ClienteReposit
 
     public function listar(ClienteAtributosFiltrosPaginacaoDTO $clienteDTO): object
     {
-        if($clienteDTO->atributos != null)
-        {
-            //atributos
-            $this->selectAtributos('id,'.$clienteDTO->atributos);
-
-        }
-            //atributos do user
-            $this->selectAtributosRelacionamentos('user');
-                
+            if($clienteDTO->atributos != null)
+            {
+                //atributos
+                $this->selectAtributos('id,'.$clienteDTO->atributos);
+            }
+        
                     if($clienteDTO->atributos_barbeiro != null)
                     {
                         //atributos de barbeiro

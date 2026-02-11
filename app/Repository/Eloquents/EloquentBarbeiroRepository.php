@@ -50,8 +50,6 @@ class EloquentBarbeiroRepository extends BaseRepository implements BarbeiroRepos
                     //atributos
                     $this->selectAtributos('id,'.$barbeiroDTO->atributos);
                 }
-                    //atributos do user
-                    $this->selectAtributosRelacionamentos('user');
                 
                     if($barbeiroDTO->atributos_cliente != null)
                     {

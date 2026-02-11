@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Storage;
 
 class ServicoService
 {
+    use ValidarAtributos;
+
     public function __construct(
        private ServicoRepositoryInteface $servicoRepository,
        private ValidarDomainService $validarService
@@ -29,10 +31,10 @@ class ServicoService
         $atributosServicoPermitido = ['id','nome','descricao','duracao_minutos','preco','barbearia_id'];
 
        //atributos
-        $servicoDto->atributos = ValidarAtributos::validarAtributos($servicoDto->atributos,$atributosServicoPermitido);
+        $servicoDto->atributos = $this->validarAtributos($servicoDto->atributos,$atributosServicoPermitido);
 
         //filtros
-        $servicoDto->filtros_validos = ValidarAtributos::validarAtributosCondicao($servicoDto->filtros,$atributosServicoPermitido);
+        $servicoDto->filtros_validos = $this->validarAtributosCondicao($servicoDto->filtros,$atributosServicoPermitido);
 
         $listaServico = $this->servicoRepository->listar($servicoDto);
 

@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\DB;
 
 class BarbeiroService
 {
+    use ValidarAtributos;
+
      public function __construct(
         private BarbeiroRepositoryInterface $barbeiroRepository,
         private AuthRepositoryInterface $authRepository,
@@ -44,17 +46,19 @@ class BarbeiroService
     public function listar(BarbeiroAtributosFiltrosPaginacaoDTO $barbeiroDTO)
     {
         $this->validarService->validarExistenciaBarbeiro($barbeiroDTO->id_barbeiro, "Não e possivel listar. Esse barbeiro não existe");
-
-        $atributosClientePermitidos = ['id','nome','telefone','data_cadastro','status','barbearia_id'];
-        $atributosAgendamentoPermitidos = ['id','data','hora','status','id_barbeiro','id_cliente','barbearia_id'];
-        $atributosBarbeiroPermitido = ['id','nome','telefone','status','especialidade','barbearia_id'];
-        $atributosServicoPermitido = ['id','nome','descricao','duracao_minutos','preco','barbearia_id'];
+        
+        $regras = [
+            'atributos' => ['id','nome','telefone','status','especialidade','barbearia_id'],
+            'atributos_cliente' => ['id','nome','telefone','data_cadastro','status','barbearia_id'],
+            'atributos_agendamento' => ['id','data','hora','status','id_barbeiro','id_cliente','barbearia_id'],
+            'atributos_servico' => ['id','nome','descricao','duracao_minutos','preco','barbearia_id']
+        ];
     
         //atributos 
-        $barbeiroDTO->atributos =  ValidarAtributos::validarAtributos($barbeiroDTO->atributos, $atributosBarbeiroPermitido);
-        $barbeiroDTO->atributos_agendamento =  ValidarAtributos::validarAtributos($barbeiroDTO->atributos_agendamento, $atributosAgendamentoPermitidos);
-        $barbeiroDTO->atributos_cliente =  ValidarAtributos::validarAtributos($barbeiroDTO->atributos_cliente, $atributosClientePermitidos);
-        $barbeiroDTO->atributos_servico =  ValidarAtributos::validarAtributos($barbeiroDTO->atributos_servico, $atributosServicoPermitido);
+        foreach($regras as $campoDto => $atributosPermitidos)
+        {
+            $barbeiroDTO->$campoDto =  $this->validarAtributos($barbeiroDTO->$campoDto, $atributosPermitidos);
+        }
 
         $lista = $this->barbeiroRepository->listar($barbeiroDTO);
 

@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-class ValidarAtributos
+trait ValidarAtributos
 {
     public  static function validarAtributos(?string $atributos_soliciatados, array $atributos_permitidos)
     {
