@@ -13,13 +13,12 @@ class Barbeiro extends Model
     use SoftDeletes;
 
     protected $table = "barbeiros";
-    protected $fillable = ["nome","telefone","especialidade","status","user_id","barbearia_id"];
+    protected $fillable = ["telefone","especialidade","status","user_id","barbearia_id"];
 
      protected $hidden = [
         'created_at',
         'updated_at',
         'deleted_at',
-        'user_id'
     ];
 
     public function agendamento()

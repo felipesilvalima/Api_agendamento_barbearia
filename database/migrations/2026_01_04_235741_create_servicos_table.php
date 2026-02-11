@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('servicos', function (Blueprint $table) {
             $table->id();
+            $table->integer('barbearia_id')->notNullable();
             $table->string('nome',50);
             $table->text('descricao')->nullable();
             $table->unsignedInteger('duracao_minutos')->default(30);

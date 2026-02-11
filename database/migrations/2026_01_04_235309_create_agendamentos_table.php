@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('agendamentos', function (Blueprint $table) {
             $table->id();
+            $table->integer('barbearia_id')->notNullable();
             $table->date('data');
             $table->time('hora');
             $table->enum('status',['AGENDADO','CONCLUIDO','CANCELADO']);

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('agendamento_servicos', function (Blueprint $table) {
             //tabela de relacionamento N:N de agendamento e serviços
             $table->id();
+            $table->integer('barbearia_id')->notNullable();
             $table->foreignId('id_agendamento')->constrained('agendamentos');
             $table->foreignId('id_servico')->constrained('servicos');
             $table->timestamps();

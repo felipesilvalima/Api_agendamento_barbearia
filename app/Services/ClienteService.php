@@ -48,8 +48,8 @@ class ClienteService
         $this->validarService->validarExistenciaCliente($clienteDTO->id_cliente, "Não e possivel listar. Esse cliente não existe");
 
         $regras = [
-            'atributos' => ['id','nome','telefone','data_cadastro','status','barbearia_id'],
-            'atributos_barbeiro' => ['id','nome','telefone','status','especialidade','barbearia_id'],
+            'atributos' => ['id','user_id','telefone','data_cadastro','status','barbearia_id'],
+            'atributos_barbeiro' => ['id','user_id','telefone','status','especialidade','barbearia_id'],
             'atributos_agendamento' => ['id','data','hora','status','id_barbeiro','id_cliente','barbearia_id'],
             'atributos_servico' => ['id','nome','descricao','duracao_minutos','preco','barbearia_id']
         ];

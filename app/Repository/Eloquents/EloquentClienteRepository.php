@@ -27,7 +27,6 @@ class EloquentClienteRepository extends BaseRepository implements ClienteReposit
     {
 
         $cadastro = $this->clienteModel->create([
-            "nome" => $clienteDto->getNome(),
             "telefone" => $clienteDto->telefone,
             "data_cadastro" => Carbon::now(),
             "user_id" => $clienteDto->id_cliente,
@@ -39,7 +38,7 @@ class EloquentClienteRepository extends BaseRepository implements ClienteReposit
 
     public function PerfilCliente(int $id_cliente): object | bool
     {
-        $this->selectAtributos('id,nome,telefone,data_cadastro,user_id');
+        $this->selectAtributos('id,telefone,data_cadastro,user_id');
         $this->selectAtributosRelacionamentos('user');
         $this->filtro(["id:=:$id_cliente"]);
         return $this->firstResultado();
@@ -47,12 +46,15 @@ class EloquentClienteRepository extends BaseRepository implements ClienteReposit
 
     public function listar(ClienteAtributosFiltrosPaginacaoDTO $clienteDTO): object
     {
-            if($clienteDTO->atributos != null)
-            {
-                //atributos
-                $this->selectAtributos('id,'.$clienteDTO->atributos);
-            }
-        
+        if($clienteDTO->atributos != null)
+        {
+            //atributos
+            $this->selectAtributos('id,'.$clienteDTO->atributos);
+
+        }
+            //atributos do user
+            $this->selectAtributosRelacionamentos('user');
+                
                     if($clienteDTO->atributos_barbeiro != null)
                     {
                         //atributos de barbeiro

@@ -78,8 +78,8 @@ class AgendamentoService
 
         $regras = [
             'atributos' => ['id','data','hora','status','id_barbeiro','id_cliente','barbearia_id'],
-            'atributos_cliente' => ['id','nome','telefone','data_cadastro','status','barbearia_id'],
-            'atributos_barbeiro' => ['id','nome','telefone','status','especialidade','barbearia_id'],
+            'atributos_cliente' => ['id','user_id','telefone','data_cadastro','status','barbearia_id'],
+            'atributos_barbeiro' => ['id','user_id','telefone','status','especialidade','barbearia_id'],
             'atributos_servico' => ['id','nome','descricao','duracao_minutos','preco','barbearia_id']
         ];
 

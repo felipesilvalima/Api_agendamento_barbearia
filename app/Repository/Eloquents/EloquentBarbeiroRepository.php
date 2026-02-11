@@ -24,7 +24,6 @@ class EloquentBarbeiroRepository extends BaseRepository implements BarbeiroRepos
             public function salvarBarbeiro(BarbeiroDTO $barbeiroDto): int
             {
                 $cadastro = $this->barbeiroModel->create([
-                    "nome" => $barbeiroDto->getNome(),
                     "telefone" => $barbeiroDto->telefone,
                     "especialidade" => $barbeiroDto->especialidade,
                     "status" => $barbeiroDto->status,
@@ -37,7 +36,7 @@ class EloquentBarbeiroRepository extends BaseRepository implements BarbeiroRepos
 
             public function PerfilBarbeiro(int $id_barbeiro): object | bool
             {
-                $this->selectAtributos('id,nome,telefone,especialidade,status,user_id');
+                $this->selectAtributos('id,telefone,especialidade,status,user_id');
                 $this->selectAtributosRelacionamentos('user');
                 $this->filtro(["id:=:$id_barbeiro"]);
                 return $this->firstResultado();
@@ -50,6 +49,8 @@ class EloquentBarbeiroRepository extends BaseRepository implements BarbeiroRepos
                     //atributos
                     $this->selectAtributos('id,'.$barbeiroDTO->atributos);
                 }
+                    //atributos do user
+                    $this->selectAtributosRelacionamentos('user');
                 
                     if($barbeiroDTO->atributos_cliente != null)
                     {
