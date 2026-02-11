@@ -30,4 +30,9 @@ class Barbeiro extends Model
     {
         return $this->belongsTo(User::class,'user_id','id');
     }
+
+    public function barbearia()
+    {
+        return $this->belongsTo(Barbearia::class,'barbearia_id','id');
+    }
 }

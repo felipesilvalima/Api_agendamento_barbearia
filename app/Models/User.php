@@ -86,4 +86,9 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(Barbeiro::class,'user_id','id');
     }
 
+    public function barbearia()
+    {
+        return $this->belongsTo(Barbearia::class,'barbearia_id','id');
+    }
+
 }

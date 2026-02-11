@@ -3,12 +3,13 @@
 namespace App\Repository\Eloquents;
 
 use App\Models\Agendamento_servico;
+use App\Models\AgendamentoServico;
 use App\Repository\Abstract\BaseRepository;
 use App\Repository\Contratos\AgendamentoServicoRepositoyInterface;
 
 class EloquentAgendamentoServicoRepository extends BaseRepository implements AgendamentoServicoRepositoyInterface
 {
-    public function __construct(private Agendamento_servico $agendamentoServicoModel)
+    public function __construct(private AgendamentoServico $agendamentoServicoModel)
     {
         parent::__construct($agendamentoServicoModel);
     }

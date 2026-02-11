@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('servicos', function (Blueprint $table) {
             $table->id();
-            $table->integer('barbearia_id')->notNullable();
             $table->string('nome',50);
             $table->text('descricao')->nullable();
             $table->unsignedInteger('duracao_minutos')->default(30);
@@ -21,6 +20,8 @@ return new class extends Migration
             $table->string('imagem', 255);
             $table->softDeletes();
             $table->timestamps();
+
+            $table->foreignId('barbearia_id')->nullable()->constrained('barbearias')->after('id');
         });
     }
 

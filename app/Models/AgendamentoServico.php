@@ -6,7 +6,7 @@ use App\Helpers\TenantScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Agendamento_servico extends Model
+class AgendamentoServico extends Model
 {
     use HasFactory;
 
@@ -26,5 +26,10 @@ class Agendamento_servico extends Model
     public function servico()
     {
         return $this->belongsTo(Servico::class,'id_servico','id');
+    }
+
+     public function barbearia()
+    {
+        return $this->belongsTo(Barbearia::class,'barbearia_id','id');
     }
 }

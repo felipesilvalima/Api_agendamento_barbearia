@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('clientes', function (Blueprint $table) {
             $table->id();
-            $table->integer('barbearia_id')->notNullable();
             $table->string('telefone',20);
             $table->date('data_cadastro');
-            $table->enum('status',['ATIVO','INATIVO'])->default('ATIVO');
+            $table->enum('status',['ATIVO','INATIVO'])->nullable()->default('ATIVO');
             $table->softDeletes();
             $table->timestamps();
 
             //relacionamento
             $table->foreignId('user_id')->notNullable()->constrained('users')->after('id');
+            $table->foreignId('barbearia_id')->nullable()->constrained('barbearias')->after('user_id');
         });
     }
 

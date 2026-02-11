@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('agendamentos', function (Blueprint $table) {
             $table->id();
-            $table->integer('barbearia_id')->notNullable();
             $table->date('data');
             $table->time('hora');
-            $table->enum('status',['AGENDADO','CONCLUIDO','CANCELADO']);
+            $table->enum('status',['AGENDADO','CONCLUIDO','CANCELADO'])->default('AGENDADO');
 
             //Relacionamentos
-            $table->foreignId('id_cliente')->constrained('agendamentos');
+            $table->foreignId('id_cliente')->constrained('clientes');
             $table->foreignId('id_barbeiro')->constrained('barbeiros');
+            $table->foreignId('barbearia_id')->nullable()->constrained('barbearias')->after('id');
             $table->softDeletes();
             $table->timestamps();
         });
