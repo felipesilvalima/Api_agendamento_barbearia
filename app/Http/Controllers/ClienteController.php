@@ -21,7 +21,7 @@ class ClienteController extends Controller
     ){}
 
   
-    public function criarClientes(ClienteRequest $request)
+    public function criarClientes(ClienteRequest $request, int $id_barbearia)
     {
         $data = $request->validated();
 
@@ -30,7 +30,7 @@ class ClienteController extends Controller
             email: $data['email'],
             password: $data['password'],
             telefone: $data['telefone'],
-            barbearia_id: $this->user()->barbeiro_id
+            id_barbearia: $id_barbearia
         ));
         
         return response()->json([

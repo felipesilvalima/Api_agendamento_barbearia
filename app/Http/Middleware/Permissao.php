@@ -22,14 +22,13 @@ class Permissao
                 {
                     abort(403,"Você não tem permissão para acessar essa rota");
                 }
-                    return $next($request);
             break;
             case 'Barbeiro':
                 if(auth('api')->user()->role !== 'barbeiro')
                 {
                     abort(403,"Você não tem permissão para acessar essa rota");
                 }
-                    return $next($request);
+                    
             break;
             case 'Cliente|Barbeiro':
 
@@ -37,11 +36,18 @@ class Permissao
                 {
                     abort(403,"Você não tem permissão para acessar essa rota");
                 }
-                    return $next($request);
+            break;
+            case 'admin':
+                if(auth('api')->user()->role != 'admin')
+                {
+                    abort(403,"Você não tem permissão para acessar essa rota");
+                }
             break;
             default:
                 abort(404,"Não existe esse tipo de perfil");
         }
+
+        return $next($request);
 
       
     }

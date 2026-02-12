@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Repository\Contratos\AgendamentoServicoRepositoyInterface;
 use App\Repository\Contratos\AgendamentosRepositoryInterface;
 use App\Repository\Contratos\AuthRepositoryInterface;
+use App\Repository\Contratos\BarbeariaInterfaceRepository;
 use App\Repository\Contratos\BarbeiroRepositoryInterface;
 use App\Repository\Contratos\ClienteRepositoryInterface;
 use App\Repository\Contratos\NotificacaoRepositoryInterface;
@@ -24,7 +25,8 @@ class ValidarDomainService
         private BarbeiroRepositoryInterface $barbeiroRepository,
         private ClienteRepositoryInterface $clienteRepository,
         private AuthRepositoryInterface $authRepository,
-        private NotificacaoRepositoryInterface $notificaoRepository
+        private NotificacaoRepositoryInterface $notificaoRepository,
+        private BarbeariaInterfaceRepository $barbeariaRepository
     ){}
 
         public function validarExistenciaAgendamento(int $id_agenda): void
@@ -94,6 +96,14 @@ class ValidarDomainService
         public function validarExistenciaNoticacao(int $id_notificao, string $mensagem)
         {
             if(!$this->notificaoRepository->existeNotificao($id_notificao))
+            {
+                throw new NaoExisteRecursoException($mensagem);
+            }
+        }
+
+        public function validarExistenciaBarbearia(int $id_barbearia, string $mensagem)
+        {
+            if(!$this->barbeariaRepository->existeBarbearia($id_barbearia))
             {
                 throw new NaoExisteRecursoException($mensagem);
             }

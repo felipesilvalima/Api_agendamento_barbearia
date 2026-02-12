@@ -13,7 +13,7 @@ class ClienteDTO
         public string $email,
         public string $password,
         public int $telefone,
-        public int $barbearia_id ,
+        public int $id_barbearia,
         public string $role = "cliente"
     ){}
 

@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Repository\Contratos\AgendamentoServicoRepositoyInterface;
 use App\Repository\Contratos\AgendamentosRepositoryInterface;
 use App\Repository\Contratos\AuthRepositoryInterface;
+use App\Repository\Contratos\BarbeariaInterfaceRepository;
 use App\Repository\Contratos\BarbeiroRepositoryInterface;
 use App\Repository\Contratos\ClienteRepositoryInterface;
 use App\Repository\Contratos\NotificacaoRepositoryInterface;
@@ -12,6 +13,7 @@ use App\Repository\Contratos\ServicoRepositoryInteface;
 use App\Repository\Eloquents\EloquentAgendamentoRepository;
 use App\Repository\Eloquents\EloquentAgendamentoServicoRepository;
 use App\Repository\Eloquents\EloquentAuthRepository;
+use App\Repository\Eloquents\EloquentBarbeariaRepository;
 use App\Repository\Eloquents\EloquentBarbeiroRepository;
 use App\Repository\Eloquents\EloquentClienteRepository;
 use App\Repository\Eloquents\EloquentServicoRepository;
@@ -58,6 +60,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             NotificacaoRepositoryInterface::class,
             EloquentNotificaoRepository::class
+        );
+
+        $this->app->bind(
+            BarbeariaInterfaceRepository::class,
+            EloquentBarbeariaRepository::class
         );
     }
 

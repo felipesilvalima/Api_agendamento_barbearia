@@ -30,7 +30,7 @@ Route::prefix('v1')->group(function (){
 
     //rota de autenticação e criação de usuário de clientes
     Route::post('/login',[AuthController::class, 'login'])->name('logar_usuario');
-    Route::post('/clientes',[ClienteController::class, 'criarClientes'])->name('criar_cliente');
+    Route::post('/clientes/{barbearia_id}',[ClienteController::class, 'criarClientes'])->name('criar_cliente');
     
     
     //rotas de auth
@@ -56,7 +56,7 @@ Route::prefix('v1')->group(function (){
     //rotas Acessada por Barbeiros
     Route::middleware('auth:api','permissao:Barbeiro')->group( function () {
         Route::patch('/agendamentos/{id}/concluir',[AgendamentoController::class, 'finalizarAgendamentos'])->name('finalizar_agendamentos');
-        Route::post('/barbeiros',[BarbeiroController::class, 'criarBarbeiros'])->name('criar_barbeiros');
+        Route::post('/barbeiros/{barbearia_id}',[BarbeiroController::class, 'criarBarbeiros'])->name('criar_barbeiros');
         Route::get('/barbeiros/agendamentos',[BarbeiroController::class, 'listarAgendamentosBarbeiros'])->name('listar_agendamentos_barbeiros');
         Route::patch('/barbeiros',[BarbeiroController::class, 'atualizarBarbeiros'])->name('atualizar_barbeiros');
         Route::post('/servicos',[ServicoController::class, 'criarServicos'])->name('cadastrar_servicos');
@@ -78,6 +78,11 @@ Route::prefix('v1')->group(function (){
         Route::get('/notificacoes',[NotificacaoController::class, 'listarNotificacoes'])->name('lista_notificacoes');
         Route::delete('/notificacoes/{id_notificao}',[NotificacaoController::class, 'deletarNotificaos'])->name('deleta_notificacoes');
     });
+
+    Route::middleware('auth:api','permissao:admin')->prefix('admin')->group(function () {
+        
+    });
+
 });
 
 Route::fallback(

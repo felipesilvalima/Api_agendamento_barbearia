@@ -73,32 +73,34 @@ Abstract class BaseRepository
         return $this;
     }
 
-    public function getResultado(string $tenat = 'barbearia_id')
+    public function getResultado(?string $tenat = 'barbearia_id')
     {
         return $this->query
-        ->where($tenat,$this->tenant())
+        ->when($tenat, fn($q) => $q->where($tenat, $this->tenant()))
         ->get();
     }
 
-    public function firstResultado(string $tenat = 'barbearia_id')
+    public function firstResultado(?string $tenat = 'barbearia_id')
     {
         return $this->query
-        ->where($tenat,$this->tenant())
+        ->when($tenat, fn($q) => $q->where($tenat, $this->tenant()))
         ?->first();
     }
 
 
-    public function existe(int $id,string $tenat = 'barbearia_id'): bool
+    public function existe(int $id,?string $tenat = 'barbearia_id'): bool
     {
         return $this->query
                 ->where('id', $id)
-                ->where($tenat,$this->tenant())
+                ->when($tenat, fn($q) => $q->where($tenat, $this->tenant()))
                 ->exists();
     }
 
-    public function delete(string $tenat = 'barbearia_id')
+    public function delete(?string $tenat = 'barbearia_id')
     {
-       return $this->query->where($tenat,$this->tenant())->delete();
+       return $this->query
+       ->when($tenat, fn($q) => $q->where($tenat, $this->tenant()))
+       ->delete();
     }
 
     protected function tenant(): int

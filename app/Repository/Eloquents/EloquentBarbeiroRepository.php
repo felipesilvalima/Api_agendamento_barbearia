@@ -28,7 +28,7 @@ class EloquentBarbeiroRepository extends BaseRepository implements BarbeiroRepos
                     "especialidade" => $barbeiroDto->especialidade,
                     "status" => $barbeiroDto->status,
                     "user_id" => $barbeiroDto->id_barbeiro,
-                    "barbearia_id" => $barbeiroDto->barbearia_id
+                    "barbearia_id" => $barbeiroDto->id_barbearia
                 ]);
         
                 return $cadastro->id;
@@ -47,7 +47,7 @@ class EloquentBarbeiroRepository extends BaseRepository implements BarbeiroRepos
                 if($barbeiroDTO->atributos != null)
                 {
                     //atributos
-                    $this->selectAtributos('id,'.$barbeiroDTO->atributos);
+                    $this->selectAtributos('id,user_id,'.$barbeiroDTO->atributos);
                 }
                     //atributos do user
                     $this->selectAtributosRelacionamentos('user');
@@ -90,6 +90,7 @@ class EloquentBarbeiroRepository extends BaseRepository implements BarbeiroRepos
             public function detalhes(int $id_barbeiro): object
             {
                 $this->buscarPorEntidade($id_barbeiro,'id');
+                $this->selectAtributosRelacionamentos('user:id,name,barbearia_id');
                 return $this->firstResultado();
             }
 

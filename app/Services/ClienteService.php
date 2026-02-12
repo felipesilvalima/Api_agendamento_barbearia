@@ -27,9 +27,10 @@ class ClienteService
 
     public function CadastrarCliente(ClienteDTO $clienteDto): void
     {
-       
+        $this->validarService->validarExistenciaBarbearia($clienteDto->id_barbearia, "Não e possivel criar cliente essa barbearia não existe");
+
         DB::transaction(function () use($clienteDto) { 
- 
+
             $clienteDto->id_cliente = $this->authRepository->salvarUsuario($clienteDto);
             
             if(!$clienteDto->id_cliente)
@@ -81,7 +82,7 @@ class ClienteService
 
         $this->validarService->validarExistenciaCliente($atualizarClienteDTO->cliente->id, "Não e possivel atualizar. Esse cliente não existe");
 
-        if($atualizarClienteDTO->nome === null && $atualizarClienteDTO->telefone === null)
+        if($atualizarClienteDTO->getNome() === null && $atualizarClienteDTO->telefone === null)
         {
             throw new HttpResponseException(response()->json([
                 'status' => 'error',
@@ -90,7 +91,7 @@ class ClienteService
         }
 
            $cliente = $atualizarClienteDTO->cliente->fill([
-                'nome' => $atualizarClienteDTO->nome ?? $atualizarClienteDTO->cliente->nome,
+                'nome' => $atualizarClienteDTO->getNome() ?? $atualizarClienteDTO->cliente->nome,
                 'telefone' => $atualizarClienteDTO->telefone ?? $atualizarClienteDTO->cliente->telefone
             ]);
 

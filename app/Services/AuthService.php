@@ -61,7 +61,7 @@ class AuthService
         }
             elseif($user->role === 'barbeiro')
             {
-                $perfil = $this->barbeiroRepository->PerfilBarbeiro($user->barbeiro->id);   
+                $perfil = $this->barbeiroRepository->PerfilBarbeiro($user->barbeiro->id); 
             }
 
                 if(collect($perfil)->isEmpty())

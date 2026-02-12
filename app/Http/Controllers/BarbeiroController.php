@@ -6,6 +6,7 @@ use App\DTOS\AtualizarBarbeiroDTO;
 use App\DTOS\BarbeiroAtributosFiltrosPaginacaoDTO;
 use App\DTOS\BarbeiroDTO;
 use App\Http\Requests\BarbeiroRequest;
+use App\Models\Barbearia;
 use App\Models\Barbeiro;
 use App\Models\User;
 use App\Services\BarbeiroService;
@@ -19,10 +20,11 @@ class BarbeiroController extends Controller
         private ValidarDomainService $validarService,
     ){}
 
-    public function criarBarbeiros(BarbeiroRequest $request)
+    public function criarBarbeiros(BarbeiroRequest $request, int $id_barbearia)
     {
         $data = $request->validated();
 
+        $this->authorize('criarBarbeiro',$this->barbeariaIstancia($id_barbearia));
         
         $this->barbeiroService->CadastrarBarbeiro(new BarbeiroDTO(
             nome: $data['nome'],
@@ -30,7 +32,7 @@ class BarbeiroController extends Controller
             password: $data['password'],
             telefone: $data['telefone'],
             especialidade: $data['especialidade'],
-            barbearia_id: $this->user()->barbearia_id
+            id_barbearia: $id_barbearia
         ));
         
         return response()->json([
@@ -84,5 +86,11 @@ class BarbeiroController extends Controller
     {   
         $this->validarService->validarExistenciaBarbeiro($id_barbeiro,"Não e possivel ver detalhes. Esse barbeiro não existe");
         return Barbeiro::findOrFail($id_barbeiro);
+    }
+
+    public function barbeariaIstancia(int $id_barbearia): ?Barbearia
+    {   
+        $this->validarService->validarExistenciaBarbeiro($id_barbearia,"Não e possivel criar barbeiro essa barbearia não existe");
+        return Barbearia::findOrFail($id_barbearia);
     }
 }

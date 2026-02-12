@@ -19,7 +19,7 @@ class EloquentClienteRepository extends BaseRepository implements ClienteReposit
 
     public function existeCliente($id_cliente): bool
     {
-            return $this->existe($id_cliente);
+        return $this->existe($id_cliente);
     }
 
         
@@ -30,7 +30,7 @@ class EloquentClienteRepository extends BaseRepository implements ClienteReposit
             "telefone" => $clienteDto->telefone,
             "data_cadastro" => Carbon::now(),
             "user_id" => $clienteDto->id_cliente,
-            "barbearia_id" => $clienteDto->barbearia_id
+            "barbearia_id" => $clienteDto->id_barbearia
         ]);
         
         return $cadastro->id;
@@ -49,7 +49,7 @@ class EloquentClienteRepository extends BaseRepository implements ClienteReposit
         if($clienteDTO->atributos != null)
         {
             //atributos
-            $this->selectAtributos('id,'.$clienteDTO->atributos);
+            $this->selectAtributos('id,user_id,'.$clienteDTO->atributos);
 
         }
             //atributos do user
@@ -93,6 +93,7 @@ class EloquentClienteRepository extends BaseRepository implements ClienteReposit
     public function detalhes(int $id_cliente): object
     {
         $this->buscarPorEntidade($id_cliente,'id');
+        $this->selectAtributosRelacionamentos('user:id,name,barbearia_id');
         return $this->firstResultado();
     }
 

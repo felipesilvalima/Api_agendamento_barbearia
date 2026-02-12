@@ -8,7 +8,6 @@ use App\DTOS\BarbeiroDTO;
 use App\Exceptions\ConflitoExecption;
 use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoExisteRecursoException;
-use App\Exceptions\NaoPermitidoExecption;
 use App\Helpers\ValidarAtributos;
 use App\Repository\Contratos\AuthRepositoryInterface;
 use App\Repository\Contratos\BarbeiroRepositoryInterface;
@@ -81,7 +80,7 @@ class BarbeiroService
         
         $this->validarService->validarExistenciaBarbeiro($atualizarBarbeiroDTO->barbeiro->id, "Não e possivel atualizar. Esse barbeiro não existe");
 
-        if($atualizarBarbeiroDTO->nome === null && $atualizarBarbeiroDTO->telefone === null && $atualizarBarbeiroDTO->especialidade === null)
+        if($atualizarBarbeiroDTO->getNome() === null && $atualizarBarbeiroDTO->telefone === null && $atualizarBarbeiroDTO->especialidade === null)
         {
             throw new HttpResponseException(response()->json([
                 'status' => 'error',
@@ -90,7 +89,7 @@ class BarbeiroService
         }
             
            $barbeiro = $atualizarBarbeiroDTO->barbeiro->fill([
-                'nome' => $atualizarBarbeiroDTO->nome ?? $atualizarBarbeiroDTO->barbeiro->nome,
+                'nome' => $atualizarBarbeiroDTO->getNome() ?? $atualizarBarbeiroDTO->barbeiro->nome,
                 'telefone' => $atualizarBarbeiroDTO->telefone ?? $atualizarBarbeiroDTO->barbeiro->telefone,
                 'especialidade' => $atualizarBarbeiroDTO->especialidade ?? $atualizarBarbeiroDTO->barbeiro->especialidade
             ]);
