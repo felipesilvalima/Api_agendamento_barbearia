@@ -81,24 +81,15 @@ class ClienteService
     {
 
         $this->validarService->validarExistenciaCliente($atualizarClienteDTO->cliente->id, "Não e possivel atualizar. Esse cliente não existe");
+        
+        $cliente = $atualizarClienteDTO->cliente->fill([
+            'telefone' => $atualizarClienteDTO->telefone ?? $atualizarClienteDTO->cliente->telefone
+        ]);
 
-        if($atualizarClienteDTO->getNome() === null && $atualizarClienteDTO->telefone === null)
-        {
-            throw new HttpResponseException(response()->json([
-                'status' => 'error',
-                'mensagem' => 'Payload de dados vázio'
-            ],422));
-        }
-
-           $cliente = $atualizarClienteDTO->cliente->fill([
-                'nome' => $atualizarClienteDTO->getNome() ?? $atualizarClienteDTO->cliente->nome,
-                'telefone' => $atualizarClienteDTO->telefone ?? $atualizarClienteDTO->cliente->telefone
-            ]);
-
-                if(!$cliente->isDirty(['nome','telefone']))
-                {
-                    throw new ConflitoExecption("Nenhum dado foi alterado. Digite novos dados");
-                }
+            if(!$cliente->isDirty(['telefone']))
+            {
+                throw new ConflitoExecption("Nenhum dado foi alterado. Digite novos dados");
+            }
 
                 $cliente->save();
 
@@ -106,8 +97,6 @@ class ClienteService
                     {
                         throw new ErrorInternoException("Error ao atualizar dados de cliente");
                     }
-        
-    
     }
 
 }

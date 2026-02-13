@@ -25,7 +25,8 @@ class AuthRequest extends FormRequest
     {
         return $this->isMethod('patch') ? [
 
-            'password' => ['required','size:10','string','confirmed']
+            'name' => 'sometimes|required|string|max:40',
+            'password' => ['sometimes','required','size:10','string','confirmed']
            
         ] :[
              'email' => [

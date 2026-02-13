@@ -25,9 +25,7 @@ class ClienteRequest extends FormRequest
     {
         return $this->isMethod('patch') ? [
 
-            'nome' => ['sometimes','required','string','max:40'],
             'telefone' => ['sometimes','required','numeric','digits:11','unique:clientes,telefone'],   
-            
         ] :
         [
             'nome' => 'required|string|max:40',

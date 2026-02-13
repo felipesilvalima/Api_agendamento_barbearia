@@ -24,8 +24,7 @@ class BarbeiroRequest extends FormRequest
     public function rules(): array
     {
         return $this->isMethod('patch') ? [
-
-            'nome' => 'sometimes|required|string|max:40',
+            
             'telefone' => 'sometimes|required|numeric|digits:11|unique:barbeiros,telefone',
             'especialidade' => 'sometimes|required|string'
             

@@ -64,11 +64,13 @@ class ClienteController extends Controller
         $request->validated();
 
         //chamar service
-        $this->clienteService->atualizar(new AtualizarClienteDTO(
-            cliente: $this->user()->cliente,
-            nome: $request['nome'] ?? null,
-            telefone: $request['telefone'] ?? null
-        ));
+        if($request->filled('telefone'))
+        {
+            $this->clienteService->atualizar(new AtualizarClienteDTO(
+                cliente: $this->user()->cliente,
+                telefone: $request['telefone'] ?? null
+            ));
+        }
 
         //retornar resposta
         return response()->json(['mensagem' => 'Atuliazado com sucesso'],200);

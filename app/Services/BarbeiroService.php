@@ -75,12 +75,12 @@ class BarbeiroService
          return $detalhes;
     }
     
-     public function atualizar(AtualizarBarbeiroDTO $atualizarBarbeiroDTO)
+    public function atualizar(AtualizarBarbeiroDTO $atualizarBarbeiroDTO)
     {
         
         $this->validarService->validarExistenciaBarbeiro($atualizarBarbeiroDTO->barbeiro->id, "Não e possivel atualizar. Esse barbeiro não existe");
 
-        if($atualizarBarbeiroDTO->getNome() === null && $atualizarBarbeiroDTO->telefone === null && $atualizarBarbeiroDTO->especialidade === null)
+        if($atualizarBarbeiroDTO->telefone === null && $atualizarBarbeiroDTO->especialidade === null)
         {
             throw new HttpResponseException(response()->json([
                 'status' => 'error',
@@ -89,12 +89,11 @@ class BarbeiroService
         }
             
            $barbeiro = $atualizarBarbeiroDTO->barbeiro->fill([
-                'nome' => $atualizarBarbeiroDTO->getNome() ?? $atualizarBarbeiroDTO->barbeiro->nome,
                 'telefone' => $atualizarBarbeiroDTO->telefone ?? $atualizarBarbeiroDTO->barbeiro->telefone,
                 'especialidade' => $atualizarBarbeiroDTO->especialidade ?? $atualizarBarbeiroDTO->barbeiro->especialidade
             ]);
 
-                if(!$barbeiro->isDirty(['nome','telefone','especialidade']))
+                if(!$barbeiro->isDirty(['telefone','especialidade']))
                 {
                     throw new ConflitoExecption("Nenhum dado foi alterado. Digite novos dados");
                 }

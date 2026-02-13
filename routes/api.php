@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use App\Htpp\Controllers\BarbeariaController;
 use App\Http\Controllers\AgendamentoController;
 use App\Http\Controllers\AgendamentoServicoController;
 use App\Http\Controllers\AuthController;
@@ -37,7 +38,8 @@ Route::prefix('v1')->group(function (){
     Route::middleware('auth:api','permissao:Cliente|Barbeiro')->prefix('auth')->group( function () {
         Route::post('/refresh',[AuthController::class, 'refresh'])->name('refresh');
         Route::get('/me',[AuthController::class, 'me'])->name('me');
-        Route::patch('/users/password',[AuthController::class, 'uptdateMe'])->name('atualizar_password');
+        Route::patch('/users/password',[AuthController::class, 'uptdatePassword'])->name('atualizar_password');
+        Route::patch('/users',[AuthController::class, 'uptdateMe'])->name('atualizar_user');
         Route::delete('/users/desativar',[AuthController::class, 'desativarMe'])->name('desativar_conta');
         Route::post('/logout',[AuthController::class, 'logout'])->name('logout');
     });
@@ -80,7 +82,7 @@ Route::prefix('v1')->group(function (){
     });
 
     Route::middleware('auth:api','permissao:admin')->prefix('admin')->group(function () {
-        
+        Route::get('/barbearias', [BarbeariaController::class,'listarBarbearias'])->name('listar_barbearias');
     });
 
 });

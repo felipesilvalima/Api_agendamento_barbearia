@@ -51,16 +51,29 @@ class AuthController extends Controller
       return response()->json($perfil,200);
   }
 
-  public function uptdateMe(AuthRequest $request)
+  public function uptdatePassword(AuthRequest $request)
   {
     
     if($request->filled('password')) {
     
       $senhaNova =  $request->validated();
   
-      $this->authService->update($senhaNova, $this->user());
+      $this->authService->updatePassword($senhaNova, $this->user());
   
       return response()->json(['mensagem' => 'Senha atualizada com sucesso'],200);
+    }
+  }
+
+  public function uptdateMe(AuthRequest $request)
+  {
+    
+    if($request->filled('name')) {
+    
+      $name =  $request->validated();
+  
+      $this->authService->update($name, $this->user());
+  
+      return response()->json(['mensagem' => 'Usuário atualizada com sucesso'],200);
     }
   }
 

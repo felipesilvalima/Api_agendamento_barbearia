@@ -6,6 +6,7 @@ namespace App\Providers;
 
 use App\Models\Agendamento;
 use App\Models\Agendamento_servico;
+use App\Models\Barbearia;
 use App\Models\Barbeiro;
 use App\Models\Cliente;
 use App\Models\Notificacao;
@@ -27,7 +28,8 @@ class AuthServiceProvider extends ServiceProvider
         Agendamento::class => AgendamentoPolicy::class,
         Barbeiro::class => BarbeiroPolicy::class,
         Cliente::class => ClientePolicy::class,
-        Notificacao::class => NotificacaoPolicy::class
+        Notificacao::class => NotificacaoPolicy::class,
+        Barbearia::class => BarbeiroPolicy::class
     ];
 
     /**

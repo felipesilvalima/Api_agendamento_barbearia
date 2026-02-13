@@ -31,7 +31,7 @@ class BarbeiroController extends Controller
             email: $data['email'],
             password: $data['password'],
             telefone: $data['telefone'],
-            especialidade: $data['especialidade'],
+            especialidade: $request->especialidade,
             id_barbearia: $id_barbearia
         ));
         
@@ -42,6 +42,7 @@ class BarbeiroController extends Controller
 
     public function listarAgendamentosBarbeiros(Request $request)
     {
+        
        $lista =  $this->barbeiroService->listar(new BarbeiroAtributosFiltrosPaginacaoDTO(
             id_barbeiro: $this->user()->barbeiro->id,
             atributos: $request->atributos ?? null,
@@ -68,7 +69,6 @@ class BarbeiroController extends Controller
         //chamar service
         $this->barbeiroService->atualizar(new AtualizarBarbeiroDTO(
             barbeiro: $this->user()->barbeiro,
-            nome: $request['nome'] ?? null,
             telefone: $request['telefone'] ?? null,
             especialidade: $request['especialidade'] ?? null
         ));
@@ -90,7 +90,7 @@ class BarbeiroController extends Controller
 
     public function barbeariaIstancia(int $id_barbearia): ?Barbearia
     {   
-        $this->validarService->validarExistenciaBarbeiro($id_barbearia,"Não e possivel criar barbeiro essa barbearia não existe");
+        $this->validarService->validarExistenciaBarbearia($id_barbearia,"Não e possivel criar barbeiro essa barbearia não existe");
         return Barbearia::findOrFail($id_barbearia);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\DTOS\LoginDTO;
 use App\Exceptions\AutenticacaoException;
 use App\Exceptions\ConflitoExecption;
+use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoExisteRecursoException;
 use App\Jobs\EnviarEmailTrocarDeSenhaJobs;
 use App\Models\User;
@@ -72,7 +73,7 @@ class AuthService
                 return $perfil;
     }
 
-    public function update(array $password, User $user)
+    public function updatePassword(array $password, User $user)
     {
         
         $this->validarService->validarExistenciaUsuario($user->id, "Não foi possivel atualizar a senha. Usuário não existe");
@@ -89,6 +90,29 @@ class AuthService
             {
                 throw new ConflitoExecption("Digite uma nova senha");
             }
+
+    }
+
+    public function update(array $data, User $user)
+    {
+        
+        $this->validarService->validarExistenciaUsuario($user->id, "Não foi possivel atualizar a senha. Usuário não existe");
+        
+        $user->fill([
+            'name' => $data['name'] ?? $user->name
+        ]);
+
+            if(!$user->isDirty(['name']))
+            {
+                throw new ConflitoExecption("Nenhum dado foi alterado. Digite novos dados");
+            }
+
+                $user->save();
+
+                    if(!$user)
+                    {
+                        throw new ErrorInternoException("Error ao atualizar dados de usuário");
+                    }
 
     }
 
