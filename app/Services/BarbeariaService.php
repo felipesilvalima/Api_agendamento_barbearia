@@ -12,6 +12,6 @@ class BarbeariaService
 
     public function listar()
     {
-        $this->barbeariaRepository->listarBarbearia();
+       return $this->barbeariaRepository->listarBarbearia();
     }
 }

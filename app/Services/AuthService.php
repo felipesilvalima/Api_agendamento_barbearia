@@ -99,7 +99,7 @@ class AuthService
         $this->validarService->validarExistenciaUsuario($user->id, "Não foi possivel atualizar a senha. Usuário não existe");
         
         $user->fill([
-            'name' => $data['name'] ?? $user->name
+            'name' => mb_convert_case($data['name'] , MB_CASE_TITLE,'UTF-8') ?? $user->name
         ]);
 
             if(!$user->isDirty(['name']))

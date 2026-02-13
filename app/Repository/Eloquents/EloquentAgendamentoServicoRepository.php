@@ -6,6 +6,7 @@ use App\Models\Agendamento_servico;
 use App\Models\AgendamentoServico;
 use App\Repository\Abstract\BaseRepository;
 use App\Repository\Contratos\AgendamentoServicoRepositoyInterface;
+use Illuminate\Database\Eloquent\Collection;
 
 class EloquentAgendamentoServicoRepository extends BaseRepository implements AgendamentoServicoRepositoyInterface
 {
@@ -45,7 +46,7 @@ class EloquentAgendamentoServicoRepository extends BaseRepository implements Age
         return $this->delete();
     }
 
-    public function listarPorAgendamento(int $id_agendamento): iterable
+    public function listarPorAgendamento(int $id_agendamento): Collection
     {
        $this->selectAtributosRelacionamentos('servico');
        $this->filtro(["id_agendamento:=:$id_agendamento"]);

@@ -2,10 +2,10 @@
 
 namespace App\Repository\Eloquents;
 
-use App\DTOS\BarbeariaDTO;
 use App\Models\Barbearia;
 use App\Repository\Abstract\BaseRepository;
 use App\Repository\Contratos\BarbeariaInterfaceRepository;
+use Illuminate\Database\Eloquent\Collection;
 
 class EloquentBarbeariaRepository extends BaseRepository implements BarbeariaInterfaceRepository
 { 
@@ -14,9 +14,9 @@ class EloquentBarbeariaRepository extends BaseRepository implements BarbeariaInt
         return parent::__construct($barbeariaModel);
     }
 
-    public function listarBarbearia(): Barbearia
+    public function listarBarbearia(): Collection
     {
-        return $this->getResultado();
+        return $this->getResultado(null);
     }
 
     public function save(Barbearia $barbearia): Barbearia

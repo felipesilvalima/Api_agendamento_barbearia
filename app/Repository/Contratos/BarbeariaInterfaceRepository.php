@@ -2,12 +2,12 @@
 
 namespace App\Repository\Contratos;
 
-use App\DTOS\BarbeariaDTO;
 use App\Models\Barbearia;
+use Illuminate\Database\Eloquent\Collection;
 
 interface BarbeariaInterfaceRepository
 {
-    public function listarBarbearia(): Barbearia;
+    public function listarBarbearia(): Collection;
     public function save(Barbearia $barbearia): Barbearia;
     public function removerBarbearia(int $id): bool;
     public function existeBarbearia(int $id): bool;

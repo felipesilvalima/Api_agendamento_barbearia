@@ -7,6 +7,7 @@ use App\DTOS\ServicosAtributosFiltrosDTO;
 use App\Repository\Abstract\BaseRepository;
 use App\Models\Servico;
 use App\Repository\Contratos\ServicoRepositoryInteface;
+use Illuminate\Database\Eloquent\Collection;
 
 class EloquentServicoRepository extends BaseRepository implements ServicoRepositoryInteface
 {
@@ -22,7 +23,7 @@ class EloquentServicoRepository extends BaseRepository implements ServicoReposit
         return $this->existe($id_servico);
     }
 
-    public function listar(ServicosAtributosFiltrosDTO $servicosDto):object
+    public function listar(ServicosAtributosFiltrosDTO $servicosDto): Collection
     {
         if($servicosDto->atributos != null)
         {

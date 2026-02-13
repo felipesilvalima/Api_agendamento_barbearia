@@ -5,7 +5,7 @@ namespace App\Repository\Eloquents;
 use App\Models\Notificacao;
 use App\Repository\Abstract\BaseRepository;
 use App\Repository\Contratos\NotificacaoRepositoryInterface;
-
+use Illuminate\Database\Eloquent\Collection;
 
 class EloquentNotificaoRepository extends BaseRepository implements NotificacaoRepositoryInterface
 {
@@ -15,7 +15,7 @@ class EloquentNotificaoRepository extends BaseRepository implements NotificacaoR
     }
 
 
-    public function notificacoes(int $id_user): object
+    public function notificacoes(int $id_user): Collection
     {
         $this->buscarPorEntidade($id_user,'notifiable_id');
         return $this->getResultado('data->barbearia_id');  

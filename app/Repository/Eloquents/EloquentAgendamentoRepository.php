@@ -8,6 +8,7 @@ use App\DTOS\AgendamentosAtributosFiltrosPagincaoDTO;
 use App\Models\Agendamento;
 use App\Repository\Abstract\BaseRepository;
 use App\Repository\Contratos\AgendamentosRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 
 class EloquentAgendamentoRepository extends BaseRepository implements AgendamentosRepositoryInterface
 {
@@ -43,7 +44,7 @@ class EloquentAgendamentoRepository extends BaseRepository implements Agendament
             return $this->existe($id_agenda);
         }
 
-        public function listar(AgendamentosAtributosFiltrosPagincaoDTO $agendamentoDTO): iterable
+        public function listar(AgendamentosAtributosFiltrosPagincaoDTO $agendamentoDTO): Collection
         {
             if($agendamentoDTO->user->role  === 'cliente')
             {

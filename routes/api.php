@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-use App\Htpp\Controllers\BarbeariaController;
+use App\Http\Controllers\BarbeariaController;
 use App\Http\Controllers\AgendamentoController;
 use App\Http\Controllers\AgendamentoServicoController;
 use App\Http\Controllers\AuthController;

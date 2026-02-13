@@ -7,6 +7,7 @@ use App\Repository\Abstract\BaseRepository;
 use App\DTOS\BarbeiroDTO;
 use App\Models\Barbeiro;
 use App\Repository\Contratos\BarbeiroRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 
 class EloquentBarbeiroRepository extends BaseRepository implements BarbeiroRepositoryInterface
 {
@@ -42,7 +43,7 @@ class EloquentBarbeiroRepository extends BaseRepository implements BarbeiroRepos
                 return $this->firstResultado();
             }
 
-            public function listar(BarbeiroAtributosFiltrosPaginacaoDTO $barbeiroDTO): object
+            public function listar(BarbeiroAtributosFiltrosPaginacaoDTO $barbeiroDTO): Collection
             {
                 if($barbeiroDTO->atributos != null)
                 {

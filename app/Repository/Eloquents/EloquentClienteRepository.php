@@ -9,6 +9,7 @@ use App\DTOS\ClienteDTO;
 use App\Models\Cliente;
 use App\Repository\Contratos\ClienteRepositoryInterface;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 
 class EloquentClienteRepository extends BaseRepository implements ClienteRepositoryInterface
 {
@@ -44,7 +45,7 @@ class EloquentClienteRepository extends BaseRepository implements ClienteReposit
         return $this->firstResultado();
     }
 
-    public function listar(ClienteAtributosFiltrosPaginacaoDTO $clienteDTO): object
+    public function listar(ClienteAtributosFiltrosPaginacaoDTO $clienteDTO): Collection
     {
         if($clienteDTO->atributos != null)
         {
