@@ -45,7 +45,7 @@ class Alertas extends Notification
      *
      * @return array<string, mixed>
      */
-    public function toDatabase(object $notifiable): array
+    public function toArray(object $notifiable): array
     {
         return [
             "mensagem" => "Seu agendamento será em 10 minutos",

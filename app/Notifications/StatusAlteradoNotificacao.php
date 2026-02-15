@@ -52,7 +52,7 @@ class StatusAlteradoNotificacao extends Notification implements ShouldQueue
      *
      * @return array<string, mixed>
      */
-    public function toDatabase(object $notifiable): array
+    public function toArray(object $notifiable): array
     {
         $status = $this->reagendado === null ? $this->agendamento->status : $this->reagendado;
 
