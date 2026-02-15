@@ -81,7 +81,7 @@ Route::prefix('v1')->group(function (){
         Route::delete('/notificacoes/{id_notificao}',[NotificacaoController::class, 'deletarNotificaos'])->name('deleta_notificacoes');
     });
 
-    Route::middleware('auth:api','permissao:admin')->prefix('admin')->group(function () {
+    Route::middleware('auth:api','permissao:Admin')->prefix('admin')->group(function () {
         Route::get('/barbearias', [BarbeariaController::class,'listarBarbearias'])->name('listar_barbearias');
     });
 

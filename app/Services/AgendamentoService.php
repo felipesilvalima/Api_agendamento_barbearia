@@ -8,6 +8,7 @@ use App\DTOS\ReagendamentoDTO;
 use App\Events\StatusAlterado;
 use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoExisteRecursoException;
+use App\Helpers\AgendamentoConfig;
 use App\Helpers\ValidarAtributos;
 use App\Repository\Contratos\AgendamentoServicoRepositoyInterface;
 use App\Repository\Contratos\AgendamentosRepositoryInterface;
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\DB;
 class AgendamentoService
 {
     use ValidarAtributos;
+    use AgendamentoConfig;
 
     public function __construct(
         private AgendamentosRepositoryInterface $agendamentoRepository,
@@ -30,10 +32,10 @@ class AgendamentoService
 
     public function agendar(AgendamentoDTO $agendamentoDto): int
     {
+    
         //validação de segurança
-        $this->validarService->validarExistenciaCliente($agendamentoDto->clienteUser->id,"Não e possivel fazer agendamento. Esse cliente não existe");
+        $this->validarService->validarExistenciaCliente($agendamentoDto->clienteUser->cliente->id,"Não e possivel fazer agendamento. Esse cliente não existe");
         $this->validarService->validarExistenciaBarbeiro($agendamentoDto->id_barbeiro,"Não e possivel fazer agendamento. Esse barbeiro não existe");
-
         //Regras de négocio
         $this->validarService->validarLimiteAgendamentoPorCliente($agendamentoDto->clienteUser);
         $this->horarioService->validarDisponibilidade($agendamentoDto);
@@ -76,32 +78,19 @@ class AgendamentoService
     public function agendamentos(AgendamentosAtributosFiltrosPagincaoDTO $agendamentosDTO): object
     {
 
-        $regras = [
-            'atributos' => ['id','data','hora','status','id_barbeiro','id_cliente','barbearia_id'],
-            'atributos_cliente' => ['id','user_id','telefone','data_cadastro','status','barbearia_id'],
-            'atributos_barbeiro' => ['id','user_id','telefone','status','especialidade','barbearia_id'],
-            'atributos_servico' => ['id','nome','descricao','duracao_minutos','preco','barbearia_id']
-        ];
-
-        $filtros = [
-            'filtro' => 'filtro_validado',
-            'filtro_barbeiro' => 'filtro_barbeiro_validado',
-            'filtro_cliente' => 'filtro_cliente_validado',
-            'filtro_servico' => 'filtro_servico_validado'
-        ];
-    
         //atributos 
-        foreach($regras as $campoDto => $atributosPermitidos)
+        foreach($this->regras() as $campoDto => $atributosPermitidos)
         {
-            $agendamentosDTO->$campoDto =  $this->validarAtributos($agendamentosDTO->$campoDto, $atributosPermitidos);
-            
-            //atributos condição
-            foreach($filtros as $filtro => $filtrosValidado)
-            {
-
-                $agendamentosDTO->$filtrosValidado = $this->validarAtributosCondicao($agendamentosDTO->$filtro ,$atributosPermitidos);
-            }
+            $agendamentosDTO->$campoDto =  $this->validarAtributos($agendamentosDTO->$campoDto, $atributosPermitidos['atributos']);  
         }
+            //atributos condição
+            foreach($this->regras() as $campoDto => $filtro)
+            {
+                (string)$filtro_validado = $filtro['filtro_validado'];
+                (string)$filtro_request = $filtro['filtro'];
+               
+                $agendamentosDTO->$filtro_validado = $this->validarAtributosCondicao($agendamentosDTO->$filtro_request ,$filtro['atributos']);
+            }
         
 
         //listar coleção de agendamentos

@@ -41,8 +41,8 @@ class ValidarDomainService
         {
             if($this->agendamentoRepository->listar(new AgendamentosAtributosFiltrosPagincaoDTO(
                 user: $clienteUser,
-                atributos: "id,agendamento",
-                filtro: "status:=:AGENDADO"
+                atributos_agendamento: "status",
+                filtro_agendamento: "status:=:AGENDADO"
 
             ))->count() > 3)
             {

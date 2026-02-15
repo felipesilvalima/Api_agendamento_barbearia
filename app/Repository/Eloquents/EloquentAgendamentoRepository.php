@@ -48,81 +48,74 @@ class EloquentAgendamentoRepository extends BaseRepository implements Agendament
         {
             if($agendamentoDTO->user->role  === 'cliente')
             {
-                if($agendamentoDTO->atributos != null)
+                if($agendamentoDTO->atributos_agendamento != null)
                 {
                     //atributos
-                    $this->selectAtributos('id,'.$agendamentoDTO->atributos);
+                    $this->selectAtributos('id,'.$agendamentoDTO->atributos_agendamento);
 
                 }
                     //filtros
-                    if($agendamentoDTO->filtro_validado != null)
+                    if($agendamentoDTO->filtro_agendamento_validado != null)
                     {
-                      $this->filtro($agendamentoDTO->filtro_validado);
+                      $this->filtro($agendamentoDTO->filtro_agendamento_validado);
                     }
 
-                    if($agendamentoDTO->atributos_barbeiro != null)
-                    {
-                        //atributos de barbeiro
-                        $this->selectAtributosRelacionamentos('barbeiro:id,'.$agendamentoDTO->atributos_barbeiro);
-                    }
-                        else
-                        {
-                            $this->selectAtributosRelacionamentos('barbeiro');
-                        }
+                        $this->selectAtributosRelacionamentos('barbeiro.user:id,name');
 
-                        //filtro de barbeiro
-                        if($agendamentoDTO->filtro_barbeiro_validado != null)
+                        if($agendamentoDTO->atributos_barbeiro != null)
                         {
-                            $this->filtroRelacionamento($agendamentoDTO->filtro_barbeiro_validado,'barbeiro');
-                        }
-
-                        //atributos de cliente
-                        if($agendamentoDTO->atributos_cliente != null)
-                        {
-                            $this->selectAtributosRelacionamentos('cliente:id,'.$agendamentoDTO->atributos_cliente);      
+                            //atributos de barbeiro
+                            $this->selectAtributosRelacionamentos('barbeiro:id,'.$agendamentoDTO->atributos_barbeiro);
                         }
                             else
                             {
-                                $this->selectAtributosRelacionamentos('cliente');
+                                $this->selectAtributosRelacionamentos('barbeiro');
                             }
 
-                            //atributos servicos
-                            if($agendamentoDTO->atributos_servico != null)
-                            {
-                                $this->selectAtributosRelacionamentos('servico:id,'.$agendamentoDTO->atributos_servico);
-                            }
-                                else
+                                //filtro de barbeiro
+                                if($agendamentoDTO->filtro_barbeiro_validado != null)
                                 {
-                                    $this->selectAtributosRelacionamentos('servico');
+                                    $this->filtroRelacionamento($agendamentoDTO->filtro_barbeiro_validado,'barbeiro');
                                 }
+
+                                    //atributos servicos
+                                    if($agendamentoDTO->atributos_servico != null)
+                                    {
+                                        $this->selectAtributosRelacionamentos('servico:id,'.$agendamentoDTO->atributos_servico);
+                                    }
+                                        else
+                                        {
+                                            $this->selectAtributosRelacionamentos('servico');
+                                        }
                             
-                                //filtro servico
-                                if($agendamentoDTO->filtro_servico_validado != null)
-                                {
-                                    $this->filtroRelacionamento($agendamentoDTO->filtro_servico_validado,'servico');
-                                }
+                                            //filtro servico
+                                            if($agendamentoDTO->filtro_servico_validado != null)
+                                            {
+                                                $this->filtroRelacionamento($agendamentoDTO->filtro_servico_validado,'servico');
+                                            }
 
-                            if($agendamentoDTO->limit !== null && $agendamentoDTO->page !== null)
-                            {
-                               //paginacao
-                              $this->paginacao($agendamentoDTO->page, $agendamentoDTO->limit);
-                            }
+                                                if($agendamentoDTO->limit !== null && $agendamentoDTO->page !== null)
+                                                {
+                                                    //paginacao
+                                                    $this->paginacao($agendamentoDTO->page, $agendamentoDTO->limit);
+                                                }
 
-                            $this->buscarPorEntidade($agendamentoDTO->user->cliente->id, 'id_cliente');
+                                                $this->buscarPorEntidade($agendamentoDTO->user->cliente->id, 'id_cliente');
             }
                 elseif($agendamentoDTO->user->role === 'barbeiro')
                 {
-                    if($agendamentoDTO->atributos != null)
+                    if($agendamentoDTO->atributos_agendamento != null)
                     {
                         //atributos
-                        $this->selectAtributos('id,'.$agendamentoDTO->atributos);
+                        $this->selectAtributos('id,'.$agendamentoDTO->atributos_agendamento);
 
                     }
                         //filtros
-                        if($agendamentoDTO->filtro_validado != null)
+                        if($agendamentoDTO->filtro_agendamento_validado != null)
                         {
-                            $this->filtro($agendamentoDTO->filtro_validado);
+                            $this->filtro($agendamentoDTO->filtro_agendamento_validado);
                         }
+                            $this->selectAtributosRelacionamentos('cliente.user:id,name');
 
                             if($agendamentoDTO->atributos_cliente != null)
                             {
@@ -140,38 +133,29 @@ class EloquentAgendamentoRepository extends BaseRepository implements Agendament
                                         $this->filtroRelacionamento($agendamentoDTO->filtro_cliente_validado,'cliente');
                                     }
 
-                                        if($agendamentoDTO->atributos_barbeiro != null)
+
+                                        if($agendamentoDTO->atributos_servico != null)
                                         {
-                                            //atributos de cliente
-                                            $this->selectAtributosRelacionamentos('barbeiro:id,'.$agendamentoDTO->atributos_cliente);      
+                                            $this->selectAtributosRelacionamentos('servico:id,'.$agendamentoDTO->atributos_servico);
                                         }
                                             else
                                             {
-                                                $this->selectAtributosRelacionamentos('barbeiro');
+                                                $this->selectAtributosRelacionamentos('servico');
                                             }
 
-                                                if($agendamentoDTO->atributos_servico != null)
+                                                //filtro servico
+                                                if($agendamentoDTO->filtro_servico_validado != null)
                                                 {
-                                                    $this->selectAtributosRelacionamentos('servico:id,'.$agendamentoDTO->atributos_servico);
-                                                }
-                                                    else
-                                                    {
-                                                        $this->selectAtributosRelacionamentos('servico');
-                                                    }
-
-                                                    //filtro servico
-                                                    if($agendamentoDTO->filtro_servico_validado != null)
-                                                    {
-                                                        $this->filtroRelacionamento($agendamentoDTO->filtro_servico_validado,'servico');
-                                                    }
-
-                                                if($agendamentoDTO->limit !== null && $agendamentoDTO->page !== null)
-                                                {
-                                                    //paginacao
-                                                    $this->paginacao($agendamentoDTO->page, $agendamentoDTO->limit);
+                                                    $this->filtroRelacionamento($agendamentoDTO->filtro_servico_validado,'servico');
                                                 }
 
-                                                $this->buscarPorEntidade($agendamentoDTO->user->barbeiro->id,'id_barbeiro');
+                                                    if($agendamentoDTO->limit !== null && $agendamentoDTO->page !== null)
+                                                    {
+                                                        //paginacao
+                                                        $this->paginacao($agendamentoDTO->page, $agendamentoDTO->limit);
+                                                    }
+
+                                                    $this->buscarPorEntidade($agendamentoDTO->user->barbeiro->id,'id_barbeiro');
 
                 }
             

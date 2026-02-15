@@ -6,18 +6,18 @@ use App\Models\User;
 
 class AgendamentosAtributosFiltrosPagincaoDTO
 {
-    public ?array $filtro_validado = null;
+    public ?array $filtro_agendamento_validado = null;
     public ?array $filtro_barbeiro_validado = null;
     public ?array $filtro_cliente_validado = null;
     public ?array $filtro_servico_validado = null;
 
     public function __construct(
         public User $user,
-        public ?string $atributos = null,
+        public ?string $atributos_agendamento = null,
         public ?string $atributos_barbeiro = null,
         public ?string $atributos_cliente = null,
         public ?string $atributos_servico = null,
-        public ?string $filtro = null,
+        public ?string $filtro_agendamento = null,
         public ?string $filtro_barbeiro = null,
         public ?string $filtro_cliente = null,
         public ?string $filtro_servico = null,

@@ -8,6 +8,7 @@ use App\DTOS\ClienteDTO;
 use App\Exceptions\ConflitoExecption;
 use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoExisteRecursoException;
+use App\Helpers\AgendamentoConfig;
 use App\Helpers\ValidarAtributos;
 use App\Repository\Contratos\AuthRepositoryInterface;
 use App\Repository\Contratos\ClienteRepositoryInterface;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 class ClienteService
 {
     use ValidarAtributos;
+    use AgendamentoConfig;
 
     public function __construct(
         private ClienteRepositoryInterface $clienteRepository,
@@ -48,17 +50,10 @@ class ClienteService
     {
         $this->validarService->validarExistenciaCliente($clienteDTO->id_cliente, "Não e possivel listar. Esse cliente não existe");
 
-        $regras = [
-            'atributos' => ['id','user_id','telefone','data_cadastro','status','barbearia_id'],
-            'atributos_barbeiro' => ['id','user_id','telefone','status','especialidade','barbearia_id'],
-            'atributos_agendamento' => ['id','data','hora','status','id_barbeiro','id_cliente','barbearia_id'],
-            'atributos_servico' => ['id','nome','descricao','duracao_minutos','preco','barbearia_id']
-        ];
-    
         //atributos 
-        foreach($regras as $campoDto => $atributosPermitidos)
+        foreach($this->regras() as $campoDto => $atributosPermitidos)
         {
-            $clienteDTO->$campoDto =  $this->validarAtributos($clienteDTO->$campoDto, $atributosPermitidos);
+            $clienteDTO->$campoDto =  $this->validarAtributos($clienteDTO->$campoDto, $atributosPermitidos['atributos']);
         }
 
         $lista = $this->clienteRepository->listar($clienteDTO);

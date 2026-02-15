@@ -37,7 +37,7 @@ class Permissao
                     abort(403,"Você não tem permissão para acessar essa rota");
                 }
             break;
-            case 'admin':
+            case 'Admin':
                 if(auth('api')->user()->role != 'admin')
                 {
                     abort(403,"Você não tem permissão para acessar essa rota");

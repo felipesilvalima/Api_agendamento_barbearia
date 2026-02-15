@@ -11,6 +11,7 @@ class BarbeariaController extends Controller
     public function __construct(private BarbeariaService $barbeariaService)
     {
     }
+    
     public function listarBarbearias()
     {
        $lista = $this->barbeariaService->listar();

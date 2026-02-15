@@ -8,6 +8,7 @@ use App\DTOS\BarbeiroDTO;
 use App\Exceptions\ConflitoExecption;
 use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoExisteRecursoException;
+use App\Helpers\AgendamentoConfig;
 use App\Helpers\ValidarAtributos;
 use App\Repository\Contratos\AuthRepositoryInterface;
 use App\Repository\Contratos\BarbeiroRepositoryInterface;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 class BarbeiroService
 {
     use ValidarAtributos;
+    use AgendamentoConfig;
 
      public function __construct(
         private BarbeiroRepositoryInterface $barbeiroRepository,
@@ -46,18 +48,13 @@ class BarbeiroService
     {
         $this->validarService->validarExistenciaBarbeiro($barbeiroDTO->id_barbeiro, "Não e possivel listar. Esse barbeiro não existe");
         
-        $regras = [
-            'atributos' => ['id','user_id','telefone','status','especialidade','barbearia_id'],
-            'atributos_cliente' => ['id','user_id','telefone','data_cadastro','status','barbearia_id'],
-            'atributos_agendamento' => ['id','data','hora','status','id_barbeiro','id_cliente','barbearia_id'],
-            'atributos_servico' => ['id','nome','descricao','duracao_minutos','preco','barbearia_id']
-        ];
-    
         //atributos 
-        foreach($regras as $campoDto => $atributosPermitidos)
+        foreach($this->regras() as $campoDto => $atributosPermitidos)
         {
-            $barbeiroDTO->$campoDto =  $this->validarAtributos($barbeiroDTO->$campoDto, $atributosPermitidos);
+            $barbeiroDTO->$campoDto =  $this->validarAtributos($barbeiroDTO->$campoDto, $atributosPermitidos['atributos']);
         }
+        
+            
 
         $lista = $this->barbeiroRepository->listar($barbeiroDTO);
 

@@ -28,7 +28,7 @@ trait ValidarAtributos
     public  static function validarAtributosCondicao(?string $atributos_soliciatados, array $atributos_permitidos)
     {
         if($atributos_soliciatados != null){
-            
+        
             $atributos_soliciatados = explode(";",$atributos_soliciatados);
 
             foreach($atributos_soliciatados as $atributo)

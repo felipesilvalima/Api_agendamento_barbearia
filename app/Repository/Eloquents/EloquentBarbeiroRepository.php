@@ -45,10 +45,10 @@ class EloquentBarbeiroRepository extends BaseRepository implements BarbeiroRepos
 
             public function listar(BarbeiroAtributosFiltrosPaginacaoDTO $barbeiroDTO): Collection
             {
-                if($barbeiroDTO->atributos != null)
+                if($barbeiroDTO->atributos_barbeiro != null)
                 {
                     //atributos
-                    $this->selectAtributos('id,user_id,'.$barbeiroDTO->atributos);
+                    $this->selectAtributos('id,user_id,'.$barbeiroDTO->atributos_barbeiro);
                 }
                     //atributos do user
                     $this->selectAtributosRelacionamentos('user');

@@ -34,7 +34,7 @@ class Agendamento extends Model
 
     public function servico()
     {
-        return $this->belongsToMany(Servico::class,'agendamento_servicos','id_servico','id_agendamento');
+        return $this->belongsToMany(Servico::class,'agendamento_servicos','id_agendamento','id_servico');
     }
 
      public function barbearia()
