@@ -10,7 +10,7 @@ class ReagendamentoDTO
         public string $data,
         public string $hora,
         public int $id_cliente,
-        public int $id_agendamento
+        public int $id_agendamento,
         
     ){}
 }

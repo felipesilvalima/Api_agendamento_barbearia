@@ -123,7 +123,7 @@ class AgendamentoService
         $agenda = $this->agendamentoRepository->detalhes($reagendamentoDto->id_agendamento);
         $reagendamentoDto->id_barbeiro = $agenda->id_barbeiro;
         $this->horarioService->validarDisponibilidade($reagendamentoDto);
-        $this->horarioService->validarExpedienteHorario();
+        //$this->horarioService->validarExpedienteHorario();
         $this->horarioService->validarHorarioFuturo($reagendamentoDto);
         $this->horarioService->validarAgendamentoAntecedente($reagendamentoDto->data);
 

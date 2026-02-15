@@ -4,6 +4,7 @@ namespace App\Repository\Contratos;
 
 use App\DTOS\AgendamentoDTO;
 use App\DTOS\AgendamentosAtributosFiltrosPagincaoDTO;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 
 interface AgendamentosRepositoryInterface

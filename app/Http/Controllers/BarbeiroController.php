@@ -45,7 +45,7 @@ class BarbeiroController extends Controller
         
        $lista =  $this->barbeiroService->listar(new BarbeiroAtributosFiltrosPaginacaoDTO(
             id_barbeiro: $this->user()->barbeiro->id,
-            atributos: $request->atributos ?? null,
+            atributos_barbeiro: $request->atributos ?? null,
             atributos_agendamento: $request->atributos_agendamento ?? null,
             atributos_cliente: $request->atributos_cliente ?? null,
             atributos_servico: $request->atributos_servico ?? null

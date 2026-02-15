@@ -6,6 +6,7 @@ namespace App\Repository\Eloquents;
 use App\DTOS\AgendamentoDTO;
 use App\DTOS\AgendamentosAtributosFiltrosPagincaoDTO;
 use App\Models\Agendamento;
+use App\Models\User;
 use App\Repository\Abstract\BaseRepository;
 use App\Repository\Contratos\AgendamentosRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
@@ -46,7 +47,9 @@ class EloquentAgendamentoRepository extends BaseRepository implements Agendament
 
         public function listar(AgendamentosAtributosFiltrosPagincaoDTO $agendamentoDTO): Collection
         {
-            if($agendamentoDTO->user->role  === 'cliente')
+            $user = auth('api')->user();
+
+            if($user->role  === 'cliente')
             {
                 if($agendamentoDTO->atributos_agendamento != null)
                 {
@@ -100,9 +103,9 @@ class EloquentAgendamentoRepository extends BaseRepository implements Agendament
                                                     $this->paginacao($agendamentoDTO->page, $agendamentoDTO->limit);
                                                 }
 
-                                                $this->buscarPorEntidade($agendamentoDTO->user->cliente->id, 'id_cliente');
+                                                $this->buscarPorEntidade($user->cliente->id, 'id_cliente');
             }
-                elseif($agendamentoDTO->user->role === 'barbeiro')
+                elseif($user->role === 'barbeiro')
                 {
                     if($agendamentoDTO->atributos_agendamento != null)
                     {
@@ -155,7 +158,7 @@ class EloquentAgendamentoRepository extends BaseRepository implements Agendament
                                                         $this->paginacao($agendamentoDTO->page, $agendamentoDTO->limit);
                                                     }
 
-                                                    $this->buscarPorEntidade($agendamentoDTO->user->barbeiro->id,'id_barbeiro');
+                                                    $this->buscarPorEntidade($user->barbeiro->id,'id_barbeiro');
 
                 }
             
@@ -165,12 +168,19 @@ class EloquentAgendamentoRepository extends BaseRepository implements Agendament
 
         public function detalhes(int $id_agenda): object
         {
-            $this->selectAtributosRelacionamentos('barbeiro');
-            $this->selectAtributosRelacionamentos('cliente');
-            $this->selectAtributosRelacionamentos('servico');
-            $this->buscarPorEntidade($id_agenda,'id');
+            if(auth('api')->user()->role === 'cliente')
+            {
+                $this->selectAtributosRelacionamentos('barbeiro.user:id,name');
+            }
+                elseif(auth('api')->user()->role === 'barbeiro')
+                {
+                    $this->selectAtributosRelacionamentos('cliente.user:id,name');
+                }
 
-            return $this->firstResultado();
+                    $this->selectAtributosRelacionamentos('servico');
+                    $this->buscarPorEntidade($id_agenda,'id');
+
+                    return $this->firstResultado();
         }
         
 }

@@ -12,7 +12,6 @@ class AgendamentosAtributosFiltrosPagincaoDTO
     public ?array $filtro_servico_validado = null;
 
     public function __construct(
-        public User $user,
         public ?string $atributos_agendamento = null,
         public ?string $atributos_barbeiro = null,
         public ?string $atributos_cliente = null,

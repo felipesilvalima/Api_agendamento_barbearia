@@ -43,7 +43,6 @@ class AgendamentoController extends Controller
     public function listarAgendamentos(Request $request)
     {
         $agendamentos = $this->agendamentoService->agendamentos(new AgendamentosAtributosFiltrosPagincaoDTO(
-            user: $this->user(),
             atributos_agendamento: $request->atributos ?? null,
             atributos_barbeiro: $request->atributos_barbeiro ?? null,
             atributos_cliente: $request->atributos_cliente ?? null,

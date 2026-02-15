@@ -40,7 +40,6 @@ class ValidarDomainService
         public function validarLimiteAgendamentoPorCliente(User $clienteUser): void
         {
             if($this->agendamentoRepository->listar(new AgendamentosAtributosFiltrosPagincaoDTO(
-                user: $clienteUser,
                 atributos_agendamento: "status",
                 filtro_agendamento: "status:=:AGENDADO"
 
