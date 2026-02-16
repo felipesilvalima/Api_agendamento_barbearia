@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTOS\LoginDTO;
+use App\Helpers\GerarTokenRefresh;
 use App\Http\Requests\AuthRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Models\User;
@@ -11,6 +12,8 @@ use App\Services\ValidarDomainService;
 
 class AuthController extends Controller
 {
+  use GerarTokenRefresh;
+
    public function __construct(
     private AuthService $authService
   ){}
@@ -23,12 +26,17 @@ class AuthController extends Controller
           email: $credencias['email'],
           password: $credencias['password']
         );
-        $token = $this->authService->logarUsuario($dtos);
+
+        $token_access = $this->authService->logarUsuario($dtos);
+        $tokne_refresh =  $this->gerarTokenRefresh($this->user()->id);
   
       return response()->json([
-        "token" => $token,
+        "token_access" => $token_access,
+        "token_refresh" => $tokne_refresh,
         "token_type" => "Bearer",
-        "expires_in" => 120
+        "expires_in_token_access" => (int)getenv('JWT_TTL'),
+        "expires_in_token_refresh" => 10080 
+
       ],200);
 
   }
