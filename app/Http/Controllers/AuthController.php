@@ -92,6 +92,9 @@ class AuthController extends Controller
     return response()->json(["mensagem" => 'Conta Desativada'],200);
   }
 
+  public function ativarMe()
+  {}
+
         private function user(): ?User
         {
             return auth('api')->user();

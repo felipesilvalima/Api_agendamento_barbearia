@@ -2,15 +2,27 @@
 
 namespace App\Models;
 
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Barbearia extends Model
 {
     use HasFactory;
+    use SoftDeletes;
+    use CascadeSoftDeletes;
 
     protected $table = "barbearias";
     protected $fillable = ["nome","endereco","telefone","email"];
+    protected $cascadeDeletes = [
+        'agendamento',
+        'servico',
+        'user',
+        'cliente',
+        'barbeiro'
+    ];
+
 
      protected $hidden = [
         'created_at',

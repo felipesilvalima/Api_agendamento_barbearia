@@ -118,10 +118,12 @@ class AuthService
 
     public function delete(User $user)
     {
+        
         $this->validarService->validarExistenciaUsuario($user->id, "Não e possivel deleta. Esse Usuário não existe");
 
         if($user->role === 'cliente')
         { 
+            
             $this->validarService->validarExistenciaCliente($user->cliente->id,"Não e possivel deleta. Esse Cliente não existe");
 
             $user->cliente->status = 'INATIVO';
@@ -134,8 +136,8 @@ class AuthService
                 $user->barbeiro->status = 'INATIVO';
                 $user->barbeiro->save();
             }
-
-        $user->delete();
+            dd('ou');
+            $user->delete();
     }
 
 }

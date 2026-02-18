@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('endereco')->nullable();
             $table->string('telefone',20)->nullable();
             $table->string('email',100)->unique();
+            $table->softDeletes();
             $table->timestamps();
            
         });

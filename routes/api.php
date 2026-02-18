@@ -50,7 +50,7 @@ Route::prefix('v1')->group(function (){
         Route::get('/clientes/agendamentos',[ClienteController::class, 'listarAgendamentosClientes'])->name('listar_agendamentos_clientes');
         Route::post('/agendamentos',[AgendamentoController::class, 'criarAgendamento'])->name('criar_agendamentos');
         Route::patch('/agendamentos/{id}/reagendar',[AgendamentoController::class, 'reagendarAgendamentos'])->name('reagendar_agendamentos');
-        Route::delete('/agendamentos/{id_agendamento}/servicos/{id_servico}',[AgendamentoController::class, 'removerServicos'])->name('remover_servicos');
+        Route::delete('/agendamentos/{id_agendamento}/servicos/{id_servico}',[AgendamentoServicoController::class, 'removerServicos'])->name('remover_servicos');
         Route::post('/agendamentos/{id_agendamento}/servicos/{id_servico}',[AgendamentoServicoController::class, 'adicionarServicosAgendamento'])->name('adiconar_servicos_no_agendamento');
         Route::patch('/clientes',[ClienteController::class, 'atualizarClientes'])->name('atualizar_clientes');
     });
@@ -83,6 +83,8 @@ Route::prefix('v1')->group(function (){
 
     Route::middleware('auth:api','permissao:Admin')->prefix('admin')->group(function () {
         Route::get('/barbearias', [BarbeariaController::class,'listarBarbearias'])->name('listar_barbearias');
+        Route::get('/barbearias/{id_barbearia}', [BarbeariaController::class,'detalhesBarbearia'])->name('detalhes_barbearias');
+        Route::delete('/barbearias/{id_barbearia}', [BarbeariaController::class,'removerBarbearia'])->name('desativar_barbearias');
     });
 
 });

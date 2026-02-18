@@ -11,4 +11,5 @@ interface BarbeariaInterfaceRepository
     public function save(Barbearia $barbearia): Barbearia;
     public function removerBarbearia(int $id): bool;
     public function existeBarbearia(int $id): bool;
+    public function detalhesBarbearia(int $id): object;
 }

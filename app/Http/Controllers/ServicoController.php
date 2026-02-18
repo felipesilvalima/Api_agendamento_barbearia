@@ -88,6 +88,8 @@ class ServicoController extends Controller
         return response()->json(['mensagem' => 'Serviço desativado com sucesso'],200);
     }
 
+    public function ativarServico(){}
+
     private function user (): ?User
     {
         return auth('api')->user();

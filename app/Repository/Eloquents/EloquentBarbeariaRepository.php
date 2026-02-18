@@ -15,7 +15,8 @@ class EloquentBarbeariaRepository extends BaseRepository implements BarbeariaInt
     }
 
     public function listarBarbearia(): Collection
-    {
+    {   
+        $this->selectAtributosRelacionamentos('user');
         return $this->getResultado(null);
     }
 
@@ -28,12 +29,19 @@ class EloquentBarbeariaRepository extends BaseRepository implements BarbeariaInt
     public function removerBarbearia(int $id): bool
     {
         $this->buscarPorEntidade($id, 'id');
-        $this->delete();
+        $this->delete(null);
         return true;
     }
 
-    public function existeBarbearia(int $barbearia_id): bool
+    public function existeBarbearia(int $id_barbearia): bool
     {
-        return $this->existe($barbearia_id,null);
+        return $this->existe($id_barbearia,null);
+    }
+
+    public function detalhesBarbearia(int $id_barbearia): object
+    {
+        $this->selectAtributosRelacionamentos('user');
+        $this->buscarPorEntidade($id_barbearia, 'id');
+        return $this->firstResultado(null);
     }
 }

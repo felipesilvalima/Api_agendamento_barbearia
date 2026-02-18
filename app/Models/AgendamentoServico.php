@@ -12,6 +12,7 @@ class AgendamentoServico extends Model
 
     protected $table = "agendamento_servicos";
     protected $fillable = ["id_agendamento","id_servico","barbearia_id"];
+    
 
      protected $hidden = [
         'created_at',

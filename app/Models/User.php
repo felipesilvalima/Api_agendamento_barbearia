@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Helpers\TenantScope;
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,8 +17,10 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
     use SoftDeletes;
+    use CascadeSoftDeletes;
     // Rest omitted for brevity
-
+    
+    protected $cascadeDeletes = ['cliente','barbeiro'];
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
