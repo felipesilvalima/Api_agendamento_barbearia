@@ -131,13 +131,7 @@ class ServicoService
         $this->validarService->validarExistenciaServico($id_servico);
         
         $servico = $this->servicoRepository->detalhes($id_servico);
-       
-        //deleta a imagem antiga
-        if($servico->imagem != null)
-        {
-            Storage::disk('public')->delete($servico->imagem);
-        }
-
+        
         //desativar
         $servico->delete();
 

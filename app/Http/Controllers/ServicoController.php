@@ -92,10 +92,28 @@ class ServicoController extends Controller
 
     public function listarDesativado()
     {
-        Servico::onlyTrashed()->get();
+        $lista =  Servico::onlyTrashed()->where('barbearia_id', auth('api')->user()->barbearia_id)->get();
+        if(collect($lista)->isEmpty())
+        {
+            abort(404,'lista de servicos desativados vázia');
+        }
+        return response()->json($lista,200);
     }
 
-    public function ativarServico(){}
+    public function ativarServico(int $servico)
+    {
+        $servico = Servico::onlyTrashed()->where('barbearia_id', auth('api')->user()->barbearia_id)->find($servico);
+
+        if($servico === null)
+        {
+            abort(404, "Esse servico não está desativado");
+        }
+
+        $servico->restore();
+
+        return response()->json(['mensagem' => 'Serviço ativado com sucesso'],200);
+
+    }
 
     private function user (): ?User
     {

@@ -59,13 +59,15 @@ Route::prefix('v1')->group(function (){
         
         //rotas Acessada por Barbeiros
         Route::middleware('auth:api','permissao:Barbeiro')->group( function () {
-            Route::patch('/agendamentos/{id}/concluir',[AgendamentoController::class, 'finalizarAgendamentos'])->name('finalizar_agendamentos');
-            Route::post('/barbeiros/{barbearia_id}',[BarbeiroController::class, 'criarBarbeiros'])->name('criar_barbeiros');
             Route::get('/barbeiros/agendamentos',[BarbeiroController::class, 'listarAgendamentosBarbeiros'])->name('listar_agendamentos_barbeiros');
             Route::patch('/barbeiros',[BarbeiroController::class, 'atualizarBarbeiros'])->name('atualizar_barbeiros');
             Route::post('/servicos',[ServicoController::class, 'criarServicos'])->name('cadastrar_servicos');
+            Route::get('/servicos/desativados',[ServicoController::class, 'listarDesativado'])->name('listar_desativar_servicos');
+            Route::patch('/agendamentos/{id}/concluir',[AgendamentoController::class, 'finalizarAgendamentos'])->name('finalizar_agendamentos');
+            Route::post('/barbeiros/{barbearia_id}',[BarbeiroController::class, 'criarBarbeiros'])->name('criar_barbeiros');
             Route::patch('/servicos/{id_servico}',[ServicoController::class, 'atualizarServicos'])->name('atualizar_servicos');
             Route::delete('/servicos/{id_servico}/desativar',[ServicoController::class, 'DesativarServicos'])->name('desativar_servicos');
+            Route::patch('/servicos/{id_servico}/ativar',[ServicoController::class, 'ativarServico'])->name('ativar_servicos');
         });
         
         //rotas Acessadas por Cliente e Barbeiro
