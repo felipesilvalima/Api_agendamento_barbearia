@@ -15,11 +15,13 @@ class StatusBarbeariaMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-
-        if(auth('api')->user()->barbearia->status != 'ATIVO'){
-            abort(403,'Barbearia Desativada');
-        }
         
+        if(auth('api')->user()->barbearia_id != null)
+        {
+            if(auth('api')->user()->barbearia->status != 'ATIVO'){
+                abort(403,'Barbearia Desativada');
+            }
+        }
 
         return $next($request);
     }

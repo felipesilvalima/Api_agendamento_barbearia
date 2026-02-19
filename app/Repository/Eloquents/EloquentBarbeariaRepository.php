@@ -2,6 +2,7 @@
 
 namespace App\Repository\Eloquents;
 
+use App\DTOS\BarbeariaFiltroDTO;
 use App\Models\Barbearia;
 use App\Repository\Abstract\BaseRepository;
 use App\Repository\Contratos\BarbeariaInterfaceRepository;
@@ -14,23 +15,33 @@ class EloquentBarbeariaRepository extends BaseRepository implements BarbeariaInt
         return parent::__construct($barbeariaModel);
     }
 
-    public function listarBarbearia(): Collection
-    {   
-        $this->selectAtributosRelacionamentos('user');
-        return $this->getResultado(null);
+    public function listarBarbearia(BarbeariaFiltroDTO $barbeariaFiltroDTO): Collection
+    { 
+        if($barbeariaFiltroDTO->atributos_barbearia != null)
+        {
+            $this->selectAtributos('id,'.$barbeariaFiltroDTO->atributos_barbearia); 
+        }
+            if($barbeariaFiltroDTO->filtro_barbearia_validado != null)
+            {
+                $this->filtro($barbeariaFiltroDTO->filtro_barbearia_validado);
+            }
+
+            if($barbeariaFiltroDTO->atributos_user != null)
+            {
+                $this->selectAtributosRelacionamentos('user:id,barbearia_id,'. $barbeariaFiltroDTO->atributos_user);
+            }
+                else
+                {
+                    $this->selectAtributosRelacionamentos('user');
+                }
+
+                    return $this->getResultado(null);
     }
 
     public function save(Barbearia $barbearia): Barbearia
-    { 
+    {
         $barbearia->save();
         return $barbearia;
-    }
-
-    public function removerBarbearia(int $id): bool
-    {
-        $this->buscarPorEntidade($id, 'id');
-        $this->delete(null);
-        return true;
     }
 
     public function existeBarbearia(int $id_barbearia): bool

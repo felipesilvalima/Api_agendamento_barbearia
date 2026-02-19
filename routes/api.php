@@ -85,7 +85,6 @@ Route::prefix('v1')->group(function (){
 
     Route::middleware('auth:api','permissao:Admin')->prefix('admin')->group(function () {
         Route::get('/barbearias', [BarbeariaController::class,'listarBarbearias'])->name('listar_barbearias');
-        Route::get('/barbearias/desativadas', [BarbeariaController::class,'listarDesativado'])->name('listar_barbearias_desativadas');
         Route::patch('/barbearias/{id_barbearia}/ativar', [BarbeariaController::class,'ativarBarbearia'])->name('ativar_barbearias');
         Route::get('/barbearias/{id_barbearia}', [BarbeariaController::class,'detalhesBarbearia'])->name('detalhes_barbearias');
         Route::delete('/barbearias/{id_barbearia}', [BarbeariaController::class,'desativarBarbearia'])->name('desativar_barbearias');

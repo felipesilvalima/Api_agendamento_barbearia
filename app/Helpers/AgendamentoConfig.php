@@ -34,4 +34,21 @@ trait AgendamentoConfig
 
         ];
     }
+
+    public function regras_barbearia (): array
+    {
+        return [
+
+            'atributos_barbearia' => [
+                'atributos' => ['id','nome','endereco','telefone','email','status'],
+                'filtro_validado' => 'filtro_barbearia_validado',                    
+                'filtro' => 'filtro_barbearia',                    
+            ],
+            
+            'atributos_user' => [
+                'atributos' => ['id','name','email','barbearia_id','role','status'],
+            ]
+
+        ];
+    }
 }

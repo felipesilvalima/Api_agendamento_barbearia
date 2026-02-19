@@ -53,8 +53,6 @@ class BarbeiroService
         {
             $barbeiroDTO->$campoDto =  $this->validarAtributos($barbeiroDTO->$campoDto, $atributosPermitidos['atributos']);
         }
-        
-            
 
         $lista = $this->barbeiroRepository->listar($barbeiroDTO);
 

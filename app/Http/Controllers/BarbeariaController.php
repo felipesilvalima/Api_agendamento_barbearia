@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOS\BarbeariaFiltroDTO;
 use App\Http\Controllers\Controller;
 use App\Models\Barbearia;
 use App\Services\BarbeariaService;
@@ -18,9 +19,13 @@ class BarbeariaController extends Controller
     {
     }
     
-    public function listarBarbearias()
-    {
-       $lista = $this->barbeariaService->listar();
+    public function listarBarbearias(Request $request)
+    {   
+       $lista = $this->barbeariaService->listar(new BarbeariaFiltroDTO(
+          atributos_barbearia:  $request->atributos ?? null,
+          atributos_user:  $request->atributos_user ?? null,
+          filtro_barbearia:  $request->filtro ?? null
+       ));
         return response()->json($lista,200);
     }
 
@@ -42,40 +47,17 @@ class BarbeariaController extends Controller
 
     public function desativarBarbearia(int $id_barbearia)
     {
-        $this->barbeariaService->remover($id_barbearia);
+        $this->barbeariaService->desativar($id_barbearia);
         return response()->json([
-            "mensagem" => "Barbearia removida com sucesso" 
+            "mensagem" => "Barbearia desativada com sucesso" 
         ],200);
     }
 
-    public function listarDesativado()
-    {
-       $lista = $this->barbearia->onlyTrashed()->get();
-
-        if(collect($lista)->isEmpty())
-        {
-            abort(404,'Listar de Barbeiro desativados vázia');
-        }
-
-       return response()->json($lista,200);
-    }
-    
-
     public function ativarBarbearia(int $id_barbearia)
     {
-        $barbearia = $this->barbearia->onlyTrashed()->find($id_barbearia);
+        $this->barbeariaService->ativar($id_barbearia);
 
-        if($barbearia === null)
-        {
-            abort(404,'Essa barbearia não está desativada');
-        }
-        
-        $barbearia->status = 'ATIVO';
-        $barbearia->save();
-        $barbearia->restore();
-        
         return response()->json([
-            'barbearia' => $barbearia,
             'mensagem' => 'Barbearia ativada'
         ],200);
         
