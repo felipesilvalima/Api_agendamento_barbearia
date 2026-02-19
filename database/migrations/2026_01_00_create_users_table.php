@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password',255);
             $table->string('role',30)->Nullable()->default('cliente');
+            $table->enum('status',['ATIVO', 'INATIVO'])->nullable()->default('ATIVO');
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

@@ -22,6 +22,7 @@ class BarbeiroController extends Controller
 
     public function criarBarbeiros(BarbeiroRequest $request, int $id_barbearia)
     {
+        
         $data = $request->validated();
 
         $this->authorize('criarBarbeiro',$this->barbeariaIstancia($id_barbearia));

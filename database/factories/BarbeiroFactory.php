@@ -16,7 +16,6 @@ class BarbeiroFactory extends Factory
         return [
             'telefone' => $this->faker->phoneNumber,
             'especialidade' => $this->faker->word,
-            'status' => $this->faker->randomElement(['ATIVO','INATIVO']),
             'user_id' => User::factory()->state(['role' => 'barbeiro']),
             'barbearia_id' => Barbearia::factory(),
         ];

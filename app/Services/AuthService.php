@@ -136,8 +136,13 @@ class AuthService
                 $user->barbeiro->status = 'INATIVO';
                 $user->barbeiro->save();
             }
-            dd('ou');
+        
             $user->delete();
+
+            if(!$user)
+            {
+                throw new ErrorInternoException("Error interno ao remover usuário");
+            }
     }
 
 }

@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('telefone',20);
             $table->string('especialidade',50);
-            $table->enum('status',['ATIVO', 'INATIVO'])->nullable()->default('ATIVO');
             $table->softDeletes();
             $table->timestamps();
 

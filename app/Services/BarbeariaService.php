@@ -28,13 +28,18 @@ class BarbeariaService
 
     public function remover(int $id_barbearia): void
     {
-        $this->validarService->validarExistenciaBarbearia($id_barbearia, "Não e possivel ver detalhes. Barbearia não existe");
-        $barbearia_removida = $this->barbeariaRepository->removerBarbearia($id_barbearia);
+         $this->validarService->validarExistenciaBarbearia($id_barbearia, "Não e possivel ver detalhes. Barbearia não existe");
+
+         $barbearia = $this->barbeariaRepository->detalhesBarbearia($id_barbearia);
+         $barbearia->status = 'INATIVO';
+         $barbearia->save();
+
+         $barbearia_removida = $this->barbeariaRepository->removerBarbearia($id_barbearia);
         
-        if(!$barbearia_removida)
-        {
+         if(!$barbearia_removida)
+         {
            throw new ErrorInternoException("Erro interno ao remover barbeiro");
-        }
+         }
 
     }
 }

@@ -19,6 +19,7 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail,
             'password' => Hash::make('password'), 
             'role' => $this->faker->randomElement(['cliente','barbeiro','admin']),
+            'status' => $this->faker->randomElement(['ATIVO','INATIVO']),
             'barbearia_id' => Barbearia::factory(),
             'remember_token' => Str::random(10),
         ];

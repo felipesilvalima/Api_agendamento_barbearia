@@ -6,6 +6,7 @@ use App\DTOS\AtualizarServicoDTO;
 use App\DTOS\ServicoDTO;
 use App\DTOS\ServicosAtributosFiltrosDTO;
 use App\Http\Requests\ServicosRequest;
+use App\Models\Servico;
 use App\Models\User;
 use App\Services\ServicoService;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +21,7 @@ class ServicoController extends Controller
     
     public function listarServicos(Request $request)
     {
+        
         
        $lista =  $this->servicoService->listar(new ServicosAtributosFiltrosDTO(
             id_barbeiro: $this->user()->barbeiro->id,
@@ -86,6 +88,11 @@ class ServicoController extends Controller
     {
         $this->servicoService->desativar($this->user()->barbeiro->id, $id_servico); 
         return response()->json(['mensagem' => 'Serviço desativado com sucesso'],200);
+    }
+
+    public function listarDesativado()
+    {
+        Servico::onlyTrashed()->get();
     }
 
     public function ativarServico(){}

@@ -16,7 +16,6 @@ class ClienteFactory extends Factory
         return [
             'telefone' => $this->faker->phoneNumber,
             'data_cadastro' => $this->faker->date(),
-            'status' => $this->faker->randomElement(['ATIVO','INATIVO']),
             'user_id' => User::factory()->state(['role' => 'cliente']),
             'barbearia_id' => Barbearia::factory(),
         ];

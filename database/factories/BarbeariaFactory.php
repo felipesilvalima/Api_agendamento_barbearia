@@ -16,6 +16,7 @@ class BarbeariaFactory extends Factory
             'endereco' => $this->faker->address,
             'telefone' => $this->faker->phoneNumber,
             'email' => $this->faker->unique()->companyEmail,
+            'status' => $this->faker->randomElement(['ATIVO','INATIVO']),
         ];
     }
 }

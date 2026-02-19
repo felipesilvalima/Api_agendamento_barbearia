@@ -21,6 +21,7 @@ class AgendamentoServicoController extends Controller
         return response()->json(['mensagem' => 'Serviço removido de agendamento com sucesso'],200);
     }
 
+
     public function listaServicosAgendamento(int $id_agendamento)
     {
         $this->authorize('detalhes', $this->agendamento_controller->agendamentoInstancia($id_agendamento));

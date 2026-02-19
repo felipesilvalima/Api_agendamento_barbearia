@@ -43,7 +43,6 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\LogAccessMiddleware::class,
-            
         ],
     ];
 
@@ -67,6 +66,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'permissao' => \App\Http\Middleware\Permissao::class,
-        'jwt' => \App\Http\Middleware\JwtMiddleware::class
+        'jwt' => \App\Http\Middleware\JwtMiddleware::class,
+        'Ativo' => \App\Http\Middleware\StatusBarbeariaMiddleware::class,
     ];
 }

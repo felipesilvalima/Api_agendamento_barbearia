@@ -12,11 +12,9 @@ class Cliente extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    use CascadeSoftDeletes;
 
     protected $table = "clientes";
     protected $fillable = ["telefone","email","data_cadastro","user_id","barbearia_id"];
-    protected $cascadeDeletes = ['agendamento','user'];
 
      protected $hidden = [
         'created_at',
