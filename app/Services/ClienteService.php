@@ -8,9 +8,11 @@ use App\DTOS\ClienteDTO;
 use App\Exceptions\ConflitoExecption;
 use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoExisteRecursoException;
+use App\Exceptions\NaoPermitidoExecption;
 use App\Helpers\AgendamentoConfig;
 use App\Helpers\ValidarAtributos;
 use App\Repository\Contratos\AuthRepositoryInterface;
+use App\Repository\Contratos\BarbeariaInterfaceRepository;
 use App\Repository\Contratos\ClienteRepositoryInterface;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\DB;
@@ -24,12 +26,19 @@ class ClienteService
     public function __construct(
         private ClienteRepositoryInterface $clienteRepository,
         private AuthRepositoryInterface $authRepository,
-        private ValidarDomainService $validarService, 
+        private ValidarDomainService $validarService,
+        private BarbeariaInterfaceRepository $barbeariaRepository,
     ){}
 
     public function CadastrarCliente(ClienteDTO $clienteDto): void
     {
         $this->validarService->validarExistenciaBarbearia($clienteDto->id_barbearia, "Não e possivel criar cliente essa barbearia não existe");
+        $barbearia = $this->barbeariaRepository->detalhesBarbearia($clienteDto->id_barbearia);
+
+        if($barbearia->status !== 'ATIVO')
+        {
+            throw new NaoPermitidoExecption("Não e possivel criar um usuário para essa barbearia. Barbearia inativa");
+        }
 
         DB::transaction(function () use($clienteDto) { 
 

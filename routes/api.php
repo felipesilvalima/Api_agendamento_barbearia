@@ -32,8 +32,9 @@ Route::prefix('v1')->group(function (){
     //rota de autenticação e criação de usuário de clientes
     Route::post('/login',[AuthController::class, 'login'])->name('logar_usuario');
     Route::post('/clientes/{barbearia_id}',[ClienteController::class, 'criarClientes'])->name('criar_cliente');
-
-    Route::middleware('Ativo')->group(function(){
+    Route::patch('/users/ativar',[AuthController::class, 'ativarMe'])->name('ativar_conta');
+    
+    Route::middleware('Ativo','AtivoUser')->group(function(){
 
         //rotas de auth
         Route::middleware('auth:api','permissao:Cliente|Barbeiro')->prefix('auth')->group( function () {
@@ -41,7 +42,7 @@ Route::prefix('v1')->group(function (){
             Route::get('/me',[AuthController::class, 'me'])->name('me');
             Route::patch('/users/password',[AuthController::class, 'uptdatePassword'])->name('atualizar_password');
             Route::patch('/users',[AuthController::class, 'uptdateMe'])->name('atualizar_user');
-            Route::delete('/users/desativar',[AuthController::class, 'desativarMe'])->name('desativar_conta');
+            Route::patch('/users/desativar',[AuthController::class, 'desativarMe'])->name('desativar_conta');
             Route::post('/logout',[AuthController::class, 'logout'])->name('logout');
         });
         
@@ -85,9 +86,9 @@ Route::prefix('v1')->group(function (){
 
     Route::middleware('auth:api','permissao:Admin')->prefix('admin')->group(function () {
         Route::get('/barbearias', [BarbeariaController::class,'listarBarbearias'])->name('listar_barbearias');
-        Route::patch('/barbearias/{id_barbearia}/ativar', [BarbeariaController::class,'ativarBarbearia'])->name('ativar_barbearias');
         Route::get('/barbearias/{id_barbearia}', [BarbeariaController::class,'detalhesBarbearia'])->name('detalhes_barbearias');
-        Route::delete('/barbearias/{id_barbearia}', [BarbeariaController::class,'desativarBarbearia'])->name('desativar_barbearias');
+        Route::patch('/barbearias/{id_barbearia}/ativar', [BarbeariaController::class,'ativarBarbearia'])->name('ativar_barbearias');
+        Route::patch('/barbearias/{id_barbearia}/desativar', [BarbeariaController::class,'desativarBarbearia'])->name('desativar_barbearias');
     });
 
 });

@@ -88,13 +88,15 @@ class AuthController extends Controller
 
   public function desativarMe()
   {
-    $this->authService->delete($this->user());
-
-    return response()->json(["mensagem" => 'Conta Desativada'],200);
+    $this->authService->desativar($this->user());
+    return response()->json(["mensagem" => 'Conta Desativada com sucesso'],200);
   }
 
   public function ativarMe()
-  {}
+  {
+    $this->authService->ativar($this->user());
+    return response()->json(["mensagem" => 'Conta Ativada com sucesso'],200);
+  }
 
         private function user(): ?User
         {

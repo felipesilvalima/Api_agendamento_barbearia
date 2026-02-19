@@ -5,6 +5,8 @@ namespace App\Repository\Eloquents;
 use App\DTOS\BarbeiroDTO;
 use App\DTOS\ClienteDTO;
 use App\DTOS\LoginDTO;
+use App\Exceptions\AutenticacaoException;
+use App\Exceptions\NaoPermitidoExecption;
 use App\Models\User;
 use App\Repository\Abstract\BaseRepository;
 use App\Repository\Contratos\AuthRepositoryInterface;
@@ -34,7 +36,7 @@ class EloquentAuthRepository extends BaseRepository implements AuthRepositoryInt
 
     }
 
-    public function verificarCredenciasUser(LoginDTO $credencias): bool | string
+    public function verificarCredenciasUser(LoginDTO $credencias): bool | string 
     {
         $token = Auth::attempt([
                 "email" => $credencias->email,
@@ -43,6 +45,15 @@ class EloquentAuthRepository extends BaseRepository implements AuthRepositoryInt
 
         if($token)
         {
+            if (auth('api')->user()->barbearia->status !== 'ATIVO') {
+                throw new NaoPermitidoExecption("Barbearia inativa",403);
+            }
+
+            if (auth('api')->user()->status !== 'ATIVO') {
+               throw new  NaoPermitidoExecption("Usuário inativo",403);
+            }
+
+
             return $token;
         }
             else

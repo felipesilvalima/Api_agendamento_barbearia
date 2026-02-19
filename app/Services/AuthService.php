@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTOS\AgendamentosAtributosFiltrosPagincaoDTO;
 use App\DTOS\LoginDTO;
 use App\Exceptions\AutenticacaoException;
 use App\Exceptions\ConflitoExecption;
@@ -9,6 +10,7 @@ use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoExisteRecursoException;
 use App\Jobs\EnviarEmailTrocarDeSenhaJobs;
 use App\Models\User;
+use App\Repository\Contratos\AgendamentosRepositoryInterface;
 use App\Repository\Contratos\AuthRepositoryInterface;
 use App\Repository\Contratos\BarbeiroRepositoryInterface;
 use App\Repository\Contratos\ClienteRepositoryInterface;
@@ -22,6 +24,7 @@ class AuthService
         private ClienteRepositoryInterface $clienteRepository,
         private BarbeiroRepositoryInterface $barbeiroRepository,
         private ValidarDomainService $validarService,
+        private AgendamentosRepositoryInterface $agendamentoRepository
     
     ){}
 
@@ -56,6 +59,7 @@ class AuthService
 
     public function perfilUser(User $user): object
     {
+       
         if($user->role === 'cliente')
         {
             $perfil = $this->clienteRepository->PerfilCliente($user->cliente->id);
@@ -116,33 +120,80 @@ class AuthService
 
     }
 
-    public function delete(User $user)
+    public function desativar(User $user)
     {
         
         $this->validarService->validarExistenciaUsuario($user->id, "Não e possivel deleta. Esse Usuário não existe");
-
-        if($user->role === 'cliente')
-        { 
-            
-            $this->validarService->validarExistenciaCliente($user->cliente->id,"Não e possivel deleta. Esse Cliente não existe");
-
-            $user->cliente->status = 'INATIVO';
-            $user->cliente->save();
+    
+        if($user->status !== 'ATIVO')
+        {
+            abort(404,'Esse usuário ja está Desativado');
         }
-            elseif($user->role === 'barbeiro')
-            {
-                $this->validarService->validarExistenciaBarbeiro($user->barbeiro->id,"Não e possivel deleta. Esse Barbeiro não existe");
-                
-                $user->barbeiro->status = 'INATIVO';
-                $user->barbeiro->save();
-            }
-        
-            $user->delete();
 
-            if(!$user)
-            {
-                throw new ErrorInternoException("Error interno ao remover usuário");
+            if($user->role === 'cliente')
+            { 
+            
+                $this->validarService->validarExistenciaCliente($user->cliente->id,"Não e possivel deleta. Esse Cliente não existe");
+
+                $user->status = 'INATIVO';
+                $id_cliente = $user->cliente->id;
+
+                $agendamentos =  $this->agendamentoRepository->listar(
+                    new AgendamentosAtributosFiltrosPagincaoDTO(
+                        atributos_agendamento: 'status,id_cliente',
+                        filtro_agendamento: "id_cliente:=:$id_cliente"
+                    )
+                );
             }
+                elseif($user->role === 'barbeiro')
+                {
+                    $this->validarService->validarExistenciaBarbeiro($user->barbeiro->id,"Não e possivel deleta. Esse Barbeiro não existe");
+
+                    $user->status = 'INATIVO';
+                    $id_barbeiro = $user->barbeiro->id;
+
+                    $agendamentos =  $this->agendamentoRepository->listar(
+                        new AgendamentosAtributosFiltrosPagincaoDTO(
+                            atributos_agendamento: 'status,id_cliente',
+                            filtro_agendamento: "id_barbeiro:=:$id_barbeiro"
+                        )
+                    );
+
+                }
+
+                foreach($agendamentos as $agendamento)
+                {
+                    if($agendamento->status === 'AGENDADO')
+                    {
+                        $agendamento->status = 'CANCELADO';
+                        $agendamento->save();
+                    }
+                }
+
+                $user->save();    
+    }
+
+    public function ativar(User $user)
+    {
+         $this->validarService->validarExistenciaUsuario($user->id, "Não e possivel deleta. Esse Usuário não existe");
+    
+        if($user->status !== 'INATIVO')
+        {
+            abort(404,'Esse usuário ja está Ativo');
+        }
+
+            if($user->role === 'cliente')
+            { 
+                $this->validarService->validarExistenciaCliente($user->cliente->id,"Não e possivel deleta. Esse Cliente não existe");
+                $user->status = 'ATIVO';
+            }
+                elseif($user->role === 'barbeiro')
+                {
+                    $this->validarService->validarExistenciaBarbeiro($user->barbeiro->id,"Não e possivel deleta. Esse Barbeiro não existe");
+                    $user->status = 'ATIVO';
+                }
+
+                $user->save(); 
     }
 
 }
