@@ -20,19 +20,18 @@ class AuthController extends Controller
 
   public function login(AuthRequest $request)
   {
-        $credencias = $request->validated();
+      $credencias = $request->validated();
 
-        $dtos = new LoginDTO(
+      $token_access = $this->authService->logarUsuario(new LoginDTO(
           email: $credencias['email'],
           password: $credencias['password']
-        );
+        ));
 
-        $token_access = $this->authService->logarUsuario($dtos);
-        $tokne_refresh =  $this->gerarTokenRefresh($this->user()->id);
+        $token_refresh =  $this->gerarTokenRefresh($this->user()->id);
   
       return response()->json([
         "token_access" => $token_access,
-        "token_refresh" => $tokne_refresh,
+        "token_refresh" => $token_refresh,
         "token_type" => "Bearer",
         "expires_in_token_access" => (int)getenv('JWT_TTL'),
         "expires_in_token_refresh" => 10080 

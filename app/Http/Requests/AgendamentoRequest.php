@@ -42,7 +42,7 @@ class AgendamentoRequest extends FormRequest
             response()->json([
                 'mensagem' => 'Dados inválidos',
                 'campos' => $validator->errors()
-            ], 422)
+            ], 400)
         );
     }
 

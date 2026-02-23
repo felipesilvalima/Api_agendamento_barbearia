@@ -21,3 +21,4 @@ yarn-error.log
 dockerfile
 docker-compose-dev.yml
 docker-compose-prod.yml
+.env.prod.backup.20260223_195620

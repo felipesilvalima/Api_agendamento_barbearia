@@ -32,7 +32,7 @@ class AuthRequest extends FormRequest
              'email' => [
                 'required',
                 'string',
-                'regex:/^[^\s@]+@[^\s@]+\.[^\s@]+$/'
+                'email:rfc,dns'
             ],
 
             'password' => 'required|string',
@@ -45,7 +45,7 @@ class AuthRequest extends FormRequest
             response()->json([
                 'mensagem' => 'Dados inválidos',
                 'campos' => $validator->errors()
-            ], 422)
+            ], 400)
         );
     }
 

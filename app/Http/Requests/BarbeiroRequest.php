@@ -38,7 +38,7 @@ class BarbeiroRequest extends FormRequest
                 'string',
                 'max:40',
                 'unique:users,email',
-                'regex:/^[^\s@]+@[^\s@]+\.[^\s@]+$/'
+                'email:rfc,dns'
             ],
             
             'password' => 'required|size:10|string',
@@ -51,7 +51,7 @@ class BarbeiroRequest extends FormRequest
             response()->json([
                 'mensagem' => 'Dados inválidos',
                 'campos' => $validator->errors()
-            ], 422)
+            ], 400)
         );
     }
 

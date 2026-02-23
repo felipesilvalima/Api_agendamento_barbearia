@@ -14,7 +14,7 @@ class BarbeariaController extends Controller
     
     public function __construct(
         private BarbeariaService $barbeariaService,
-        private Barbearia $barbearia
+
     )
     {
     }

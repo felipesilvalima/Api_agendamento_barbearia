@@ -16,6 +16,7 @@ use App\Repository\Contratos\BarbeiroRepositoryInterface;
 use App\Repository\Contratos\ClienteRepositoryInterface;
 use DomainException;
 use Illuminate\Foundation\Auth\User;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class AgendamentoService
@@ -92,15 +93,27 @@ class AgendamentoService
                 $agendamentosDTO->$filtro_validado = $this->validarAtributosCondicao($agendamentosDTO->$filtro_request ,$filtro['atributos']);
             }
         
+        //verificar o redis
+         $cacheKey = 'agendamento:list';
+        
+         if (Cache::has($cacheKey)) {
+            return Cache::get($cacheKey);
+        }
 
+    
         //listar coleção de agendamentos
         $agendamentos = $this->agendamentoRepository->listar($agendamentosDTO);
+        //adicionar dados ao redis
+        Cache::put($cacheKey, $agendamentos, now()->addMinute(getenv('JWT_TTL')));
+
         
         //verificar se exister algum recurso
         if(collect($agendamentos)->isEmpty())
         {
             throw new NaoExisteRecursoException("Nenhuma lista encontrado");
         }
+
+
 
             return $agendamentos;
 
