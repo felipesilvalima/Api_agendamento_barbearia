@@ -97,7 +97,6 @@ class AgendamentoService
         
         //verificar o redis
          $cacheKey = 'agendamento:list';
-
          return $this->verificarCache($cacheKey);
     
         //listar coleção de agendamentos
