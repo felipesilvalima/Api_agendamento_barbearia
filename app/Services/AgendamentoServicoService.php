@@ -5,12 +5,16 @@ namespace App\Services;
 use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoExisteRecursoException;
 use App\Models\Cliente;
+use App\Helpers\CacheData;
 use App\Repository\Contratos\AgendamentoServicoRepositoyInterface;
 use App\Repository\Contratos\ClienteRepositoryInterface;
 use DomainException;
+use Illuminate\Support\Facades\Cache;
 
 class AgendamentoServicoService
 {
+    use CacheData;
+
     public function __construct(
         private AgendamentoServicoRepositoyInterface $agendamento_ServicoRepository,
         private ValidarDomainService $validarService,
@@ -36,12 +40,18 @@ class AgendamentoServicoService
 
     public function listar(int $id_agendamento)
     {
+        $cacheKey = 'agendamentoServico:list';
+        
+        return $this->verificarCache($cacheKey);
+
         $lista = $this->agendamento_ServicoRepository->listarPorAgendamento($id_agendamento);
 
         if(collect($lista)->isEmpty())
         {
             throw new NaoExisteRecursoException("Nenhuma lista encotrada");
         }
+
+        $this->adicionarCache($cacheKey, $lista, getenv('JWT_TTL'));
 
         return $lista;
         

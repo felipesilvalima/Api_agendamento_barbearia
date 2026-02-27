@@ -10,6 +10,7 @@ use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoExisteRecursoException;
 use App\Jobs\EnviarEmailTrocarDeSenhaJobs;
 use App\Models\User;
+use App\Helpers\CacheData;
 use App\Repository\Contratos\AgendamentosRepositoryInterface;
 use App\Repository\Contratos\AuthRepositoryInterface;
 use App\Repository\Contratos\BarbeiroRepositoryInterface;
@@ -19,6 +20,8 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthService
 {
+    use CacheData;
+
     public function __construct(
         private AuthRepositoryInterface $authRepository,
         private ClienteRepositoryInterface $clienteRepository,
@@ -59,7 +62,9 @@ class AuthService
 
     public function perfilUser(User $user): object
     {
-       
+        $cacheKey = 'auth:perfil';
+        return $this->verificarCache($cacheKey);
+
         if($user->role === 'cliente')
         {
             $perfil = $this->clienteRepository->PerfilCliente($user->cliente->id);
@@ -73,6 +78,8 @@ class AuthService
                 {
                     throw new  NaoExisteRecursoException("Perfil não encontrado. Usuário não existe");
                 }
+
+                $this->adicionarCache($cacheKey, $perfil, getenv('JWT_TTL'));
 
                 return $perfil;
     }

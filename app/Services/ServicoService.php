@@ -15,10 +15,12 @@ use App\Repository\Contratos\ServicoRepositoryInteface;
 use App\Repository\ServicoRepository;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Storage;
+use App\Helpers\CacheData;
 
 class ServicoService
 {
     use ValidarAtributos;
+    use CacheData;
 
     public function __construct(
        private ServicoRepositoryInteface $servicoRepository,
@@ -36,12 +38,17 @@ class ServicoService
         //filtros
         $servicoDto->filtros_validos = $this->validarAtributosCondicao($servicoDto->filtros,$atributosServicoPermitido);
 
+        $cacheKey = 'servico:list';
+        return $this->verificarCache($cacheKey);
+
         $listaServico = $this->servicoRepository->listar($servicoDto);
 
         if(collect($listaServico)->isEmpty())
         {
             throw new NaoExisteRecursoException("Nenhuma listar encontrada");
         }
+        
+        $this->adicionarCache($cacheKey, $listaServico,getenv('JWT_TTL'));
 
         return $listaServico;
         
@@ -50,7 +57,14 @@ class ServicoService
     public function detalhes(int $id_servico): object
     {
         $this->validarService->validarExistenciaServico($id_servico);
+
+        $cacheKey = 'servico:list';
+        return $this->verificarCache($cacheKey);
+
         $servico =  $this->servicoRepository->detalhes($id_servico);
+
+        $this->adicionarCache($cacheKey, $listaServico,getenv('JWT_TTL'));
+
         return $servico;
     }
 

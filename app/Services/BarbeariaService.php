@@ -11,11 +11,13 @@ use App\Helpers\ValidarAtributos;
 use App\Models\Agendamento;
 use App\Models\Barbearia;
 use App\Models\User;
+use App\Helpers\CacheData;
 use App\Repository\Contratos\BarbeariaInterfaceRepository;
 use Illuminate\Database\Eloquent\Collection;
 
 class BarbeariaService
 {
+  use CacheData;
   use ValidarAtributos;
   use AgendamentoConfig;
 
@@ -51,21 +53,33 @@ class BarbeariaService
                 $barbeariaFiltroDto->$filtro_validado = $this->validarAtributosCondicao($barbeariaFiltroDto->$filtro_request ,$filtro['atributos']);
                
             }
+              $cacheKey = 'barbearia:list';
+              return $this->verificarCache($cacheKey);
 
               $lista = $this->barbeariaRepository->listarBarbearia($barbeariaFiltroDto);
 
-      if(collect($lista)->isEmpty())
-      {
-        throw new NaoExisteRecursoException("lista de barbearia está vázia");
-      }
+              if(collect($lista)->isEmpty())
+              {
+                throw new NaoExisteRecursoException("lista de barbearia está vázia");
+              }
 
-        return $lista;
+              $this->adicionarCache($cacheKey, $lista,getenv('JWT_TTL'));
+
+              return $lista;
     }
 
     public function detalhes(int $id_barbearia): object
     {
       $this->validarService->validarExistenciaBarbearia($id_barbearia, "Não e possivel ver detalhes. Barbearia não existe");
-      return $this->barbeariaRepository->detalhesBarbearia($id_barbearia);
+
+      $cacheKey = 'barbearia:list';
+      return $this->verificarCache($cacheKey);
+
+      $detalhesBarbearia = $this->barbeariaRepository->detalhesBarbearia($id_barbearia);
+
+      $this->adicionarCache($cacheKey, $detalhesBarbearia,getenv('JWT_TTL'));
+
+      return $detalhesBarbearia;
     }
 
     public function desativar(int $id_barbearia): void

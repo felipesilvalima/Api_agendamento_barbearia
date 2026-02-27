@@ -21,11 +21,11 @@ class AgendamentoController extends Controller
         private ValidarDomainService $validarService,
     ){}
 
-    public function criarAgendamento(AgendamentoRequest $request)
+    public function agendar(AgendamentoRequest $request)
     {
         $data = $request->validated();
 
-        $agendamento_id = $this->agendamentoService->agendar(new AgendamentoDTO(
+        $agendamento_id = $this->agendamentoService->criarAgendamento(new AgendamentoDTO(
             id_barbeiro: $data['id_barbeiro'],
             clienteUser: $this->user(),
             data: $data['data'],
@@ -42,7 +42,7 @@ class AgendamentoController extends Controller
 
     public function listarAgendamentos(Request $request)
     {
-        $agendamentos = $this->agendamentoService->agendamentos(new AgendamentosAtributosFiltrosPagincaoDTO(
+        $agendamentos = $this->agendamentoService->listar(new AgendamentosAtributosFiltrosPagincaoDTO(
             atributos_agendamento: $request->atributos ?? null,
             atributos_barbeiro: $request->atributos_barbeiro ?? null,
             atributos_cliente: $request->atributos_cliente ?? null,

@@ -50,7 +50,7 @@ Route::prefix('v1')->group(function (){
         //rotas acessada por Clientes
         Route::middleware('auth:api','permissao:Cliente')->group( function () {
             Route::get('/clientes/agendamentos',[ClienteController::class, 'listarAgendamentosClientes'])->name('listar_agendamentos_clientes');
-            Route::post('/agendamentos',[AgendamentoController::class, 'criarAgendamento'])->name('criar_agendamentos');
+            Route::post('/agendamentos',[AgendamentoController::class, 'agendar'])->name('criar_agendamentos');
             Route::patch('/agendamentos/{id}/reagendar',[AgendamentoController::class, 'reagendarAgendamentos'])->name('reagendar_agendamentos');
             Route::delete('/agendamentos/{id_agendamento}/servicos/{id_servico}',[AgendamentoServicoController::class, 'removerServicos'])->name('remover_servicos');
             Route::post('/agendamentos/{id_agendamento}/servicos/{id_servico}',[AgendamentoServicoController::class, 'adicionarServicosAgendamento'])->name('adiconar_servicos_no_agendamento');

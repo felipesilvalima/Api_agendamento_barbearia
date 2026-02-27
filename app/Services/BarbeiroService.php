@@ -10,6 +10,7 @@ use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoExisteRecursoException;
 use App\Helpers\AgendamentoConfig;
 use App\Helpers\ValidarAtributos;
+use App\Helpers\CacheData;
 use App\Repository\Contratos\AuthRepositoryInterface;
 use App\Repository\Contratos\BarbeiroRepositoryInterface;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 
 class BarbeiroService
 {
+    use CacheData;
     use ValidarAtributos;
     use AgendamentoConfig;
 
@@ -53,6 +55,9 @@ class BarbeiroService
         {
             $barbeiroDTO->$campoDto =  $this->validarAtributos($barbeiroDTO->$campoDto, $atributosPermitidos['atributos']);
         }
+        
+        $cacheKey = 'barbeiro:list';
+        return $this->verificarCache($cacheKey);
 
         $lista = $this->barbeiroRepository->listar($barbeiroDTO);
 
@@ -61,12 +66,20 @@ class BarbeiroService
                 throw new NaoExisteRecursoException("Listar de clientes vázia");
             }
 
+                $this->adicionarCache($cacheKey, $lista,getenv('JWT_TTL'));
+
                 return $lista;
     }
 
     public function detalhes(int $id_barbeiro)
     {
+        $cacheKey = 'barbeiro:details';
+        return $this->verificarCache($cacheKey);
+
          $detalhes = $this->barbeiroRepository->detalhes($id_barbeiro);
+
+         $this->adicionarCache($cacheKey, $detalhes,getenv('JWT_TTL'));
+
          return $detalhes;
     }
     

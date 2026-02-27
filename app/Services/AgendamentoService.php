@@ -10,6 +10,7 @@ use App\Exceptions\ErrorInternoException;
 use App\Exceptions\NaoExisteRecursoException;
 use App\Helpers\AgendamentoConfig;
 use App\Helpers\ValidarAtributos;
+use App\Helpers\CacheData;
 use App\Repository\Contratos\AgendamentoServicoRepositoyInterface;
 use App\Repository\Contratos\AgendamentosRepositoryInterface;
 use App\Repository\Contratos\BarbeiroRepositoryInterface;
@@ -23,6 +24,7 @@ class AgendamentoService
 {
     use ValidarAtributos;
     use AgendamentoConfig;
+    use CacheData;
 
     public function __construct(
         private AgendamentosRepositoryInterface $agendamentoRepository,
@@ -31,7 +33,7 @@ class AgendamentoService
         private HorarioDomainService $horarioService,
     ){}
 
-    public function agendar(AgendamentoDTO $agendamentoDto): int
+    public function criarAgendamento(AgendamentoDTO $agendamentoDto): int
     {
     
         //validação de segurança
@@ -76,7 +78,7 @@ class AgendamentoService
             return $agendamento->id;
     }
 
-    public function agendamentos(AgendamentosAtributosFiltrosPagincaoDTO $agendamentosDTO): object
+    public function listar(AgendamentosAtributosFiltrosPagincaoDTO $agendamentosDTO): object
     {
 
         //atributos 
@@ -95,17 +97,11 @@ class AgendamentoService
         
         //verificar o redis
          $cacheKey = 'agendamento:list';
-        
-         if (Cache::has($cacheKey)) {
-            return Cache::get($cacheKey);
-        }
 
+         return $this->verificarCache($cacheKey);
     
         //listar coleção de agendamentos
-        $agendamentos = $this->agendamentoRepository->listar($agendamentosDTO);
-        //adicionar dados ao redis
-        Cache::put($cacheKey, $agendamentos, now()->addMinute(getenv('JWT_TTL')));
-
+        $agendamentos = $this->agendamentoRepository->listar($agendamentosDTO);       
         
         //verificar se exister algum recurso
         if(collect($agendamentos)->isEmpty())
@@ -113,7 +109,8 @@ class AgendamentoService
             throw new NaoExisteRecursoException("Nenhuma lista encontrado");
         }
 
-
+            //adicionar dados ao redis
+            $this->adicionarCache($cacheKey, $agendamentos, getenv('JTW_TTL')); 
 
             return $agendamentos;
 
@@ -123,7 +120,14 @@ class AgendamentoService
     public function detalhesAgenda(int $id_agenda): object
     {  
         //buscar registro do agendamento de cliente
-        $agendaCliente = $this->agendamentoRepository->detalhes($id_agenda); 
+        $cacheKey = 'agendamento:details';
+
+        return $this->verificarCache($cacheKey);
+
+        $agendaCliente = $this->agendamentoRepository->detalhes($id_agenda);
+
+        $this->adicionarCache($cacheKey, $agendaCliente, getenv('JWT_TTL'));
+        
         return $agendaCliente; 
     }
 

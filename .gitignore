@@ -18,7 +18,4 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-dockerfile
-docker-compose-dev.yml
-docker-compose-prod.yml
 .env.prod.backup.20260223_195620

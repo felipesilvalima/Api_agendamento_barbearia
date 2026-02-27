@@ -11,6 +11,7 @@ use App\Exceptions\NaoExisteRecursoException;
 use App\Exceptions\NaoPermitidoExecption;
 use App\Helpers\AgendamentoConfig;
 use App\Helpers\ValidarAtributos;
+use App\Helpers\CacheData;
 use App\Repository\Contratos\AuthRepositoryInterface;
 use App\Repository\Contratos\BarbeariaInterfaceRepository;
 use App\Repository\Contratos\ClienteRepositoryInterface;
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\DB;
 
 class ClienteService
 {
+    use CacheData;
     use ValidarAtributos;
     use AgendamentoConfig;
 
@@ -65,19 +67,29 @@ class ClienteService
             $clienteDTO->$campoDto =  $this->validarAtributos($clienteDTO->$campoDto, $atributosPermitidos['atributos']);
         }
 
+        $cacheKey = 'cliente:list';
+        return $this->verificarCache($cacheKey);
+
         $lista = $this->clienteRepository->listar($clienteDTO);
 
             if(collect($lista)->isEmpty())
             {
                 throw new NaoExisteRecursoException("Listar de clientes vázia");
             }
+                $this->adicionarCache($cacheKey, $lista,getenv('JWT_TTL'));
 
                 return $lista;
     }
 
     public function detalhes(int $id_cliente)
     {
+        $cacheKey = 'cliente:deatils';
+        return $this->verificarCache($cacheKey);
+
          $detalhes = $this->clienteRepository->detalhes($id_cliente);
+
+         $this->adicionarCache($cacheKey, $detalhes,getenv('JWT_TTL'));
+
          return $detalhes;
     }
 
