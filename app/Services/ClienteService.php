@@ -67,7 +67,7 @@ class ClienteService
             $clienteDTO->$campoDto =  $this->validarAtributos($clienteDTO->$campoDto, $atributosPermitidos['atributos']);
         }
 
-        $cacheKey = 'cliente:list';
+        $cacheKey = 'clientes-user-'. auth('api')->user()->id.'-list';
         return $this->verificarCache($cacheKey);
 
         $lista = $this->clienteRepository->listar($clienteDTO);
@@ -83,7 +83,7 @@ class ClienteService
 
     public function detalhes(int $id_cliente)
     {
-        $cacheKey = 'cliente:deatils';
+         $cacheKey = 'clientes-user-'. auth('api')->user()->id.'-details';
         return $this->verificarCache($cacheKey);
 
          $detalhes = $this->clienteRepository->detalhes($id_cliente);

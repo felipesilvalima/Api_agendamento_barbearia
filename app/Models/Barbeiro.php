@@ -7,11 +7,13 @@ use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Helpers\CacheKeyInvalid;
 
 class Barbeiro extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use CacheKeyInvalid;
 
     protected $table = "barbeiros";
     protected $fillable = ["telefone","especialidade","status","user_id","barbearia_id"];

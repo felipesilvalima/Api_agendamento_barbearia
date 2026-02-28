@@ -53,7 +53,7 @@ class BarbeariaService
                 $barbeariaFiltroDto->$filtro_validado = $this->validarAtributosCondicao($barbeariaFiltroDto->$filtro_request ,$filtro['atributos']);
                
             }
-              $cacheKey = 'barbearia:list';
+               $cacheKey = 'barbearias-user-'. auth('api')->user()->id.'-list';
               return $this->verificarCache($cacheKey);
 
               $lista = $this->barbeariaRepository->listarBarbearia($barbeariaFiltroDto);
@@ -72,7 +72,7 @@ class BarbeariaService
     {
       $this->validarService->validarExistenciaBarbearia($id_barbearia, "Não e possivel ver detalhes. Barbearia não existe");
 
-      $cacheKey = 'barbearia:list';
+       $cacheKey = 'barbearias-user-'. auth('api')->user()->id.'-details';
       return $this->verificarCache($cacheKey);
 
       $detalhesBarbearia = $this->barbeariaRepository->detalhesBarbearia($id_barbearia);

@@ -56,7 +56,7 @@ class BarbeiroService
             $barbeiroDTO->$campoDto =  $this->validarAtributos($barbeiroDTO->$campoDto, $atributosPermitidos['atributos']);
         }
         
-        $cacheKey = 'barbeiro:list';
+         $cacheKey = 'barbeiros-user-'. auth('api')->user()->id.'-list';
         return $this->verificarCache($cacheKey);
 
         $lista = $this->barbeiroRepository->listar($barbeiroDTO);
@@ -73,7 +73,7 @@ class BarbeiroService
 
     public function detalhes(int $id_barbeiro)
     {
-        $cacheKey = 'barbeiro:details';
+        $cacheKey = 'barbeiros-user-'. auth('api')->user()->id.'-details';
         return $this->verificarCache($cacheKey);
 
          $detalhes = $this->barbeiroRepository->detalhes($id_barbeiro);

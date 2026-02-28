@@ -16,7 +16,8 @@ public function verificarCache(string $cacheKey):mixed
 
 public function adicionarCache(string $cacheKey, mixed $value, int $duracao):void
 {
-    Cache::put($cacheKey, $value, now()::addMinuto($duracao));
+    $tag = explode('-',$cacheKey);
+    Cache::tags([$tag[0]])->put($cacheKey, $value, now()::addMinuto($duracao));
 }
 
 

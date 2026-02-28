@@ -38,7 +38,7 @@ class ServicoService
         //filtros
         $servicoDto->filtros_validos = $this->validarAtributosCondicao($servicoDto->filtros,$atributosServicoPermitido);
 
-        $cacheKey = 'servico:list';
+         $cacheKey = 'servicos-user-'. auth('api')->user()->id.'-list';
         return $this->verificarCache($cacheKey);
 
         $listaServico = $this->servicoRepository->listar($servicoDto);
@@ -58,7 +58,7 @@ class ServicoService
     {
         $this->validarService->validarExistenciaServico($id_servico);
 
-        $cacheKey = 'servico:list';
+         $cacheKey = 'servicos-user-'. auth('api')->user()->id.'-details';
         return $this->verificarCache($cacheKey);
 
         $servico =  $this->servicoRepository->detalhes($id_servico);
@@ -107,7 +107,7 @@ class ServicoService
 
            $servico = $this->servicoRepository->detalhes($atualizarServicoDto->id_servico);
 
-            //salvar a imagem no servidor
+            //salvar a imagem no projeto
             if($atualizarServicoDto->imagem != null)
             {
                 $atualizarServicoDto->path = $atualizarServicoDto->imagem->store('imagens/servicos');

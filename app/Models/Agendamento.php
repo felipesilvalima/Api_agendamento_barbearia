@@ -3,16 +3,18 @@
 namespace App\Models;
 
 use App\Exceptions\NaoPermitidoExecption;
-use App\Helpers\TenantScope;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Helpers\CacheKeyInvalid;
 
 class Agendamento extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use CacheKeyInvalid;
+    
 
     protected $table = "agendamentos";
     protected $fillable = ["data","hora","status","id_cliente","id_barbeiro","barbearia_id"];

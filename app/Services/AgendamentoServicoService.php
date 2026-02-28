@@ -40,7 +40,7 @@ class AgendamentoServicoService
 
     public function listar(int $id_agendamento)
     {
-        $cacheKey = 'agendamentoServico:list';
+        $cacheKey = 'agendamento_servicos-user-'. auth('api')->user()->id.'-list';
         
         return $this->verificarCache($cacheKey);
 

@@ -96,7 +96,7 @@ class AgendamentoService
             }
         
         //verificar o redis
-         $cacheKey = 'agendamento:list';
+         $cacheKey = 'agendamentos_user_'. auth('api')->user()->id.'_list';
          return $this->verificarCache($cacheKey);
     
         //listar coleção de agendamentos
@@ -119,7 +119,7 @@ class AgendamentoService
     public function detalhesAgenda(int $id_agenda): object
     {  
         //buscar registro do agendamento de cliente
-        $cacheKey = 'agendamento:details';
+        $cacheKey = 'agendamentos-user-'. auth('api')->user()->id.'-details';
 
         return $this->verificarCache($cacheKey);
 

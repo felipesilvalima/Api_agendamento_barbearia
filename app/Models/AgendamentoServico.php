@@ -5,10 +5,12 @@ namespace App\Models;
 use App\Helpers\TenantScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Helpers\CacheKeyInvalid;
 
 class AgendamentoServico extends Model
 {
     use HasFactory;
+    use CacheKeyInvalid;
 
     protected $table = "agendamento_servicos";
     protected $fillable = ["id_agendamento","id_servico","barbearia_id"];

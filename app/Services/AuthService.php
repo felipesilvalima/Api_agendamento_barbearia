@@ -62,7 +62,7 @@ class AuthService
 
     public function perfilUser(User $user): object
     {
-        $cacheKey = 'auth:perfil';
+        $cacheKey = 'users-user-'. auth('api')->user()->id.'-perfil';
         return $this->verificarCache($cacheKey);
 
         if($user->role === 'cliente')
