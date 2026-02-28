@@ -1,33 +1,28 @@
-FROM php:8.3-apache
+FROM php:8.3-fpm
 
 WORKDIR /app
 
 # Dependências do sistema
 RUN apt-get update && apt-get install -y \
-    libpng-dev libjpeg-dev libfreetype6-dev zip unzip git \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql \
+    zip \
+    unzip \
+    git \
+    libonig-dev \
+    libxml2-dev \
+    && docker-php-ext-install pdo pdo_mysql mbstring xml \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Composer
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
     && php -r "unlink('composer-setup.php');"
 
-# Copiar código
 COPY ./ /app
 
-# Composer (root) para instalar pacotes
 RUN composer install --no-dev --optimize-autoloader
+RUN chown -R www-data:www-data /app
+USER www-data
 
-# Permissões finais de todo o projeto
-RUN chown -R root:www-data /app
-
-# Habilitar mod_rewrite (root)
-RUN a2enmod rewrite
-
-# Agora sim muda para usuário www-data
-USER root
-
-# Expor porta
-EXPOSE 80
+EXPOSE 8000
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
