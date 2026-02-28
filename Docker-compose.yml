@@ -1,8 +1,8 @@
-version: "5.0.1"
+
 services:
   db-barbearia:
-    image: "mysql:8.0"
     container_name: "db-barbearia"
+    image: "mysql:8.0"
     ports:
       - "3306:3306"
     networks:
@@ -10,9 +10,9 @@ services:
     volumes:
       - "vol-barbearia:/var/lib/mysql"
     environment:
-      - DB_DATABASE=${DB_DATABASE}
-      - DB_ROOT_PASSWORD=${DB_PASSWORD}
-      - DB_USER=${DB_USER}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_USERNAME=${DB_USERNAME}
+      - MYSQL_DATABASE=${DB_DATABASE}
     restart: "always"
     
   redis-barbearia:
@@ -30,8 +30,9 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
+    image: "api-barbearia:5.0"
     ports:
-      - "8080:8000"
+      - "80:8000"
     networks:
       - "net-barbearia"
     volumes:
@@ -44,6 +45,9 @@ services:
     restart: "always"
   queue:
     container_name: "queue-barbearia"
+    image: "api-barbearia:5.0"
+    ports:
+      - "5040:5040"
     networks:
       - "net-barbearia"
     depends_on:
@@ -52,6 +56,9 @@ services:
 
   scheduler:
     container_name: "scheduler-barbearia"
+    image: "api-barbearia:5.0"
+    ports:
+      - "4080:4080"
     networks:
       - "net-barbearia"
     depends_on:
@@ -59,7 +66,7 @@ services:
     command: ["php","artisan", "scheduler:cron"]
 
 volumes:
-  vol-barbearia
+  vol-barbearia: {}
 
 networks:
   net-barbearia:
