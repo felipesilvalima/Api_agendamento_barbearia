@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Cache;
 
 trait CacheKeyInvalid{
 
-
     protected static function bootCacheKeyInvalid()
     {
        static $user = auth('api')->user()->id;

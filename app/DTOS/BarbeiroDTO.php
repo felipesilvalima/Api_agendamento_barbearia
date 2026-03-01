@@ -3,6 +3,8 @@
 namespace App\DTOS;
 
 use App\Entitys\BarbeiroEntity;
+use App\Enums\StatusUser;
+use App\Enums\Role;
 
 class BarbeiroDTO
 {
@@ -15,8 +17,7 @@ class BarbeiroDTO
         public int $telefone,
         public int $id_barbearia,
         public string $especialidade = "Barbeiro Completo",
-        public string $status = "ATIVO",
-        public string $role = "barbeiro" 
+        public string $role = Role::BARBEIRO 
     ){}
 
 

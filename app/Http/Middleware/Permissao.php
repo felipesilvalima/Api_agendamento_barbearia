@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Enums\Role;
 
 class Permissao
 {
@@ -18,13 +19,13 @@ class Permissao
         switch($perfil)
         {
             case 'Cliente':
-                if(auth('api')->user()->role !== 'cliente')
+                if(auth('api')->user()->role !== Role::CLIENTE)
                 {
                     abort(403,"Você não tem permissão para acessar essa rota");
                 }
             break;
             case 'Barbeiro':
-                if(auth('api')->user()->role !== 'barbeiro')
+                if(auth('api')->user()->role !== Role::BARBEIRO)
                 {
                     abort(403,"Você não tem permissão para acessar essa rota");
                 }
@@ -32,13 +33,13 @@ class Permissao
             break;
             case 'Cliente|Barbeiro':
 
-                if(!in_array(auth('api')->user()->role, ['cliente','barbeiro']))
+                if(!in_array(auth('api')->user()->role, [Role::CLIENTE,Role::BARBEIRO]))
                 {
                     abort(403,"Você não tem permissão para acessar essa rota");
                 }
             break;
             case 'Admin':
-                if(auth('api')->user()->role != 'admin')
+                if(auth('api')->user()->role != Role::ADMIN)
                 {
                     abort(403,"Você não tem permissão para acessar essa rota");
                 }

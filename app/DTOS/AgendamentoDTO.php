@@ -4,6 +4,7 @@ namespace App\DTOS;
 
 use App\Models\Cliente;
 use App\Models\User;
+use App\Enums\Status;
 
 class AgendamentoDTO
 {
@@ -14,7 +15,7 @@ class AgendamentoDTO
         public string $hora,
         public array $servicos,
         public int $barbearia_id,
-        public string $status = "AGENDADO",
+        public string $status = Status::AGENDADO,
     ){}
 
 }

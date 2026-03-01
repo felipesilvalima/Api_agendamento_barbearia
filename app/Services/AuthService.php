@@ -17,6 +17,10 @@ use App\Repository\Contratos\BarbeiroRepositoryInterface;
 use App\Repository\Contratos\ClienteRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Enums\StatusUser;
+use App\Enums\Status;
+use App\Enums\Role;
+
 
 class AuthService
 {
@@ -65,11 +69,11 @@ class AuthService
         $cacheKey = 'users-user-'. auth('api')->user()->id.'-perfil';
         return $this->verificarCache($cacheKey);
 
-        if($user->role === 'cliente')
+        if($user->role === Role::CLIENTE)
         {
             $perfil = $this->clienteRepository->PerfilCliente($user->cliente->id);
         }
-            elseif($user->role === 'barbeiro')
+            elseif($user->role === Role::BARBEIRO)
             {
                 $perfil = $this->barbeiroRepository->PerfilBarbeiro($user->barbeiro->id); 
             }
@@ -132,17 +136,17 @@ class AuthService
         
         $this->validarService->validarExistenciaUsuario($user->id, "Não e possivel deleta. Esse Usuário não existe");
     
-        if($user->status !== 'ATIVO')
+        if($user->status !== StatusUser::ATIVO)
         {
             abort(404,'Esse usuário ja está Desativado');
         }
 
-            if($user->role === 'cliente')
+            if($user->role === Role::CLIENTE)
             { 
             
                 $this->validarService->validarExistenciaCliente($user->cliente->id,"Não e possivel deleta. Esse Cliente não existe");
 
-                $user->status = 'INATIVO';
+                $user->status = StatusUser::INATIVO;
                 $id_cliente = $user->cliente->id;
 
                 $agendamentos =  $this->agendamentoRepository->listar(
@@ -152,11 +156,11 @@ class AuthService
                     )
                 );
             }
-                elseif($user->role === 'barbeiro')
+                elseif($user->role === Role::BARBEIRO)
                 {
                     $this->validarService->validarExistenciaBarbeiro($user->barbeiro->id,"Não e possivel deleta. Esse Barbeiro não existe");
 
-                    $user->status = 'INATIVO';
+                    $user->status = StatusUser::INATIVO;
                     $id_barbeiro = $user->barbeiro->id;
 
                     $agendamentos =  $this->agendamentoRepository->listar(
@@ -170,9 +174,9 @@ class AuthService
 
                 foreach($agendamentos as $agendamento)
                 {
-                    if($agendamento->status === 'AGENDADO')
+                    if($agendamento->status === Status::AGENDADO)
                     {
-                        $agendamento->status = 'CANCELADO';
+                        $agendamento->status = Status::CANCELADO;
                         $agendamento->save();
                     }
                 }
@@ -184,20 +188,20 @@ class AuthService
     {
          $this->validarService->validarExistenciaUsuario($user->id, "Não e possivel deleta. Esse Usuário não existe");
     
-        if($user->status !== 'INATIVO')
+        if($user->status !== StatusUser::INATIVO)
         {
             abort(404,'Esse usuário ja está Ativo');
         }
 
-            if($user->role === 'cliente')
+            if($user->role === Role::CLIENTE)
             { 
                 $this->validarService->validarExistenciaCliente($user->cliente->id,"Não e possivel deleta. Esse Cliente não existe");
-                $user->status = 'ATIVO';
+                $user->status = StatusUser::ATIVO;
             }
-                elseif($user->role === 'barbeiro')
+                elseif($user->role === Role::BARBEIRO)
                 {
                     $this->validarService->validarExistenciaBarbeiro($user->barbeiro->id,"Não e possivel deleta. Esse Barbeiro não existe");
-                    $user->status = 'ATIVO';
+                    $user->status = StatusUser::ATIVO;
                 }
 
                 $user->save(); 

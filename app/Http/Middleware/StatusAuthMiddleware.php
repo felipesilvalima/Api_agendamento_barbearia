@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Enums\StatusUser;
 
 class StatusAuthMiddleware
 {
@@ -17,7 +18,7 @@ class StatusAuthMiddleware
     {
         if(auth('api')->user()->status != null)
         {
-            if(auth('api')->user()->status != 'ATIVO'){
+            if(auth('api')->user()->status != StatusUser::ATIVO){
                 abort(403,'Conta Desativada');
             }
         }

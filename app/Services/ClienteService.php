@@ -17,6 +17,7 @@ use App\Repository\Contratos\BarbeariaInterfaceRepository;
 use App\Repository\Contratos\ClienteRepositoryInterface;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\DB;
+use App\Enums\StatusBarbearia;
 
 
 class ClienteService
@@ -37,7 +38,7 @@ class ClienteService
         $this->validarService->validarExistenciaBarbearia($clienteDto->id_barbearia, "Não e possivel criar cliente essa barbearia não existe");
         $barbearia = $this->barbeariaRepository->detalhesBarbearia($clienteDto->id_barbearia);
 
-        if($barbearia->status !== 'ATIVO')
+        if($barbearia->status !== StatusBarbearia::ATIVO)
         {
             throw new NaoPermitidoExecption("Não e possivel criar um usuário para essa barbearia. Barbearia inativa");
         }

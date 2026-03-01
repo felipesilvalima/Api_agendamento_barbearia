@@ -27,7 +27,6 @@ class EloquentBarbeiroRepository extends BaseRepository implements BarbeiroRepos
                 $cadastro = $this->barbeiroModel->create([
                     "telefone" => $barbeiroDto->telefone,
                     "especialidade" => $barbeiroDto->especialidade,
-                    "status" => $barbeiroDto->status,
                     "user_id" => $barbeiroDto->id_barbeiro,
                     "barbearia_id" => $barbeiroDto->id_barbearia
                 ]);

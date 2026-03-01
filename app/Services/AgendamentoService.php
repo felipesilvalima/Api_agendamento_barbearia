@@ -19,6 +19,9 @@ use DomainException;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Enums\Status;
+use App\Enums\Role;
 
 class AgendamentoService
 {
@@ -143,7 +146,7 @@ class AgendamentoService
         $this->horarioService->validarHorarioFuturo($reagendamentoDto);
         $this->horarioService->validarAgendamentoAntecedente($reagendamentoDto->data);
 
-        if($agenda->status != 'AGENDADO')
+        if($agenda->status != Status::AGENDADO)
         {
             throw new DomainException("E permitido reagendar apenas status Agendado",403);
         }
@@ -173,17 +176,17 @@ class AgendamentoService
         $agendaCliente = $this->agendamentoRepository->detalhes($id_agenda);
        
             //regras
-            if($agendaCliente->status === 'CANCELADO')
+            if($agendaCliente->status === Status::CANCELADO)
             {
                 throw new DomainException("Agendamento não pode ser mais concluido. O Agendamento já foi Cancelado",409);
             }
-                elseif($agendaCliente->status === 'CONCLUIDO')
+                elseif($agendaCliente->status === Status::CONCLUIDO)
                 {
                     throw new DomainException("Esse Agendamento já foi Concluido",409);
                 }
 
                     //percistencia
-                    $agendaCliente->status = 'CONCLUIDO';
+                    $agendaCliente->status = Status::CONCLUIDO;
                     $agendaCliente->save();
 
                     //event
@@ -197,7 +200,7 @@ class AgendamentoService
 
         $agendaCliente = $this->agendamentoRepository->detalhes($id_agenda);
 
-        if($user->role === 'cliente')
+        if($user->role === Role::CLIENTE)
         {
             //validação de segurança
             $this->validarService->validarExistenciaCliente($user->cliente->id,"Não e possivel cancelar. esse Cliente não existe");
@@ -210,17 +213,17 @@ class AgendamentoService
                 $this->validarService->validarExistenciaBarbeiro($user->barbeiro->id,"Não e possivel cancelar. esse Barbeiro não existe");
             }
          
-                if($agendaCliente->status === 'CONCLUIDO')
+                if($agendaCliente->status === Status::CONCLUIDO)
                 {
                     throw new DomainException("Agendamento não pode ser mais cancelado. O Agendamento já foi Concluido",409);
                 }
-                    elseif($agendaCliente->status === 'CANCELADO')
+                    elseif($agendaCliente->status === Status::CANCELADO)
                     {
                         throw new DomainException("Esse Agendamento já foi cancelado",409);
                     }
                 
                         //percistencia
-                        $agendaCliente->status = 'CANCELADO';
+                        $agendaCliente->status = Status::CANCELADO;
                         $agendaCliente->save();
 
                         //event

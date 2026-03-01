@@ -1,8 +1,7 @@
 <?php declare(strict_types=1); 
 
 namespace App\DTOS;
-
-
+use App\Enums\Role;
 
 class ClienteDTO
 {
@@ -14,7 +13,7 @@ class ClienteDTO
         public string $password,
         public int $telefone,
         public int $id_barbearia,
-        public string $role = "cliente"
+        public string $role = Role::CLIENTE
     ){}
 
    

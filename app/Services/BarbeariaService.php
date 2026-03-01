@@ -14,6 +14,9 @@ use App\Models\User;
 use App\Helpers\CacheData;
 use App\Repository\Contratos\BarbeariaInterfaceRepository;
 use Illuminate\Database\Eloquent\Collection;
+use App\Enums\Status;
+use App\Enums\StatusUser;
+use App\Enums\StatusBarbearia;
 
 class BarbeariaService
 {
@@ -88,12 +91,12 @@ class BarbeariaService
 
          $barbearia = $this->barbeariaRepository->detalhesBarbearia($id_barbearia);
 
-        if($barbearia->status !== 'ATIVO')
+        if($barbearia->status !== StatusBarbearia::ATIVO)
         {
             abort(404,'Essa barbearia ja está desativada');
         }
 
-         $barbearia->status = 'INATIVO';
+         $barbearia->status = StatusBarbearia::INATIVO;
          $barbearia->save();
 
          $users = $this->user->where('barbearia_id', $id_barbearia)?->get();
@@ -103,16 +106,16 @@ class BarbeariaService
           {
             foreach($users as $user)
             {
-                $user->status = 'INATIVO';
+                $user->status = StatusUser::INATIVO;
                 $user->save();
             }
   
   
             foreach($agendamentos as $agendamento)
             {
-              if($agendamento->status === 'AGENDADO')
+              if($agendamento->status === Status::AGENDADO)
               {
-                $agendamento->status = 'CANCELADO';
+                $agendamento->status = Status::CANCELADO;
                 $agendamento->save();
               }
             }
@@ -125,12 +128,12 @@ class BarbeariaService
     {
        $barbearia = $this->barbeariaRepository->detalhesBarbearia($id_barbearia);
         
-        if($barbearia->status !== 'INATIVO')
+        if($barbearia->status !== StatusBarbearia::INATIVO)
         {
             abort(404,'Essa barbearia não está desativada');
         }
         
-        $barbearia->status = 'ATIVO';
+        $barbearia->status = StatusBarbearia::ATIVO;
         $barbearia->save();
 
         $users = $this->user->where('barbearia_id',$id_barbearia)?->get();
@@ -139,7 +142,7 @@ class BarbeariaService
             {
                 foreach($users as $user)
                 {
-                    $user->status = 'ATIVO';
+                    $user->status = StatusUser::ATIVO;
                     $user->save();
                 }
             }

@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Enums\StatusBarbearia;
 
 class StatusBarbeariaMiddleware
 {
@@ -18,7 +19,7 @@ class StatusBarbeariaMiddleware
         
         if(auth('api')->user()->barbearia_id != null)
         {
-            if(auth('api')->user()->barbearia->status != 'ATIVO'){
+            if(auth('api')->user()->barbearia->status != StatusBarbearia::ATIVO){
                 abort(403,'Barbearia Desativada');
             }
         }

@@ -12,6 +12,8 @@ use App\Repository\Abstract\BaseRepository;
 use App\Repository\Contratos\AuthRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Enums\StatusUser;
+use App\Enums\StatusBarbearia;
 
 class EloquentAuthRepository extends BaseRepository implements AuthRepositoryInterface
 {
@@ -29,7 +31,8 @@ class EloquentAuthRepository extends BaseRepository implements AuthRepositoryInt
             "email" => $user->email,
             "password" =>  Hash::make($user->password),
             "barbearia_id" => $user->id_barbearia,
-            "role" => $user->role ?? null
+            "role" => $user->role ?? null,
+            "status" => StatusUser::ATIVO
         ]);
 
         return $user->id;
@@ -45,11 +48,11 @@ class EloquentAuthRepository extends BaseRepository implements AuthRepositoryInt
 
         if($token)
         {
-            if (auth('api')->user()->barbearia->status !== 'ATIVO') {
+            if (auth('api')->user()->barbearia->status !== StatusBarbearia::ATIVO) {
                 throw new NaoPermitidoExecption("Barbearia inativa",403);
             }
 
-            if (auth('api')->user()->status !== 'ATIVO') {
+            if (auth('api')->user()->status !== StatusUser::ATIVO) {
                throw new  NaoPermitidoExecption("Usuário inativo",403);
             }
 

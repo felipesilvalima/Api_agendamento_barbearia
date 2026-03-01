@@ -10,6 +10,9 @@ use App\Models\User;
 use App\Repository\Abstract\BaseRepository;
 use App\Repository\Contratos\AgendamentosRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
+use App\Enums\Status;
+use App\Enums\Role;
+
 
 class EloquentAgendamentoRepository extends BaseRepository implements AgendamentosRepositoryInterface
 {
@@ -24,7 +27,7 @@ class EloquentAgendamentoRepository extends BaseRepository implements Agendament
         {
             $result = $this->agendamentoModel->
             where('id_barbeiro',$id_barbeiro)->
-            where('status', 'AGENDADO')->whereTime('hora', $hora)->whereDate('data', $data)->where('barbearia_id',$this->tenant())->exists();
+            where('status', Status::AGENDADO)->whereTime('hora', $hora)->whereDate('data', $data)->where('barbearia_id',$this->tenant())->exists();
             return $result;
         }
 
@@ -49,7 +52,7 @@ class EloquentAgendamentoRepository extends BaseRepository implements Agendament
         {
             $user = auth('api')->user();
 
-            if($user->role  === 'cliente')
+            if($user->role  === Role::CLIENTE)
             {
                 if($agendamentoDTO->atributos_agendamento != null)
                 {
@@ -105,7 +108,7 @@ class EloquentAgendamentoRepository extends BaseRepository implements Agendament
 
                                                 $this->buscarPorEntidade($user->cliente->id, 'id_cliente');
             }
-                elseif($user->role === 'barbeiro')
+                elseif($user->role === Role::BARBEIRO)
                 {
                     if($agendamentoDTO->atributos_agendamento != null)
                     {
@@ -168,11 +171,11 @@ class EloquentAgendamentoRepository extends BaseRepository implements Agendament
 
         public function detalhes(int $id_agenda): object
         {
-            if(auth('api')->user()->role === 'cliente')
+            if(auth('api')->user()->role === Role::CLIENTE)
             {
                 $this->selectAtributosRelacionamentos('barbeiro.user:id,name');
             }
-                elseif(auth('api')->user()->role === 'barbeiro')
+                elseif(auth('api')->user()->role === Role::BARBEIRO)
                 {
                     $this->selectAtributosRelacionamentos('cliente.user:id,name');
                 }
