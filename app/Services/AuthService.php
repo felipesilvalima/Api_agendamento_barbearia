@@ -96,10 +96,9 @@ class AuthService
         if (!Hash::check($password['password'], $user->password)) 
         {
             $user->password = Hash::make($password['password']);
+            $user->save();
 
             EnviarEmailTrocarDeSenhaJobs::dispatch($user);
-            
-            $user->save();
         }
             else
             {

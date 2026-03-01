@@ -22,7 +22,7 @@ class EnviarEmailTrocarDeSenhaJobs implements ShouldQueue
      */
     public function __construct(public User $user)
     {
-        //
+        // 
     }
 
     /**
@@ -30,6 +30,10 @@ class EnviarEmailTrocarDeSenhaJobs implements ShouldQueue
      */
     public function handle(): void
     {
+         Log::info('Trocar de senha concluida.', [
+            'user_id' => auth('api')->user()->id
+        ]);
+
          $this->user->notify(
             new TrocaSenhaNotification()
         );

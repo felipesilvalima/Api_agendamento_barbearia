@@ -35,6 +35,12 @@ class AlertaHorarioJobs implements ShouldQueue
             now()->addMinutes(10),
             now()->addMinutes(11),
         ])->each(function ($agendamento) {
+
+            Log::info('Alerta de horário.', [
+                'id' => $agendamento->id,
+                'user_id' => auth('api')->user()->id
+            ]);
+
             $agendamento->cliente->user->notify(
                 new Alertas($agendamento)
             );

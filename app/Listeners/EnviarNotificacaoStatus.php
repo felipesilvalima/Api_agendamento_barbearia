@@ -24,6 +24,11 @@ class EnviarNotificacaoStatus
      */
     public function handle(StatusAlterado $event): void
     {
+        Log::info('Status do agendamento Alterado', [
+            'id' => $event->agendamento->id,
+            'user_id' => auth('api')->user()->id
+        ]);
+
         $event->agendamento->cliente->user->notify(
             new StatusAlteradoNotificacao($event->agendamento, $event->reagendamento)
         );
