@@ -8,7 +8,6 @@ trait CacheKeyInvalid{
 
     protected static function bootCacheKeyInvalid()
     {
-       static $user = auth('api')->user()->id;
 
          static::created(function ($model) {
             Cache::tags([$model->getTable()])->flush();
@@ -24,11 +23,14 @@ trait CacheKeyInvalid{
 
          static::saved(function ($model) {
             Cache::tags([$model->getTable()])->flush();
+
+            if (method_exists(Cache::store(), 'tags')) {
+                Cache::tags([$model->getTable()])->flush();
+            }
+            
         });
 
-         static::restored(function ($model) {
-            Cache::tags([$model->getTable()])->flush();
-        });
+       
 
         
     }

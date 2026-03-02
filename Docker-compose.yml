@@ -13,7 +13,7 @@ services:
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
       - MYSQL_USERNAME=${DB_USERNAME}
       - MYSQL_DATABASE=${DB_DATABASE}
-    restart: "always"
+    restart: "unless-stopped"
     
   redis-barbearia:
     container_name: "redis-barbearia"
@@ -27,6 +27,8 @@ services:
 
   api-barbearia:
     container_name: "api-barbearia"
+    user: "1000:1000"
+    tty: true
     build:
       context: ./
       dockerfile: Dockerfile
@@ -43,7 +45,7 @@ services:
       - "apache-proxy"
     env_file:
       - ./.env
-    restart: "always"
+    restart: "unless-stopped"
 
   apache-proxy:
     container_name: "apache-proxy"
@@ -57,7 +59,7 @@ services:
       && httpd-foreground"
     networks:
       - "net-barbearia"
-    restart: "always"
+    restart: "unless-stopped"
   queue:
     container_name: "queue-barbearia"
     image: "api-barbearia:5.0"

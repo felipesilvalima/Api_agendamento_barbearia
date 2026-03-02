@@ -21,8 +21,14 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 COPY ./ /app
 
 RUN composer install --no-dev --optimize-autoloader
-RUN chown -R www-data:www-data /app
+# Ajusta permissões das pastas que precisam ser graváveis
+RUN chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
+
+# Usuário padrão: vamos usar www-data para produção
 USER www-data
 
+# Porta
 EXPOSE 8000
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+
+CMD ["php-fpm"]
