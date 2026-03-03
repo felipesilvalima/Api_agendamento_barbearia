@@ -56,8 +56,12 @@ class BarbeariaService
                 $barbeariaFiltroDto->$filtro_validado = $this->validarAtributosCondicao($barbeariaFiltroDto->$filtro_request ,$filtro['atributos']);
                
             }
-               $cacheKey = 'barbearias-user-'. auth('api')->user()->id.'-list';
-              return $this->verificarCache($cacheKey);
+              $cacheKey = 'barbearias-user-'. auth('api')->user()->id.'-list';
+
+              if(!empty($this->verificarCache($cacheKey)))
+              {
+                return $this->verificarCache($cacheKey);
+              }
 
               $lista = $this->barbeariaRepository->listarBarbearia($barbeariaFiltroDto);
 
@@ -66,7 +70,7 @@ class BarbeariaService
                 throw new NaoExisteRecursoException("lista de barbearia está vázia");
               }
 
-              $this->adicionarCache($cacheKey, $lista,getenv('JWT_TTL'));
+              $this->adicionarCache($cacheKey, $lista,env('JWT_TTL'));
 
               return $lista;
     }
@@ -76,11 +80,15 @@ class BarbeariaService
       $this->validarService->validarExistenciaBarbearia($id_barbearia, "Não e possivel ver detalhes. Barbearia não existe");
 
        $cacheKey = 'barbearias-user-'. auth('api')->user()->id.'-details';
-      return $this->verificarCache($cacheKey);
+
+        if(!empty($this->verificarCache($cacheKey)))
+        {
+            return $this->verificarCache($cacheKey);
+        }
 
       $detalhesBarbearia = $this->barbeariaRepository->detalhesBarbearia($id_barbearia);
 
-      $this->adicionarCache($cacheKey, $detalhesBarbearia,getenv('JWT_TTL'));
+      $this->adicionarCache($cacheKey, $detalhesBarbearia,env('JWT_TTL'));
 
       return $detalhesBarbearia;
     }

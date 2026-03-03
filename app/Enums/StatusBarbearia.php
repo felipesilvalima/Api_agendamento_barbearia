@@ -1,4 +1,6 @@
-<?php declare(string_type=1);
+<?php declare(string_type=1);  declare(strict_types=1); 
+
+namespace App\Enums;
 
 enum StatusBarbearia: string
 {

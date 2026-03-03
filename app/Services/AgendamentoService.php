@@ -100,7 +100,11 @@ class AgendamentoService
         
         //verificar o redis
          $cacheKey = 'agendamentos_user_'. auth('api')->user()->id.'_list';
-         return $this->verificarCache($cacheKey);
+
+        if(!empty($this->verificarCache($cacheKey)))
+        {
+            return $this->verificarCache($cacheKey);
+        }
     
         //listar coleção de agendamentos
         $agendamentos = $this->agendamentoRepository->listar($agendamentosDTO);       
@@ -112,7 +116,7 @@ class AgendamentoService
         }
 
             //adicionar dados ao redis
-            $this->adicionarCache($cacheKey, $agendamentos, getenv('JTW_TTL')); 
+            $this->adicionarCache($cacheKey, $agendamentos, env('JTW_TTL')); 
 
             return $agendamentos;
 
@@ -124,11 +128,14 @@ class AgendamentoService
         //buscar registro do agendamento de cliente
         $cacheKey = 'agendamentos-user-'. auth('api')->user()->id.'-details';
 
-        return $this->verificarCache($cacheKey);
+        if(!empty($this->verificarCache($cacheKey)))
+        {
+            return $this->verificarCache($cacheKey);
+        }
 
         $agendaCliente = $this->agendamentoRepository->detalhes($id_agenda);
 
-        $this->adicionarCache($cacheKey, $agendaCliente, getenv('JWT_TTL'));
+        $this->adicionarCache($cacheKey, $agendaCliente, env('JWT_TTL'));
         
         return $agendaCliente; 
     }

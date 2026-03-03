@@ -67,7 +67,11 @@ class AuthService
     public function perfilUser(User $user): object
     {
         $cacheKey = 'users-user-'. auth('api')->user()->id.'-perfil';
-        return $this->verificarCache($cacheKey);
+
+        if(!empty($this->verificarCache($cacheKey)))
+        {
+            return $this->verificarCache($cacheKey);
+        }
 
         if($user->role === Role::CLIENTE)
         {
@@ -82,8 +86,8 @@ class AuthService
                 {
                     throw new  NaoExisteRecursoException("Perfil não encontrado. Usuário não existe");
                 }
-
-                $this->adicionarCache($cacheKey, $perfil, getenv('JWT_TTL'));
+                
+                $this->adicionarCache($cacheKey, $perfil, env('JWT_TTL'));
 
                 return $perfil;
     }

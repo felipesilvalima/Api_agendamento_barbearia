@@ -69,7 +69,11 @@ class ClienteService
         }
 
         $cacheKey = 'clientes-user-'. auth('api')->user()->id.'-list';
-        return $this->verificarCache($cacheKey);
+
+        if(!empty($this->verificarCache($cacheKey)))
+        {
+            return $this->verificarCache($cacheKey);
+        }
 
         $lista = $this->clienteRepository->listar($clienteDTO);
 
@@ -77,19 +81,23 @@ class ClienteService
             {
                 throw new NaoExisteRecursoException("Listar de clientes vázia");
             }
-                $this->adicionarCache($cacheKey, $lista,getenv('JWT_TTL'));
+                $this->adicionarCache($cacheKey, $lista,env('JWT_TTL'));
 
                 return $lista;
     }
 
     public function detalhes(int $id_cliente)
     {
-         $cacheKey = 'clientes-user-'. auth('api')->user()->id.'-details';
-        return $this->verificarCache($cacheKey);
+        $cacheKey = 'clientes-user-'. auth('api')->user()->id.'-details';
+        
+        if(!empty($this->verificarCache($cacheKey)))
+        {
+            return $this->verificarCache($cacheKey);
+        }
 
          $detalhes = $this->clienteRepository->detalhes($id_cliente);
 
-         $this->adicionarCache($cacheKey, $detalhes,getenv('JWT_TTL'));
+         $this->adicionarCache($cacheKey, $detalhes,env('JWT_TTL'));
 
          return $detalhes;
     }

@@ -27,18 +27,18 @@ services:
 
   api-barbearia:
     container_name: "api-barbearia"
-    user: "1000:1000"
     tty: true
     build:
       context: ./
       dockerfile: Dockerfile
     image: "api-barbearia:5.0"
     ports:
-      - "5400:8000"
+      - "9000:9000"
     networks:
       - "net-barbearia"
     volumes:
-      - "./:/app"
+      - "./:/var/www/html"
+    user: "root"
     depends_on:
       - "redis-barbearia"
       - "db-barbearia"
@@ -53,10 +53,16 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ./proxy.conf:/usr/local/apache2/conf/extra/proxy.conf
+      - "./proxy.conf:/usr/local/apache2/conf/extra/proxy.conf"
+      - "./:/var/www/html"
     command: >
-      sh -c "echo 'Include conf/extra/proxy.conf' >> /usr/local/apache2/conf/httpd.conf
-      && httpd-foreground"
+      sh -c "
+        echo 'Include conf/extra/proxy.conf' >> /usr/local/apache2/conf/httpd.conf &&
+        echo 'LoadModule proxy_module modules/mod_proxy.so' >> /usr/local/apache2/conf/httpd.conf &&
+        echo 'LoadModule proxy_fcgi_module modules/mod_proxy_fcgi.so' >> /usr/local/apache2/conf/httpd.conf &&
+        echo 'LoadModule rewrite_module modules/mod_rewrite.so' >> /usr/local/apache2/conf/httpd.conf &&
+        httpd-foreground
+      " 
     networks:
       - "net-barbearia"
     restart: "unless-stopped"

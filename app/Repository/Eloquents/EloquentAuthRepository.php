@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Enums\StatusUser;
 use App\Enums\StatusBarbearia;
 
+
 class EloquentAuthRepository extends BaseRepository implements AuthRepositoryInterface
 {
     public function __construct(private User $userModel)
@@ -48,9 +49,12 @@ class EloquentAuthRepository extends BaseRepository implements AuthRepositoryInt
 
         if($token)
         {
+        
+            
             if (auth('api')->user()->barbearia->status !== StatusBarbearia::ATIVO) {
                 throw new NaoPermitidoExecption("Barbearia inativa",403);
             }
+
 
             if (auth('api')->user()->status !== StatusUser::ATIVO) {
                throw new  NaoPermitidoExecption("Usuário inativo",403);

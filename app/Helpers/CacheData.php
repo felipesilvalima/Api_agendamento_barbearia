@@ -2,11 +2,12 @@
 
 namespace App\Helpers;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 trait CacheData{
 
-public function verificarCache(string $cacheKey):mixed
+public function verificarCache(string $cacheKey)
 {
     if(Cache::has($cacheKey))
     {
@@ -14,10 +15,10 @@ public function verificarCache(string $cacheKey):mixed
     }
 }
 
-public function adicionarCache(string $cacheKey, mixed $value, int $duracao):void
+public function adicionarCache(string $cacheKey, mixed $value, int | string $duracao):void
 {
     $tag = explode('-',$cacheKey);
-    Cache::tags([$tag[0]])->put($cacheKey, $value, now()::addMinuto($duracao));
+    Cache::tags([$tag[0]])->put($cacheKey, $value, Carbon::now()->addMinute($duracao));
 }
 
 

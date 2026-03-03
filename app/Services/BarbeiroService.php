@@ -56,8 +56,12 @@ class BarbeiroService
             $barbeiroDTO->$campoDto =  $this->validarAtributos($barbeiroDTO->$campoDto, $atributosPermitidos['atributos']);
         }
         
-         $cacheKey = 'barbeiros-user-'. auth('api')->user()->id.'-list';
-        return $this->verificarCache($cacheKey);
+        $cacheKey = 'barbeiros-user-'. auth('api')->user()->id.'-list';
+
+        if(!empty($this->verificarCache($cacheKey)))
+        {
+            return $this->verificarCache($cacheKey);
+        }
 
         $lista = $this->barbeiroRepository->listar($barbeiroDTO);
 
@@ -66,7 +70,7 @@ class BarbeiroService
                 throw new NaoExisteRecursoException("Listar de clientes vázia");
             }
 
-                $this->adicionarCache($cacheKey, $lista,getenv('JWT_TTL'));
+                $this->adicionarCache($cacheKey, $lista,env('JWT_TTL'));
 
                 return $lista;
     }
@@ -74,11 +78,14 @@ class BarbeiroService
     public function detalhes(int $id_barbeiro)
     {
         $cacheKey = 'barbeiros-user-'. auth('api')->user()->id.'-details';
-        return $this->verificarCache($cacheKey);
+        if(!empty($this->verificarCache($cacheKey)))
+        {
+            return $this->verificarCache($cacheKey);
+        }
 
          $detalhes = $this->barbeiroRepository->detalhes($id_barbeiro);
 
-         $this->adicionarCache($cacheKey, $detalhes,getenv('JWT_TTL'));
+         $this->adicionarCache($cacheKey, $detalhes,env('JWT_TTL'));
 
          return $detalhes;
     }

@@ -38,8 +38,12 @@ class ServicoService
         //filtros
         $servicoDto->filtros_validos = $this->validarAtributosCondicao($servicoDto->filtros,$atributosServicoPermitido);
 
-         $cacheKey = 'servicos-user-'. auth('api')->user()->id.'-list';
-        return $this->verificarCache($cacheKey);
+        $cacheKey = 'servicos-user-'. auth('api')->user()->id.'-list';
+
+        if(!empty($this->verificarCache($cacheKey)))
+        {
+            return $this->verificarCache($cacheKey);
+        }
 
         $listaServico = $this->servicoRepository->listar($servicoDto);
 
@@ -48,7 +52,7 @@ class ServicoService
             throw new NaoExisteRecursoException("Nenhuma listar encontrada");
         }
         
-        $this->adicionarCache($cacheKey, $listaServico,getenv('JWT_TTL'));
+        $this->adicionarCache($cacheKey, $listaServico,env('JWT_TTL'));
 
         return $listaServico;
         
@@ -58,12 +62,16 @@ class ServicoService
     {
         $this->validarService->validarExistenciaServico($id_servico);
 
-         $cacheKey = 'servicos-user-'. auth('api')->user()->id.'-details';
-        return $this->verificarCache($cacheKey);
+        $cacheKey = 'servicos-user-'. auth('api')->user()->id.'-details';
+        
+        if(!empty($this->verificarCache($cacheKey)))
+        {
+            return $this->verificarCache($cacheKey);
+        }
 
         $servico =  $this->servicoRepository->detalhes($id_servico);
 
-        $this->adicionarCache($cacheKey, $listaServico,getenv('JWT_TTL'));
+        $this->adicionarCache($cacheKey, $servico,env('JWT_TTL'));
 
         return $servico;
     }

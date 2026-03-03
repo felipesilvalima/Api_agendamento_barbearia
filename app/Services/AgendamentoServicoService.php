@@ -42,7 +42,10 @@ class AgendamentoServicoService
     {
         $cacheKey = 'agendamento_servicos-user-'. auth('api')->user()->id.'-list';
         
-        return $this->verificarCache($cacheKey);
+        if(!empty($this->verificarCache($cacheKey)))
+        {
+            return $this->verificarCache($cacheKey);
+        }
 
         $lista = $this->agendamento_ServicoRepository->listarPorAgendamento($id_agendamento);
 
@@ -51,7 +54,7 @@ class AgendamentoServicoService
             throw new NaoExisteRecursoException("Nenhuma lista encotrada");
         }
 
-        $this->adicionarCache($cacheKey, $lista, getenv('JWT_TTL'));
+        $this->adicionarCache($cacheKey, $lista, env('JWT_TTL'));
 
         return $lista;
         

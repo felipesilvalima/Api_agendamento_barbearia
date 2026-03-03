@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\StatusBarbearia;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,11 @@ class Barbearia extends Model
     use HasFactory;
     use SoftDeletes;
     use CacheKeyInvalid;
-
+    
+    protected $casts = [
+        'status' => StatusBarbearia::class,
+    ];
+    
     protected $table = "barbearias";
     protected $fillable = ["nome","endereco","telefone","email"];
     
