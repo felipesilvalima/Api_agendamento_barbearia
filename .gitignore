@@ -20,3 +20,4 @@ yarn-error.log
 /.vscode
 .env.prod.backup.20260223_195620
 /storage
+storage/
