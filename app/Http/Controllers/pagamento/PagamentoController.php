@@ -12,7 +12,7 @@ class PagamentoController
         $gateway = app()->make(GatewaysInterface::class, 
             $request->all()
         );
-
+        
         $processamentoGateway = $gateway->processo([
             'name' => $request->input('name'),
             'email' => $request->input('email'),

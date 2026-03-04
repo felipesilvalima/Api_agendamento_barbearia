@@ -8,12 +8,15 @@ use App\Enums\GatewayEnums\GatewayStatus;
 use App\Exceptions\ErrorInternoException;
 use App\Models\User;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Leopaulo88\Asaas\Facades\Asaas;
 
 class HttpGatewayService
 {
    public function criarCustumer(array $data): string
    {
+        Log::info("Customer sendo criado");
+
         $customer = Asaas::customers()->create($data);
     
         if(!empty($customer->id) === true)
@@ -29,7 +32,8 @@ class HttpGatewayService
 
    public function criarCobranca(array $paymentData): array
    {
-        //criar uma cobrança
+        Log::info("Cobrança sendo criada");
+
         $payment = Asaas::payments()->create($paymentData);
 
         // Para PIX, você pode obter o QR Code
