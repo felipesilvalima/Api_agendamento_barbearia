@@ -9,6 +9,7 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\NotificacaoController;
 use App\Http\Controllers\pagamento\PagamentoController;
 use App\Http\Controllers\ServicoController;
+use App\Http\Controllers\Webhook\AsaasWebhookController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,13 +28,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-//teste
-Route::prefix('pagamento')->group(function(){
-    Route::post('/processamentos',[PagamentoController::class, 'processamento'])->name('processamento_pagamento');
-});
 
-Route::prefix('v1')->group(function (){
-
+Route::prefix('v2')->group(function (){
+    
+    //teste
+    Route::prefix('pagamento')->group(function(){
+        Route::post('/processamentos',[PagamentoController::class, 'processamento'])->name('processamento_pagamento');
+        Route::post('/webhook/asaas', [AsaasWebhookController::class, 'handle']);
+    });
+    
     //rota de autenticação e criação de usuário de clientes
     Route::post('/login',[AuthController::class, 'login'])->name('logar_usuario');
     Route::post('/clientes/{barbearia_id}',[ClienteController::class, 'criarClientes'])->name('criar_cliente');

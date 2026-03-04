@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\pagamento;
 
 use App\Contracts\GatewaysInterface;
+use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class PagamentoController
+class PagamentoController extends Controller
 {
     public function processamento(Request $request)
     {
