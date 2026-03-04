@@ -28,6 +28,7 @@ services:
   api-barbearia:
     container_name: "api-barbearia"
     tty: true
+    user: "root"
     build:
       context: ./
       dockerfile: Dockerfile
@@ -38,7 +39,6 @@ services:
       - "net-barbearia"
     volumes:
       - "./:/var/www/html"
-    user: "root"
     depends_on:
       - "redis-barbearia"
       - "db-barbearia"

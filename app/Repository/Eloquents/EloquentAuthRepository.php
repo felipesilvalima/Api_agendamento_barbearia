@@ -29,8 +29,8 @@ class EloquentAuthRepository extends BaseRepository implements AuthRepositoryInt
 
       $user = $this->userModel->create([
             "name" => $user->getNome(),
-            "email" => $user->email,
-            "password" =>  Hash::make($user->password),
+            "email" => trim($user->email),
+            "password" => Hash::make(trim($user->password)),
             "barbearia_id" => $user->id_barbearia,
             "role" => $user->role ?? null,
             "status" => StatusUser::ATIVO

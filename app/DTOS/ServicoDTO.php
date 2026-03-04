@@ -22,6 +22,6 @@ public function __construct(
 
     public function getNome()
     {
-        return mb_convert_case($this->nome,MB_CASE_TITLE, "UTF-8");
+        return mb_convert_case(trim($this->nome),MB_CASE_TITLE, "UTF-8");
     }
 }

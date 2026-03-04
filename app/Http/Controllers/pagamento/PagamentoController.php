@@ -20,7 +20,7 @@ class PagamentoController extends Controller
             'cpfCnpj' => $request->input('cpfCnpj'),
             'value' => $request->input('value'),
             'billingType' => $request->input('billingType'),
-            'user_id' => $request->input('user_id')
+            'user_id' => auth('api')->user()->id
         ]); 
 
         return response()->json($processamentoGateway);

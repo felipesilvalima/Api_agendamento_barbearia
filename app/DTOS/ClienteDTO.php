@@ -13,7 +13,7 @@ class ClienteDTO
         public string $password,
         public int $telefone,
         public int $id_barbearia,
-        public string $role = Role::CLIENTE
+        public string $role = Role::CLIENTE->value
     ){}
 
    
@@ -24,6 +24,6 @@ class ClienteDTO
          */ 
         public function getNome()
         {
-                return mb_convert_case($this->nome, MB_CASE_TITLE,'UTF-8');
+                return mb_convert_case(trim($this->nome), MB_CASE_TITLE,'UTF-8');
         }
 }

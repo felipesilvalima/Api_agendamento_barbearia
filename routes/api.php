@@ -31,11 +31,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::prefix('v2')->group(function (){
     
-    //teste
-    Route::prefix('pagamento')->group(function(){
-        Route::post('/processamentos',[PagamentoController::class, 'processamento'])->name('processamento_pagamento');
-        Route::post('/webhook/asaas', [AsaasWebhookController::class, 'handle']);
-    });
     
     //rota de autenticação e criação de usuário de clientes
     Route::post('/login',[AuthController::class, 'login'])->name('logar_usuario');
@@ -93,9 +88,10 @@ Route::prefix('v2')->group(function (){
             Route::delete('/notificacoes/{id_notificao}',[NotificacaoController::class, 'deletarNotificaos'])->name('deleta_notificacoes');
         });
 
-        // Route::prefix('pagamento')->group(function(){
-        //     Route::post('/processamentos',[PagamentoController::class, 'processamento'])->name('processamento_pagamento');
-        // });
+         Route::prefix('pagamento')->group(function(){
+            Route::post('/processamentos',[PagamentoController::class, 'processamento'])->name('processamento_pagamento');
+            Route::post('/webhook/asaas', [AsaasWebhookController::class, 'handle']);
+        });
     });
 
     Route::middleware('auth:api','permissao:Admin')->prefix('admin')->group(function () {

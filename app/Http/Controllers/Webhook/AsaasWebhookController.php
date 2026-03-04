@@ -30,7 +30,6 @@ class AsaasWebhookController extends Controller
                 DEFAULT => ['mensagem' => 'Payment não mapeado','event' => $event]
             };
         
-                // Retornar 200 OK para o Asaas confirmar o recebimento
                 return response()->json($paymentWebhook,200);
     }
 

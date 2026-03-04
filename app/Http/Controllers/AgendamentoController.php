@@ -24,7 +24,7 @@ class AgendamentoController extends Controller
     public function agendar(AgendamentoRequest $request)
     {
         $data = $request->validated();
-
+        
         $agendamento_id = $this->agendamentoService->criarAgendamento(new AgendamentoDTO(
             id_barbeiro: $data['id_barbeiro'],
             clienteUser: $this->user(),

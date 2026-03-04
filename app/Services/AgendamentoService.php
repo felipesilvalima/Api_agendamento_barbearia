@@ -48,7 +48,6 @@ class AgendamentoService
         $this->horarioService->validarExpedienteHorario();
         $this->horarioService->validarHorarioFuturo($agendamentoDto);
         $this->horarioService->validarAgendamentoAntecedente($agendamentoDto->data);
-        
         //percistencia
        $agendamento = DB::transaction(function () use($agendamentoDto){
 

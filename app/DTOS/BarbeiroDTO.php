@@ -17,7 +17,7 @@ class BarbeiroDTO
         public int $telefone,
         public int $id_barbearia,
         public string $especialidade = "Barbeiro Completo",
-        public string $role = Role::BARBEIRO 
+        public string $role = Role::BARBEIRO->value
     ){}
 
 
@@ -28,6 +28,6 @@ class BarbeiroDTO
          */ 
         public function getNome()
         {
-                return mb_convert_case($this->nome, MB_CASE_TITLE,'UTF-8');
+                return mb_convert_case(trim($this->nome), MB_CASE_TITLE,'UTF-8');
         }
 }

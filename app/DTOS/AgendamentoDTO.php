@@ -15,7 +15,7 @@ class AgendamentoDTO
         public string $hora,
         public array $servicos,
         public int $barbearia_id,
-        public string $status = Status::AGENDADO,
+        public string $status = Status::AGENDADO->value,
     ){}
 
 }
