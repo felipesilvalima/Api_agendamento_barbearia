@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Contracts\GatewaysInterface;
+use App\Enums\GatewayEnums\GatewayBillingType;
 use App\Repository\Contratos\AgendamentoServicoRepositoyInterface;
 use App\Repository\Contratos\AgendamentosRepositoryInterface;
 use App\Repository\Contratos\AuthRepositoryInterface;
@@ -18,6 +20,10 @@ use App\Repository\Eloquents\EloquentBarbeiroRepository;
 use App\Repository\Eloquents\EloquentClienteRepository;
 use App\Repository\Eloquents\EloquentServicoRepository;
 use App\Repository\Eloquents\EloquentNotificaoRepository;
+use App\Services\Gateways\BoletoService;
+use App\Services\Gateways\CardService;
+use App\Services\Gateways\PixService;
+use ErrorException;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -66,6 +72,28 @@ class AppServiceProvider extends ServiceProvider
             BarbeariaInterfaceRepository::class,
             EloquentBarbeariaRepository::class
         );
+
+        $this->app->bind(
+            GatewaysInterface::class,
+            function($app, $params)
+            {
+                $gatway = empty($params['gateway']) === false ? $params['gateway'] : false;
+                $billingType = empty($params['billingType']) === false ? $params['billingType'] : false;
+                
+                    if($gatway === false && $billingType === false)
+                    {
+                        throw new ErrorException("Error na chamada de método de pagamento");
+                    }
+                        $classes = [
+                            'ASAAS' =>[
+                                GatewayBillingType::BOLETO->value => BoletoService::class,
+                                GatewayBillingType::CARD_CRED->value => CardService::class,
+                                GatewayBillingType::PIX->value => PixService::class
+                            ]
+                        ];
+                            
+                            return new $classes[$gatway][$billingType];
+            });
     }
 
     /**

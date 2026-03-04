@@ -8,6 +8,7 @@ use App\Notifications\Alertas;
 use App\Notifications\StatusAlteradoNotificacao;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Log;
 
 class EnviarNotificacaoStatus
 {

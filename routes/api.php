@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarbeiroController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\NotificacaoController;
+use App\Http\Controllers\pagamento\PagamentoController;
 use App\Http\Controllers\ServicoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+//teste
+Route::prefix('pagamento')->group(function(){
+    Route::post('/processamentos',[PagamentoController::class, 'processamento'])->name('processamento_pagamento');
 });
 
 Route::prefix('v1')->group(function (){
@@ -83,6 +89,10 @@ Route::prefix('v1')->group(function (){
             Route::get('/notificacoes',[NotificacaoController::class, 'listarNotificacoes'])->name('lista_notificacoes');
             Route::delete('/notificacoes/{id_notificao}',[NotificacaoController::class, 'deletarNotificaos'])->name('deleta_notificacoes');
         });
+
+        // Route::prefix('pagamento')->group(function(){
+        //     Route::post('/processamentos',[PagamentoController::class, 'processamento'])->name('processamento_pagamento');
+        // });
     });
 
     Route::middleware('auth:api','permissao:Admin')->prefix('admin')->group(function () {
@@ -92,7 +102,10 @@ Route::prefix('v1')->group(function (){
         Route::patch('/barbearias/{id_barbearia}/desativar', [BarbeariaController::class,'desativarBarbearia'])->name('desativar_barbearias');
     });
 
+
 });
+
+
 
 Route::fallback(
     function () {

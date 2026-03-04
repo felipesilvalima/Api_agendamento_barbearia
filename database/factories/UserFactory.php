@@ -20,6 +20,7 @@ class UserFactory extends Factory
             'password' => Hash::make('password'), 
             'role' => $this->faker->randomElement(['cliente','barbeiro','admin']),
             'status' => $this->faker->randomElement(['ATIVO','INATIVO']),
+            'customer_id' => Barbearia::factory(),
             'barbearia_id' => Barbearia::factory(),
             'remember_token' => Str::random(10),
         ];

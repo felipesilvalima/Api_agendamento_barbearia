@@ -50,7 +50,6 @@ class EloquentAgendamentoServicoRepository extends BaseRepository implements Age
     {
        $this->selectAtributosRelacionamentos('servico');
        $this->filtro(["id_agendamento:=:$id_agendamento"]);
-
        return $this->getResultado();
     }
 }

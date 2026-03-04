@@ -45,7 +45,7 @@ class EloquentClienteRepository extends BaseRepository implements ClienteReposit
         return $this->firstResultado();
     }
 
-    public function listar(ClienteAtributosFiltrosPaginacaoDTO $clienteDTO): Collection
+    public function listar(ClienteAtributosFiltrosPaginacaoDTO $clienteDTO)
     {
         if($clienteDTO->atributos_cliente != null)
         {

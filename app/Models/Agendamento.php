@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Status;
 use App\Exceptions\NaoPermitidoExecption;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,7 +15,10 @@ class Agendamento extends Model
     use HasFactory;
     use SoftDeletes;
     use CacheKeyInvalid;
-    
+
+    protected $casts = [
+        'status' => Status::class,
+    ];
 
     protected $table = "agendamentos";
     protected $fillable = ["data","hora","status","id_cliente","id_barbeiro","barbearia_id"];

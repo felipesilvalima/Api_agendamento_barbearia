@@ -8,11 +8,12 @@
         "php": "^8.1",
         "dyrynda/laravel-cascade-soft-deletes": "^4.4",
         "firebase/php-jwt": "^7.0",
-        "guzzlehttp/guzzle": "^7.2",
+        "guzzlehttp/guzzle": "^7.10",
         "knuckleswtf/scribe": "^5.6",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
+        "leopaulo88/asaas-sdk-laravel": "^0.5.3",
         "predis/predis": "^3.4",
         "tymon/jwt-auth": "^2.2"
     },
